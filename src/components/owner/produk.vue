@@ -74,20 +74,29 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Name*" v-model="form.name" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                        <v-overflow-btn
-                        class="my-2"
-                        :items="dropdown_font"
-                        label="Merk*"
-                        target="#dropdown-example"
-                        v-model="form.merk"
-                        ></v-overflow-btn>
+                        <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Amount*" v-model="form.amount" required></v-text-field>
+                        <v-text-field label="Harga*" v-model="form.harga" required></v-text-field> 
                     </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Stok*" v-model="form.stok" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Stokminimum*" v-model="form.stokminimum" required></v-text-field>
+                    </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                        <!-- <v-overflow-btn
+                        class="my-2"
+                        :items="dropdown_font"
+                        label="harga*"
+                        target="#dropdown-example"
+                        v-model="form.harga"
+                        ></v-overflow-btn> -->
+                    </v-col>
+                    <!-- <v-col cols="12">
+                        <v-text-field label="stok*" v-model="form.stok" required></v-text-field>
+                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -119,10 +128,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data () {
         return {
-            dropdown_font: ['Honda', 'Yamaha','Suzuki'],
+            // dropdown_font: ['Honda', 'Yamaha','Suzuki'],
             dialog: false,
             keyword: '',
             headers: [
@@ -169,12 +179,12 @@ export default {
             text: '',
             load: false,
             form: {
-                name : '',
-                merk : '',
-                amount : '',
-        
+                nama : '',
+                harga : '',
+                stok : '',
+                stokminimum : '',
             },
-            sparepart : new FormData,
+            produk : new FormData,
             typeInput: 'new',
             errors : '',
             updatedId : '',     
@@ -182,26 +192,29 @@ export default {
     },
     methods:{
         getData(){
-            var uri = this.$apiUrl + '/produk'
-            this.$http.get(uri).then(response =>{
-                this.produk=response.data.message
-            })
+            axios.get("http://kouvee.xbanana.id/api/produk")
+            .then(
+                response => {this.produks = response.data.produk},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
+            this.produk.append('nama', this.form.nama);
+            this.produk.append('harga', this.form.harga);
+            this.produk.append('stok', this.form.stok);
+            this.produk.append('stokminimum', this.form.stokminimum)
+            var uri =this.$apiUrl + '/produk'
             this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
+            this.$http.post(uri,this.produk).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar
                 this.color = 'green'; //memberi warna snackbar
                 this.text = response.data.message; //memasukkan pesan ke snackbar
                 this.load = false;
                 this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.getData(); //mengambil data produk
                 this.resetForm();
             }).catch(error =>{
                 this.errors = error
@@ -213,18 +226,18 @@ export default {
     },
 
         updateData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-
-            var uri = this.$apiUrl + '/sparepart/' + this.updatedId;
+            this.produk.append('nama', this.form.nama);
+            this.produk.append('harga', this.form.harga);
+            this.produk.append('stok', this.form.stok);
+            this.produk.append('stokminimum', this.form.stokminimum)
+            var uri = this.$apiUrl + '/produk/' + this.updatedId;
             this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
+            this.$http.post(uri,this.produk).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
                 this.text = response.data.message; //memasukkan pesan ke snackbar
                 this.load = false;
                 this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.getData(); //mengambil data produk
                 this.resetForm();
                 this.typeInput = 'new';
             }).catch(error =>{
@@ -240,15 +253,15 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.name = item.name;
-            this.form.merek = item.merek;
-            this.form.amount = item.merek;
-  
-            this.updatedId = item.id
+            this.form.nama = item.nama;
+            this.form.harga = item.harga;
+            this.form.stok = item.stok;
+            this.form.stokminimum = item.stokminimum;
+            this.updatedId = item.idproduk
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            var uri=this.$apiUrl + '/produk/' + deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text=response.data.message;
@@ -273,10 +286,10 @@ export default {
 
         resetForm(){
             this.form = {
-                name : '',
+                nama : '',
                 merek : '',
-                amount : '',
-            
+                stok : '',
+                stokminimum : '',
             }
         }
     },

@@ -28,7 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="produk"
+                    :items="suppliers"
                     :search="keyword"
                     :loading="load"
                 >
@@ -39,8 +39,8 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idsupplier }}</td>
                             <td>{{ item.nama}}</td>
-                            <td>{{ item.notelp}}</td>
                             <td>{{ item.alamat}}</td>
+                            <td>{{ item.notelp}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -67,26 +67,32 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Sparepart</span>
+            <span class="headline">Supplier</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Name*" v-model="form.name" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                        <v-overflow-btn
-                        class="my-2"
-                        :items="dropdown_font"
-                        label="Merk*"
-                        target="#dropdown-example"
-                        v-model="form.merk"
-                        ></v-overflow-btn>
+                        <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Amount*" v-model="form.amount" required></v-text-field>
+                        <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field> 
                     </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="NoTelp*" v-model="form.notelp" required></v-text-field>
+                    </v-col>
+                  <v-col cols="12" sm="6" md="4">
+                        <!-- <v-overflow-btn
+                        class="my-2"
+                        :items="dropdown_font"
+                        label="alamat*"
+                        target="#dropdown-example"
+                        v-model="form.alamat"
+                        ></v-overflow-btn> -->
+                    </v-col>
+                    <!-- <v-col cols="12">
+                        <v-text-field label="stok*" v-model="form.stok" required></v-text-field>
+                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -118,10 +124,11 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data () {
         return {
-            dropdown_font: ['Honda', 'Yamaha','Suzuki'],
+            // dropdown_font: ['Honda', 'Yamaha','Suzuki'],
             dialog: false,
             keyword: '',
             headers: [
@@ -138,12 +145,12 @@ export default {
                     value: 'nama'
                     },
                     {
-                    text: 'Nomor Telepon',
-                    value: 'notelp'
+                    text: 'Alamat',
+                    value: 'alamat'
                     },
                     {
-                    text: 'Alamat',
-                    value: 'alamat',
+                    text: 'No Telpon',
+                    value: 'notelp',
                     },
                     {
                     text: 'Created At',
@@ -158,45 +165,46 @@ export default {
                     value: null
                     },    
             ],
-            produk: [],
+            suppliers: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                name : '',
-                merk : '',
-                amount : '',
-        
+                nama : '',
+                alamat : '',
+                notelp : '',
             },
-            sparepart : new FormData,
+            supplier : new FormData,
             typeInput: 'new',
             errors : '',
-            updatedId : '',
+            updatedId : '',     
         }
     },
     methods:{
         getData(){
-            var uri = this.$apiUrl + '/produk'
-            this.$http.get(uri).then(response =>{
-                this.produk=response.data.message
-            })
+            axios.get("http://kouvee.xbanana.id/api/supplier")
+            .then(
+                response => {this.suppliers = response.data.supplier},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
+            this.supplier.append('nama', this.form.nama);
+            this.supplier.append('alamat', this.form.alamat);
+            this.supplier.append('notelp', this.form.notelp);
+            var uri =this.$apiUrl + '/supplier'
             this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
+            this.$http.post(uri,this.supplier).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar
                 this.color = 'green'; //memberi warna snackbar
                 this.text = response.data.message; //memasukkan pesan ke snackbar
                 this.load = false;
                 this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.getData(); //mengambil data supplier
                 this.resetForm();
             }).catch(error =>{
                 this.errors = error
@@ -208,18 +216,17 @@ export default {
     },
 
         updateData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-
-            var uri = this.$apiUrl + '/sparepart/' + this.updatedId;
+            this.supplier.append('nama', this.form.nama);
+            this.supplier.append('alamat', this.form.alamat);
+            this.supplier.append('notelp', this.form.notelp);
+            var uri = this.$apiUrl + '/supplier/' + this.updatedId;
             this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
+            this.$http.post(uri,this.supplier).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
                 this.text = response.data.message; //memasukkan pesan ke snackbar
                 this.load = false;
                 this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.getData(); //mengambil data supplier
                 this.resetForm();
                 this.typeInput = 'new';
             }).catch(error =>{
@@ -235,15 +242,14 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.name = item.name;
-            this.form.merek = item.merek;
-            this.form.amount = item.merek;
-  
-            this.updatedId = item.id
+            this.form.nama = item.nama;
+            this.form.alamat = item.alamat;
+            this.form.notelp = item.notelp;
+            this.updatedId = item.idsupplier
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            var uri=this.$apiUrl + '/supplier/' + deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text=response.data.message;
@@ -268,10 +274,9 @@ export default {
 
         resetForm(){
             this.form = {
-                name : '',
+                nama : '',
                 merek : '',
-                amount : '',
-            
+                notelp : '',
             }
         }
     },
