@@ -194,7 +194,7 @@ export default {
         getData(){
             axios.get("http://kouvee.xbanana.id/api/produk")
             .then(
-                response => {this.produks = response.data.produk},
+                response => {this.produks = response.data.result},
             )
             .catch(e => {
                 this.errors.push(e)
