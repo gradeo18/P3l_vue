@@ -165,28 +165,19 @@ export default {
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+          this.ukuran.append('nama',this.nama);
+          var uri = "http://kouvee.xbanana.id/api/ukuran_hewan"
+          this.$http.post(uri,this.ukuran).then(response =>{
+            this.snackbar = true; 
+            this.text = 'Berhasil'; 
+            this.color = 'green';
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
 
         updateData(){
             this.sparepart.append('name', this.form.name);
@@ -246,10 +237,7 @@ export default {
 
         resetForm(){
             this.form = {
-                name : '',
-                merek : '',
-                amount : '',
-            
+                nama : '',            
             }
         }
     },

@@ -37,6 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
+                            <td>{{ item.gambar }}</td>
                             <td>{{ item.idproduk }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
@@ -76,6 +77,9 @@
         <v-card-text>
             <v-container>
                 <v-row>
+                    <v-col cols="12">
+                        <v-text-field label="Gambar*" v-model="form.gambar" required></v-text-field>
+                    </v-col>
                     <v-col cols="12">
                         <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
                     </v-col>
@@ -126,9 +130,13 @@ export default {
             dialog: false,
             keyword: '',
             headers: [
-                {
+                    {
                     text: 'No',
                     value: 'no',
+                    },
+                    {
+                    text: 'Gambar',
+                    value: 'gambar'
                     },
                     {
                     text: 'ID Produk',
@@ -169,6 +177,7 @@ export default {
             text: '',
             load: false,
             form: {
+                gambar: '',
                 nama : '',
                 harga : '',
                 stok : '',
@@ -192,23 +201,27 @@ export default {
         },
 
         sendData(){
-            axios.post("http://kouvee.xbanana.id/api/produk",{
-                nama: this.nama,
-                harga: this.harga,
-                stok: this.stok,
-                stokminimum: this.stokminimum
-            })
-            .then(
-                (response) => console.log(response)
-            )
-            .catch(
-                (error) => console.log(error)
-            );
+          this.produk.append('gambar',this.gambar);
+          this.produk.append('nama',this.nama);
+          this.produk.append('harga',this.harga);
+          this.produk.append('stok',this.stok);
+          this.produk.append('stokminimum',this.stokminimum);
+          var uri = "http://kouvee.xbanana.id/api/produk"
+          this.$http.post(uri,this.produk).then(response =>{
+            this.snackbar = true; 
+            this.text = response.data.message;
+            this.color = 'green'
+        }).catch(error =>{ 
+            this.errors = error 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
+        })
         },
 
         updateData(){
            
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -220,18 +233,8 @@ export default {
             this.updatedId = item.idproduk
     },
 
-        deleteData(deleteId){
-            const confirmBox = confirm("Are you sure want remove?")
-            if(confirmBox)
-            axios.delete("/api/produk/" + deleteId)
-            .then(
-                (response => {
-                    this.getData()
-                })
-                .catch(
-                    (error) => console.log(error)
-                ) 
-            );
+        deleteData(){
+    
     },
     
         setForm(){
@@ -245,7 +248,6 @@ export default {
         resetForm(){
             this.form = {
                 nama : '',
-                merek : '',
                 stok : '',
                 stokminimum : '',
             }
