@@ -41,12 +41,9 @@
                             <td>{{ item.nama}}</td>
                             <td>{{ item.alamat}}</td>
                             <td>{{ item.notelp}}</td>
-<<<<<<< HEAD
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
-=======
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -160,7 +157,6 @@ export default {
                     },
                     {
                     text: 'Created At',
-<<<<<<< HEAD
                     value: 'created_at',
                     },
                     {
@@ -171,18 +167,6 @@ export default {
                     text: 'Deleted At',
                     value: 'deleted_at'
                     },   
-=======
-                    value: null
-                    },
-                    {
-                    text: 'Updated At',
-                    value: null
-                    },
-                    {
-                    text: 'Deleted At',
-                    value: null
-                    },    
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             ],
             suppliers: [],
             snackbar: false,
@@ -204,11 +188,7 @@ export default {
         getData(){
             axios.get("http://kouvee.xbanana.id/api/supplier")
             .then(
-<<<<<<< HEAD
                 response => {this.suppliers = response.data},
-=======
-                response => {this.suppliers = response.data.supplier},
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             )
             .catch(e => {
                 this.errors.push(e)

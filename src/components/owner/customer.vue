@@ -28,11 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-<<<<<<< HEAD
                     :items="customers"
-=======
-                    :items="produk"
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     :search="keyword"
                     :loading="load"
                 >
@@ -46,12 +42,9 @@
                             <td>{{ item.notelp}}</td>
                             <td>{{ item.alamat}}</td>
                             <td>{{ item.tgllahir}}</td>
-<<<<<<< HEAD
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
-=======
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -78,17 +71,12 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-<<<<<<< HEAD
             <span class="headline">Edit Customer</span>
-=======
-            <span class="headline">Sparepart</span>
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-<<<<<<< HEAD
                         <v-text-field label="Nama Customer*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -101,22 +89,6 @@
                         <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
                     </v-col>
                     
-=======
-                        <v-text-field label="Name*" v-model="form.name" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                        <v-overflow-btn
-                        class="my-2"
-                        :items="dropdown_font"
-                        label="Merk*"
-                        target="#dropdown-example"
-                        v-model="form.merk"
-                        ></v-overflow-btn>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-text-field label="Amount*" v-model="form.amount" required></v-text-field>
-                    </v-col>
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -148,17 +120,10 @@
 </template>
 
 <script>
-<<<<<<< HEAD
 import axios from 'axios'
 export default {
     data () {
         return {
-=======
-export default {
-    data () {
-        return {
-            dropdown_font: ['Honda', 'Yamaha','Suzuki'],
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             dialog: false,
             keyword: '',
             headers: [
@@ -188,7 +153,6 @@ export default {
                     },
                     {
                     text: 'Created At',
-<<<<<<< HEAD
                     value: 'created_at',
                     },
                     {
@@ -201,20 +165,6 @@ export default {
                     },   
             ],
             customers: [],
-=======
-                    value: null
-                    },
-                    {
-                    text: 'Updated At',
-                    value: null
-                    },
-                    {
-                    text: 'Deleted At',
-                    value: null
-                    },    
-            ],
-            produk: [],
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             snackbar: false,
             color: null,
             text: '',
@@ -225,11 +175,7 @@ export default {
                 amount : '',
         
             },
-<<<<<<< HEAD
             customer : new FormData,
-=======
-            sparepart : new FormData,
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -237,7 +183,6 @@ export default {
     },
     methods:{
         getData(){
-<<<<<<< HEAD
             axios.get("http://kouvee.xbanana.id/api/customer")
             .then(
                 response => {this.customers = response.data},
@@ -245,12 +190,6 @@ export default {
             .catch(e => {
                 this.errors.push(e)
             });
-=======
-            var uri = this.$apiUrl + '/produk'
-            this.$http.get(uri).then(response =>{
-                this.produk=response.data.message
-            })
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
         },
 
         sendData(){
@@ -305,17 +244,10 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-<<<<<<< HEAD
             this.form.nama = item.nama;
             this.form.notelp = item.notelp;
             this.form.alamat = item.alamat;
             this.form.tgllahir = item.tgllahir;
-=======
-            this.form.name = item.name;
-            this.form.merek = item.merek;
-            this.form.amount = item.merek;
-  
->>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             this.updatedId = item.id
     },
 
