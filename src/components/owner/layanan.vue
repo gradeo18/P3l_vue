@@ -28,7 +28,11 @@
 
                 <v-data-table
                     :headers="headers"
+<<<<<<< HEAD
                     :items="layanans"
+=======
+                    :items="spareparts"
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     :search="keyword"
                     :loading="load"
                 >
@@ -40,9 +44,12 @@
                             <td>{{ item.idlayanan }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
+<<<<<<< HEAD
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
+=======
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -69,16 +76,36 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
+<<<<<<< HEAD
             <span class="headline">Edit Layanan</span>
+=======
+            <span class="headline">Layanan</span>
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
+<<<<<<< HEAD
                         <v-text-field label="Nama Layanan*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Harga Layanan*" v-model="form.harga" required></v-text-field>
+=======
+                        <v-text-field label="Name*" v-model="form.name" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                        <v-overflow-btn
+                        class="my-2"
+                        :items="dropdown_font"
+                        label="Merk*"
+                        target="#dropdown-example"
+                        v-model="form.merk"
+                        ></v-overflow-btn>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Amount*" v-model="form.amount" required></v-text-field>
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     </v-col>
                 </v-row>
             </v-container>
@@ -111,10 +138,17 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from 'axios'
 export default {
     data () {
         return {
+=======
+export default {
+    data () {
+        return {
+            dropdown_font: ['Honda', 'Yamaha','Suzuki'],
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             dialog: false,
             keyword: '',
             headers: [
@@ -136,6 +170,7 @@ export default {
                     },
                     {
                     text: 'Created At',
+<<<<<<< HEAD
                     value: 'created_at',
                     },
                     {
@@ -149,15 +184,39 @@ export default {
                       
             ],
             layanans: [],
+=======
+                    value: null
+                    },
+                    {
+                    text: 'Updated At',
+                    value: null
+                    },
+                    {
+                    text: 'Deleted At',
+                    value: null
+                    },
+                      
+            ],
+            spareparts: [],
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
+<<<<<<< HEAD
                 nama : '',
                 harga : '',
             },
             layanan : new FormData,
+=======
+                name : '',
+                merk : '',
+                amount : '',
+        
+            },
+            sparepart : new FormData,
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -165,6 +224,7 @@ export default {
     },
     methods:{
         getData(){
+<<<<<<< HEAD
             axios.get("http://kouvee.xbanana.id/api/layanan")
             .then(
                 response => {this.layanans = response.data},
@@ -173,6 +233,13 @@ export default {
                 this.errors.push(e)
             });
         },
+=======
+            var uri = this.$apiUrl + '/sparepart'
+            this.$http.get(uri).then(response =>{
+                this.spareparts=response.data.message
+        })
+    },
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
 
         sendData(){
             this.sparepart.append('name', this.form.name);
@@ -226,8 +293,15 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
+<<<<<<< HEAD
             this.form.nama = item.nama;
             this.form.harga = item.harga;
+=======
+            this.form.name = item.name;
+            this.form.merek = item.merek;
+            this.form.amount = item.merek;
+  
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             this.updatedId = item.id
     },
 

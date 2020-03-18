@@ -28,7 +28,11 @@
 
                 <v-data-table
                     :headers="headers"
+<<<<<<< HEAD
                     :items="pegawais"
+=======
+                    :items="produk"
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     :search="keyword"
                     :loading="load"
                 >
@@ -39,6 +43,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idpegawai }}</td>
                             <td>{{ item.nama}}</td>
+<<<<<<< HEAD
                             <td>{{ item.noTelp}}</td>
                             <td>{{ item.alamat}}</td>
                             <td>{{ item.tgllahir}}</td>
@@ -46,6 +51,12 @@
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
+=======
+                            <td>{{ item.notelp}}</td>
+                            <td>{{ item.alamat}}</td>
+                            <td>{{ item.tgllahir}}</td>
+                            <td>{{ item.role}}</td>
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -72,12 +83,17 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
+<<<<<<< HEAD
             <span class="headline">Edit Pegawai</span>
+=======
+            <span class="headline">Sparepart</span>
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
+<<<<<<< HEAD
                         <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
@@ -91,6 +107,21 @@
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Role*" v-model="form.role" required></v-text-field>
+=======
+                        <v-text-field label="Name*" v-model="form.name" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                        <v-overflow-btn
+                        class="my-2"
+                        :items="dropdown_font"
+                        label="Merk*"
+                        target="#dropdown-example"
+                        v-model="form.merk"
+                        ></v-overflow-btn>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Amount*" v-model="form.amount" required></v-text-field>
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     </v-col>
                 </v-row>
             </v-container>
@@ -123,10 +154,17 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 import axios from 'axios'
 export default {
     data () {
         return {
+=======
+export default {
+    data () {
+        return {
+            dropdown_font: ['Honda', 'Yamaha','Suzuki'],
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             dialog: false,
             keyword: '',
             headers: [
@@ -144,7 +182,11 @@ export default {
                     },
                     {
                     text: 'Nomor Telepon',
+<<<<<<< HEAD
                     value: 'noTelp'
+=======
+                    value: 'notelp'
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
                     },
                     {
                     text: 'Alamat',
@@ -160,6 +202,7 @@ export default {
                     },
                     {
                     text: 'Created At',
+<<<<<<< HEAD
                     value: 'created_at',
                     },
                     {
@@ -172,11 +215,26 @@ export default {
                     },   
             ],
             pegawais: [],
+=======
+                    value: null
+                    },
+                    {
+                    text: 'Updated At',
+                    value: null
+                    },
+                    {
+                    text: 'Deleted At',
+                    value: null
+                    },    
+            ],
+            produk: [],
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
+<<<<<<< HEAD
                 nama : '',
                 notelp : '',
                 alamat : '',
@@ -184,6 +242,14 @@ export default {
                 tgllahir : '',
             },
             pegawai : new FormData,
+=======
+                name : '',
+                merk : '',
+                amount : '',
+        
+            },
+            sparepart : new FormData,
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -191,6 +257,7 @@ export default {
     },
     methods:{
         getData(){
+<<<<<<< HEAD
             axios.get("http://kouvee.xbanana.id/api/pegawai")
             .then(
                 response => {this.pegawais = response.data},
@@ -198,6 +265,12 @@ export default {
             .catch(e => {
                 this.errors.push(e)
             });
+=======
+            var uri = this.$apiUrl + '/produk'
+            this.$http.get(uri).then(response =>{
+                this.produk=response.data.message
+            })
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
         },
 
         sendData(){
@@ -252,11 +325,18 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
+<<<<<<< HEAD
             this.form.nama = item.nama;
             this.form.noTelp = item.noTelp;
             this.form.alamat = item.alamat;
             this.form.role = item.role;
             this.form.tgllahir = item.tgllahir;
+=======
+            this.form.name = item.name;
+            this.form.merek = item.merek;
+            this.form.amount = item.merek;
+  
+>>>>>>> f38700492b76abf8568bc38b34092ea27a1b9428
             this.updatedId = item.id
     },
 
