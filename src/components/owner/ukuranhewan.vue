@@ -55,7 +55,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idukuran)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -165,7 +165,7 @@ export default {
         },
 
         sendData(){
-          this.ukuran.append('nama',this.nama);
+          this.ukuran.append('nama',this.form.nama);
           var uri = "http://kouvee.xbanana.id/api/ukuran_hewan"
           this.$http.post(uri,this.ukuran).then(response =>{
             this.snackbar = true; 
@@ -180,18 +180,15 @@ export default {
         },
 
         updateData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-
-            var uri = this.$apiUrl + '/sparepart/' + this.updatedId;
+            this.ukuran.append('nama', this.form.nama);
+            var uri = "http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId;
             this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
+            this.$http.put(uri,this.ukuran).then(response =>{
                 this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
+                this.text = 'Berhasil'; 
                 this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.dialog = false;
+                this.getData(); 
                 this.resetForm();
                 this.typeInput = 'new';
             }).catch(error =>{
@@ -206,16 +203,16 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialog = true;
             this.form.nama = item.nama;
-            this.updatedId = item.id
+            this.updatedId = item.idukuran;
+            this.dialog = true;
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            var uri="http://kouvee.xbanana.id/api/ukuran_hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -225,7 +222,7 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
+        },
     
         setForm(){
             if (this.typeInput === 'new') {
