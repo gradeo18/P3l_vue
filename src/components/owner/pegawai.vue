@@ -74,7 +74,7 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Pegawai</span>
+            <span class="headline">Pegawai</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -89,10 +89,32 @@
                         <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
+                        <v-menu
+                            v-model="menuDate"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="form.tgllahir"
+                                label="Tanggal*"
+                                readonly
+                                v-on="on"
+                                required
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
+                        </v-menu>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Role*" v-model="form.role" required></v-text-field>
+                        <v-select
+                            :items="roleselect"
+                            v-model="form.role"
+                            label="Role*"
+                        /> 
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Username*" v-model="form.username" required></v-text-field>
@@ -137,6 +159,7 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            roleselect: ['Owner','Kasir','CS'],
             headers: [
                 {
                     text: 'No',
@@ -264,7 +287,7 @@ export default {
             this.load = false;
             this.typeInput = 'new';
         })
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -275,7 +298,7 @@ export default {
             this.form.role = item.role;
             this.form.tgllahir = item.tgllahir;
             this.updatedId = item.id
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -303,7 +326,7 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
@@ -314,7 +337,7 @@ export default {
                 tgllahir : '',
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();

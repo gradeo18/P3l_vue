@@ -68,13 +68,17 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Ukuran Hewan</span>
+            <span class="headline">Ukuran Hewan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Nama Ukuran*" v-model="form.nama" required></v-text-field>
+                        <v-select
+                            :items="ukuranselect"
+                            v-model="form.nama"
+                            label="Nama Ukuran Hewan*"
+                        />  
                     </v-col>
                 </v-row>
             </v-container>
@@ -113,6 +117,7 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            ukuranselect: ['SMALL','MEDIUM','LARGE'],
             headers: [
                 {
                     text: 'No',
@@ -186,7 +191,7 @@ export default {
             this.ukuran.append('nama', this.form.nama);
             var uri = "http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId;
             this.load = true
-            this.$http.post(uri,this.ukuran).then(response =>{     
+            this.$http.put(uri,this.ukuran).then(response =>{     
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -237,14 +242,14 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
                 nama : '',            
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();

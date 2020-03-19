@@ -81,7 +81,25 @@
                         <v-text-field label="Nama Hewan*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
+                        <v-menu
+                            v-model="menuDate"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="form.tgllahir"
+                                label="Tanggal Lahir*"
+                                readonly
+                                v-on="on"
+                                required
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
+                        </v-menu>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="ID Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
@@ -245,16 +263,17 @@ export default {
             this.load = false;
             this.typeInput = 'new';
         })
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
             this.form.nama = item.nama;
+            this.form.tgllahir = item.tgllahir;
             this.form.idjenis = item.idjenis;
             this.form.idukuran = item.idukuran;
             this.updatedId = item.id
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -282,17 +301,18 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
-                name : '',
-                merek : '',
-                amount : '',
-            
+                nama : '',
+                tgllahir : '',
+                idjenis : '',
+                idukuran : '',
+                idcustomer : '',
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();

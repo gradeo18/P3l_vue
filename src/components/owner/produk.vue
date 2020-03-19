@@ -37,6 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
+                            <!-- <td><img :src="'/produk/gambar/'+ item.gambar" width="100px"></td> -->
                             <td>{{ item.gambar }}</td>
                             <td>{{ item.idproduk }}</td>
                             <td>{{ item.nama}}</td>
@@ -78,20 +79,31 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Gambar*" v-model="form.gambar" required></v-text-field>
+                        <label for="gambar">Gambar Produk*</label>
+                        <v-text-field v-model="form.gambar" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
+                        <label for="gambar">Nama Produk*</label>
+                        <v-text-field v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Harga*" v-model="form.harga" required></v-text-field> 
+                        <label for="gambar">Harga*</label>
+                        <v-text-field v-model="form.harga" required></v-text-field> 
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Stok*" v-model="form.stok" required></v-text-field>
+                        <label for="gambar">Stok*</label>
+                        <v-text-field v-model="form.stok" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Stokminimum*" v-model="form.stokminimum" required></v-text-field>
+                        <label for="gambar">Stok Minimum*</label>
+                        <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
+                    <!-- <v-col cols="12">
+                        <label for="gambar">Gambar Produk</label>
+                    </v-col>
+                    <v-col cols="12">
+                        <input type="file" class="form-control" @change="produkChange">
+                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -234,7 +246,7 @@ export default {
             this.form.stok = item.stok;
             this.form.stokminimum = item.stokminimum;
             this.updatedId = item.idproduk
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -261,16 +273,25 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
                 nama : '',
+                harga : '',
                 stok : '',
                 stokminimum : '',
             }
         }
-    },
+        },
+
+        // produkChange(e){
+        //     var fileReader = new FileReader()
+        //     fileReader.readAsDataURL(e.target.files[0])
+        //     fileReader.onload=(e) => {
+        //         this.item.gambar = e.target.result
+        //     }
+        // },
 
         mounted(){
             this.getData();

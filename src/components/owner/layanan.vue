@@ -69,16 +69,24 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Layanan</span>
+            <span class="headline">Layanan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Nama Layanan*" v-model="form.nama" required></v-text-field>
+                    <v-select
+                            :items="layananselect"
+                            v-model="form.nama"
+                            label="Nama Layanan Hewan*"
+                        />  
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Harga Layanan*" v-model="form.harga" required></v-text-field>
+                        <v-select
+                            :items="hargaselect"
+                            v-model="form.harga"
+                            label="Harga Layanan Hewan*"
+                        />  
                     </v-col>
                 </v-row>
             </v-container>
@@ -117,6 +125,8 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            layananselect: ['Grooming','Penitipan','Potong Bulu'],
+            hargaselect: ['50000','100000','150.000'],
             headers: [
                 {
                     text: 'No',
@@ -216,7 +226,7 @@ export default {
             this.load = false;
             this.typeInput = 'new';
         })
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -224,7 +234,7 @@ export default {
             this.form.nama = item.nama;
             this.form.harga = item.harga;
             this.updatedId = item.id
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -251,17 +261,16 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
                 name : '',
                 merek : '',
                 amount : '',
-            
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();

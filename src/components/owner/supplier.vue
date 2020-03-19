@@ -119,7 +119,6 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            // dropdown_font: ['Honda', 'Yamaha','Suzuki'],
             dialog: false,
             keyword: '',
             headers: [
@@ -226,7 +225,7 @@ export default {
             this.load = false;
             this.typeInput = 'new';
         })
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -235,7 +234,7 @@ export default {
             this.form.alamat = item.alamat;
             this.form.notelp = item.notelp;
             this.updatedId = item.idsupplier
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -262,7 +261,7 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
@@ -271,7 +270,7 @@ export default {
                 notelp : '',
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();

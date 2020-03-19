@@ -68,13 +68,17 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Jenis Hewan</span>
+            <span class="headline">Jenis Hewan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Nama Jenis Hewan*" v-model="form.nama" required></v-text-field>
+                        <v-select
+                            :items="jenis"
+                            v-model="form.nama"
+                            label="Nama Jenis Hewan*"
+                        />  
                     </v-col>
                 </v-row>
             </v-container>
@@ -113,6 +117,7 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            jenis: ['ANJING','KUCING'],
             headers: [
                 {
                     text: 'No',

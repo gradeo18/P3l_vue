@@ -12,10 +12,10 @@
         <v-list-item>
                 <v-list-item-content>
                 <v-list-item-title class="title">
-                    Modul 11
+                    Dashboard
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                    VueConsumeRESTAPI
+                    Owner
                 </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -111,12 +111,12 @@
                 
                 <VSpacer/>
                 
-                <img src="../assets/logo.svg" style="height:45px;width:45px">
+                <img src="../assets/logo.png" style="height:45px;width:45px">
                 <v-toolbar-title
                     style="font-size:21px;"
                     class="white--textml-2"
                 >
-                    PAW-UAJY
+                    KOUVEE PET SHOP
                 </v-toolbar-title>
                 </v-app-bar>
                 

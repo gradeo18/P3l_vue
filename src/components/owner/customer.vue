@@ -80,7 +80,25 @@
                         <v-text-field label="Nama Customer*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
+                        <v-menu
+                            v-model="menuDate"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="form.tgllahir"
+                                label="Tanggal Lahir*"
+                                readonly
+                                v-on="on"
+                                required
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
+                        </v-menu>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="No.Telp*" v-model="form.notelp" required></v-text-field>
@@ -235,7 +253,7 @@ export default {
             this.load = false;
             this.typeInput = 'new';
         })
-    },
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -245,7 +263,7 @@ export default {
             this.form.alamat = item.alamat;
             this.form.tgllahir = item.tgllahir;
             this.updatedId = item.id
-    },
+        },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
@@ -273,7 +291,7 @@ export default {
             } else { console.log("dddd")
                 this.updateData()
             }
-    },
+        },
 
         resetForm(){
             this.form = {
@@ -283,7 +301,7 @@ export default {
                 tgllahir : '',
             }
         }
-    },
+        },
 
         mounted(){
             this.getData();
