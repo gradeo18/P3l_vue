@@ -57,7 +57,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idsupplier)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -84,18 +84,6 @@
                     <v-col cols="12">
                         <v-text-field label="NoTelp*" v-model="form.notelp" required></v-text-field>
                     </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                        <!-- <v-overflow-btn
-                        class="my-2"
-                        :items="dropdown_font"
-                        label="alamat*"
-                        target="#dropdown-example"
-                        v-model="form.alamat"
-                        ></v-overflow-btn> -->
-                    </v-col>
-                    <!-- <v-col cols="12">
-                        <v-text-field label="stok*" v-model="form.stok" required></v-text-field>
-                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -199,24 +187,22 @@ export default {
             this.supplier.append('nama', this.form.nama);
             this.supplier.append('alamat', this.form.alamat);
             this.supplier.append('notelp', this.form.notelp);
-            var uri =this.$apiUrl + '/supplier'
-            this.load = true
+            var uri = "http://kouvee.xbanana.id/api/supplier"
             this.$http.post(uri,this.supplier).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data supplier
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
+
 
         updateData(){
             this.supplier.append('nama', this.form.nama);
@@ -252,10 +238,13 @@ export default {
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/supplier/' + deleteId;
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.id/api/supplier/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text = response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -265,7 +254,7 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
+        },
     
         setForm(){
             if (this.typeInput === 'new') {

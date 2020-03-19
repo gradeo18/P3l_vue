@@ -169,8 +169,11 @@ export default {
           var uri = "http://kouvee.xbanana.id/api/ukuran_hewan"
           this.$http.post(uri,this.ukuran).then(response =>{
             this.snackbar = true; 
+            this.text = response.data.message;
             this.text = 'Berhasil'; 
             this.color = 'green';
+            this.dialog =false;
+            this.getData();
         }).catch(error =>{ 
             this.errors = error; 
             this.snackbar = true; 
@@ -183,35 +186,39 @@ export default {
             this.ukuran.append('nama', this.form.nama);
             var uri = "http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId;
             this.load = true
-            this.$http.put(uri,this.ukuran).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
+            this.$http.post(uri,this.ukuran).then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
                 this.text = 'Berhasil'; 
                 this.load = false;
                 this.dialog = false;
                 this.getData(); 
                 this.resetForm();
-                this.typeInput = 'new';
+                this.typeInput = 'dddd';
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
             this.text = 'Try Again';
             this.color = 'red';
             this.load = false;
-            this.typeInput = 'new';
-        })
-    },
+            this.typeInput = 'dddd';
+            })
+        },
 
         editHandler(item){
             this.typeInput = 'edit';
             this.form.nama = item.nama;
             this.updatedId = item.idukuran;
             this.dialog = true;
-    },
+        },
 
         deleteData(deleteId){
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox)
             var uri="http://kouvee.xbanana.id/api/ukuran_hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
+                this.text = response.data.message;
                 this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;

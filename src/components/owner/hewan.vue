@@ -39,8 +39,10 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idhewan }}</td>
                             <td>{{ item.nama}}</td>
+                            <td>{{ item.tgllahir}}</td>
                             <td>{{ item.idjenis}}</td>
                             <td>{{ item.idukuran}}</td>
+                            <td>{{ item.idcustomer}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
@@ -57,7 +59,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idhewan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -70,7 +72,7 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Hewan</span>
+            <span class="headline">Hewan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -79,10 +81,16 @@
                         <v-text-field label="Nama Hewan*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
+                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Ukuran Hewan*" v-model="form.idukuran" required></v-text-field>
+                        <v-text-field label="ID Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="ID Ukuran Hewan*" v-model="form.idukuran" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="ID Customer*" v-model="form.idcustomer" required></v-text-field>
                     </v-col>
                     
                 </v-row>
@@ -148,6 +156,10 @@ export default {
                     value: 'idukuran',
                     },
                     {
+                    text: 'ID Customer',
+                    value: 'idcustomer',
+                    },
+                    {
                     text: 'Created At',
                     value: 'created_at',
                     },
@@ -189,28 +201,26 @@ export default {
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+            this.hewan.append('nama', this.form.nama);
+            this.hewan.append('tgllahir', this.form.tgllahir);
+            this.hewan.append('idjenis', this.form.idjenis);
+            this.hewan.append('idukuran', this.form.idukuran);
+            this.hewan.append('idcustomer', this.form.idcustomer);
+            var uri = "http://kouvee.xbanana.id/api/hewan"
+            this.$http.post(uri,this.hewan).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
 
         updateData(){
             this.sparepart.append('name', this.form.name);
@@ -247,10 +257,13 @@ export default {
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox){
+            var uri="http://kouvee.xbanana.id/api/hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text = response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -260,7 +273,8 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
+            }
+        },
     
         setForm(){
             if (this.typeInput === 'new') {

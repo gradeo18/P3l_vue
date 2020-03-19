@@ -39,10 +39,12 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idpegawai }}</td>
                             <td>{{ item.nama}}</td>
+                            <td>{{ item.tgllahir}}</td>
                             <td>{{ item.noTelp}}</td>
                             <td>{{ item.alamat}}</td>
-                            <td>{{ item.tgllahir}}</td>
                             <td>{{ item.role}}</td>
+                            <td>{{ item.username}}</td>
+                            <td>{{ item.password}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
@@ -59,7 +61,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idpegawai)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -91,6 +93,12 @@
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Role*" v-model="form.role" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Username*" v-model="form.username" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field :type="'password'" label="Password*" v-model="form.password" required></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -143,6 +151,10 @@ export default {
                     value: 'nama'
                     },
                     {
+                    text: 'Tanggal Lahir',
+                    value: 'tgllahir',
+                    },
+                    {
                     text: 'Nomor Telepon',
                     value: 'noTelp'
                     },
@@ -155,8 +167,12 @@ export default {
                     value: 'role',
                     },
                     {
-                    text: 'Tanggal Lahir',
-                    value: 'tgllahir',
+                    text: 'Username',
+                    value: 'username',
+                    },
+                    {
+                    text: 'Password',
+                    value: 'password',
                     },
                     {
                     text: 'Created At',
@@ -201,28 +217,29 @@ export default {
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+            this.pegawai.append('nama', this.form.nama);
+            this.pegawai.append('notelp', this.form.noTelp);
+            this.pegawai.append('alamat', this.form.alamat);
+            this.pegawai.append('tgllahir', this.form.tgllahir);
+            this.pegawai.append('role', this.form.role);
+            this.pegawai.append('username', this.form.username);
+            this.pegawai.append('password', this.form.password);
+            var uri = "http://kouvee.xbanana.id/api/pegawai"
+            this.$http.post(uri,this.pegawai).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
+
 
         updateData(){
             this.sparepart.append('name', this.form.name);
@@ -261,10 +278,13 @@ export default {
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.id/api/pegawai/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text = response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -274,7 +294,8 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
+        },
+    
     
         setForm(){
             if (this.typeInput === 'new') {
@@ -286,10 +307,11 @@ export default {
 
         resetForm(){
             this.form = {
-                name : '',
-                merek : '',
-                amount : '',
-            
+                nama : '',
+                notelp : '',
+                alamat : '',
+                role : '',
+                tgllahir : '',
             }
         }
     },

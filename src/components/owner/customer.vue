@@ -39,9 +39,9 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idcustomer }}</td>
                             <td>{{ item.nama}}</td>
+                            <td>{{ item.tgllahir}}</td>
                             <td>{{ item.notelp}}</td>
                             <td>{{ item.alamat}}</td>
-                            <td>{{ item.tgllahir}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
@@ -58,7 +58,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idcustomer)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -71,7 +71,7 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Customer</span>
+            <span class="headline">Customer</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -80,15 +80,14 @@
                         <v-text-field label="Nama Customer*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
+                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
                         <v-text-field label="No.Telp*" v-model="form.notelp" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field>
                     </v-col>
-                    <v-col cols="12">
-                        <v-text-field label="Tanggal Lahir*" v-model="form.tgllahir" required></v-text-field>
-                    </v-col>
-                    
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -140,16 +139,16 @@ export default {
                     value: 'nama'
                     },
                     {
+                    text: 'Tanggal Lahir',
+                    value: 'tgllahir',
+                    },
+                    {
                     text: 'Nomor Telepon',
                     value: 'notelp'
                     },
                     {
                     text: 'Alamat',
                     value: 'alamat',
-                    },
-                    {
-                    text: 'Tanggal Lahir',
-                    value: 'tgllahir',
                     },
                     {
                     text: 'Created At',
@@ -193,28 +192,25 @@ export default {
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+            this.customer.append('nama', this.form.nama);
+            this.customer.append('tgllahir', this.form.tgllahir);
+            this.customer.append('alamat', this.form.alamat);
+            this.customer.append('notelp', this.form.notelp);
+            var uri = "http://kouvee.xbanana.id/api/customer"
+            this.$http.post(uri,this.customer).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
 
         updateData(){
             this.sparepart.append('name', this.form.name);
@@ -252,10 +248,13 @@ export default {
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox){
+            var uri="http://kouvee.xbanana.id/api/customer/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text = response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -265,7 +264,8 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
+            }
+        },
     
         setForm(){
             if (this.typeInput === 'new') {
@@ -277,10 +277,10 @@ export default {
 
         resetForm(){
             this.form = {
-                name : '',
-                merek : '',
-                amount : '',
-            
+                nama : '',
+                alamat : '',
+                notelp : '',
+                tgllahir : '',
             }
         }
     },

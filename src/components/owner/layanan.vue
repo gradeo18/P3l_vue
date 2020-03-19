@@ -56,7 +56,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idlayanan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -175,28 +175,23 @@ export default {
         },
 
         sendData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-    
-            var uri =this.$apiUrl + '/sparepart'
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar
-                this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
-                this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
-                this.resetForm();
-            }).catch(error =>{
-                this.errors = error
-                this.snackbar = true;
-                this.text = 'Try Again';
-                this.color = 'red';
-                this.load = false;
+            this.layanan.append('nama', this.form.nama);
+            this.layanan.append('harga', this.form.harga);
+            var uri = "http://kouvee.xbanana.id/api/layanan"
+            this.$http.post(uri,this.layanan).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
+        }).catch(error =>{ 
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Try Again'; 
+            this.color = 'red';
         })
-    },
+        },
 
         updateData(){
             this.sparepart.append('name', this.form.name);
@@ -232,10 +227,13 @@ export default {
     },
 
         deleteData(deleteId){
-            var uri=this.$apiUrl + '/sparepart/' + deleteId;
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.id/api/layanan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
-                this.text=response.data.message;
+                this.text = response.data.message;
+                this.text="Berhasil";
                 this.color='green'
                 this.deleteDialog=false;
                 this.getData();
@@ -245,8 +243,8 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-    },
-    
+        },
+
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()

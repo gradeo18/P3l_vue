@@ -59,7 +59,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.id)"
+                                @click="deleteData(item.idproduk)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -201,18 +201,21 @@ export default {
         },
 
         sendData(){
-          this.produk.append('gambar',this.gambar);
-          this.produk.append('nama',this.nama);
-          this.produk.append('harga',this.harga);
-          this.produk.append('stok',this.stok);
-          this.produk.append('stokminimum',this.stokminimum);
-          var uri = "http://kouvee.xbanana.id/api/produk"
-          this.$http.post(uri,this.produk).then(response =>{
-            this.snackbar = true; 
-            this.text = response.data.message;
-            this.color = 'green'
+            this.produk.append('gambar', this.form.gambar);
+            this.produk.append('nama', this.form.nama);
+            this.produk.append('harga', this.form.harga);
+            this.produk.append('stok', this.form.stok);
+            this.produk.append('stokminimum', this.form.stokminimum);
+            var uri = "http://kouvee.xbanana.id/api/produk"
+            this.$http.post(uri,this.produk).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
         }).catch(error =>{ 
-            this.errors = error 
+            this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
             this.color = 'red';
@@ -233,9 +236,24 @@ export default {
             this.updatedId = item.idproduk
     },
 
-        deleteData(){
-    
-    },
+        deleteData(deleteId){
+            const confirmBox = confirm("Are you sure want remove?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.id/api/produk/"+deleteId;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
+                this.text = response.data.message;
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getData();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Try Again';
+                    this.color='red';
+                })
+        },
     
         setForm(){
             if (this.typeInput === 'new') {
