@@ -37,8 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <!-- <td><img :src="'/produk/gambar/'+ item.gambar" width="100px"></td> -->
-                            <td>{{ item.gambar }}</td>
+                            <td><img :src="'/img/gambar/'+ item.gambar" width="100px"></td>
                             <td>{{ item.idproduk }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
@@ -78,10 +77,10 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <label for="gambar">Gambar Produk*</label>
                         <v-text-field v-model="form.gambar" required></v-text-field>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12">
                         <label for="gambar">Nama Produk*</label>
                         <v-text-field v-model="form.nama" required></v-text-field>
@@ -98,12 +97,12 @@
                         <label for="gambar">Stok Minimum*</label>
                         <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12">
-                        <label for="gambar">Gambar Produk</label>
-                    </v-col>
+                    <div class="form-group">
                     <v-col cols="12">
+                        <label for="gambar">Gambar Produk : </label>
                         <input type="file" class="form-control" @change="produkChange">
-                    </v-col> -->
+                    </v-col>
+                    </div>
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -202,6 +201,15 @@ export default {
         }
     },
     methods:{
+         produkChange(e){
+            var fileReader = new FileReader()
+            console.log(e)
+            fileReader.readAsDataURL(e.target.files[0])
+            fileReader.onload = (e) => {
+                this.form.gambar = e.target.result
+            }
+        },
+
         getData(){
             axios.get("http://kouvee.xbanana.id/api/produk")
             .then(
@@ -220,6 +228,7 @@ export default {
             this.produk.append('stokminimum', this.form.stokminimum);
             var uri = "http://kouvee.xbanana.id/api/produk"
             this.$http.post(uri,this.produk).then(response =>{
+                console.log(response)
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -308,14 +317,6 @@ export default {
             }
         }
         },
-
-        // produkChange(e){
-        //     var fileReader = new FileReader()
-        //     fileReader.readAsDataURL(e.target.files[0])
-        //     fileReader.onload=(e) => {
-        //         this.item.gambar = e.target.result
-        //     }
-        // },
 
         mounted(){
             this.getData();

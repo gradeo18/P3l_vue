@@ -95,7 +95,7 @@
                 
                 <template v-slot:append>
                     <div class="pa-2">
-                        <v-btn block>Logout</v-btn>
+                        <v-btn block @click="logout">Logout</v-btn>
                     </div>
                 </template>
                 </v-navigation-drawer>
@@ -136,5 +136,13 @@
                     ],
                 }
             },
+            methods:{
+            logout(){
+                this.$session.clear('dataPegawai');
+                this.$router.push({
+                path: "/"
+              });
+            }
         }
+    }    
     </script>

@@ -2,15 +2,41 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 const DashboardLayout = () => import(/* webpackChunkName: "dashboard" */ '../components/dashboardLayout.vue')
+const DashboardCS = () => import(/* webpackChunkName: "dashboard" */ '../components/dashboardCS.vue')
+const HomePageLayout = () => import('../components/homePageLayout.vue')
 
 function ownerView(view) {
     return () => import(/* webpackChunkName: "view-[request]" */ `../components/owner/${view}.vue`) 
 }
 
+function loadHomePage(view){
+    return () => import(`../components/home/${view}.vue`)
+}
+
 const routes = [
 {
-
-path: '/',
+    path: '/',
+    component: HomePageLayout,
+    children: [
+    {
+        path: '/',
+        name: 'home',
+        component: loadHomePage('home')
+    }, 
+    {
+        path: '/aboutUs',
+        name: 'aboutUs',
+        component: loadHomePage('aboutUsLayout')
+    }, 
+    {
+        path: '/signDual',
+        name: 'signDual',
+        component: loadHomePage('signDual')
+    }
+    ]
+},
+{
+path: '/dashboardOwner',
 component: DashboardLayout,
 children: [
     {
@@ -53,6 +79,13 @@ children: [
         path: '/jenishewan',
         component: ownerView('jenishewan')   
     },
+    
+]
+},
+{
+path: '/dashboardCS',
+component: DashboardCS,
+children: [
     
 ]
 },
