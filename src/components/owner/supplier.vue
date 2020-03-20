@@ -203,28 +203,30 @@ export default {
         },
 
 
-        updateData(){
-            this.supplier.append('nama', this.form.nama);
-            this.supplier.append('alamat', this.form.alamat);
-            this.supplier.append('notelp', this.form.notelp);
-            var uri = this.$apiUrl + '/supplier/' + this.updatedId;
-            this.load = true
-            this.$http.post(uri,this.supplier).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
+        updateData(){      
+            axios.put("http://kouvee.xbanana.id/api/supplier/" + this.updatedId,{
+                nama: this.form.nama,
+                alamat: this.form.alamat,
+                notelp: this.form.notelp
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
                 this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data supplier
+                this.dialog = false;
+                this.getData(); 
                 this.resetForm();
-                this.typeInput = 'new';
+                this.typeInput = 'dddd';
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
             this.text = 'Try Again';
             this.color = 'red';
             this.load = false;
-            this.typeInput = 'new';
-        })
+            this.typeInput = 'dddd';
+            })
         },
 
         editHandler(item){

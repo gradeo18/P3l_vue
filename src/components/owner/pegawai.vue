@@ -167,7 +167,7 @@ export default {
                     },
                     {
                     text: 'ID Pegawai',
-                    value: 'idPegawai'
+                    value: 'idpegawai'
                     },
                     {
                     text: 'Nama Pegawai',
@@ -264,30 +264,36 @@ export default {
         },
 
 
-        updateData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-
-            var uri = this.$apiUrl + '/sparepart/' + this.updatedId;
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
+        updateData(){      
+            axios.put("http://kouvee.xbanana.id/api/pegawai/" + this.updatedId,{
+                nama: this.form.nama,
+                notelp: this.form.noTelp,
+                alamat: this.form.alamat,
+                tgllahir: this.form.tgllahir,
+                role: this.form.role,
+                username: this.form.username,
+                password: this.form.password,
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
                 this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.dialog = false;
+                this.getData(); 
                 this.resetForm();
-                this.typeInput = 'new';
+                this.typeInput = 'dddd';
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
             this.text = 'Try Again';
             this.color = 'red';
             this.load = false;
-            this.typeInput = 'new';
-        })
+            this.typeInput = 'dddd';
+            })
         },
+
 
         editHandler(item){
             this.typeInput = 'edit';
@@ -297,7 +303,7 @@ export default {
             this.form.alamat = item.alamat;
             this.form.role = item.role;
             this.form.tgllahir = item.tgllahir;
-            this.updatedId = item.id
+            this.updatedId = item.idpegawai;
         },
 
         deleteData(deleteId){

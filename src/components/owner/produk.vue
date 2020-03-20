@@ -234,8 +234,32 @@ export default {
         })
         },
 
-        updateData(){
-           
+        updateData(){      
+            axios.put("http://kouvee.xbanana.id/api/produk/" + this.updatedId,{
+                gambar: this.form.gambar,
+                nama: this.form.nama,
+                harga: this.form.harga,
+                stok: this.form.stok,
+                stokminimum: this.form.stokminimum
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.dialog = false;
+                this.getData(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Try Again';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
         },
 
         editHandler(item){

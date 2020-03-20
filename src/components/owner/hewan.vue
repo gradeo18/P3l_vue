@@ -240,29 +240,32 @@ export default {
         })
         },
 
-        updateData(){
-            this.sparepart.append('name', this.form.name);
-            this.sparepart.append('merk', this.form.merk);
-            this.sparepart.append('amount', this.form.amount);
-
-            var uri = this.$apiUrl + '/sparepart/' + this.updatedId;
-            this.load = true
-            this.$http.post(uri,this.sparepart).then(response =>{
-                this.snackbar = true; //mengaktifkan snackbar this.color = 'green'; //memberi warna snackbar
-                this.text = response.data.message; //memasukkan pesan ke snackbar
+        updateData(){      
+            axios.put("http://kouvee.xbanana.id/api/hewan/" + this.updatedId,{
+                nama: this.form.nama,
+                tgllahir: this.form.tgllahir,
+                idjenis: this.form.idjenis,
+                idukuran: this.form.idukuran,
+                idcustomer: this.form.idcustomer
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
                 this.load = false;
-                this.dialog = false
-                this.getData(); //mengambil data sparepart
+                this.dialog = false;
+                this.getData(); 
                 this.resetForm();
-                this.typeInput = 'new';
+                this.typeInput = 'dddd';
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
             this.text = 'Try Again';
             this.color = 'red';
             this.load = false;
-            this.typeInput = 'new';
-        })
+            this.typeInput = 'dddd';
+            })
         },
 
         editHandler(item){
@@ -272,7 +275,8 @@ export default {
             this.form.tgllahir = item.tgllahir;
             this.form.idjenis = item.idjenis;
             this.form.idukuran = item.idukuran;
-            this.updatedId = item.id
+            this.form.idcustomer = item.idcustomer;
+            this.updatedId = item.idhewan;
         },
 
         deleteData(deleteId){

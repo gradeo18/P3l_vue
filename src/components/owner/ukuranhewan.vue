@@ -187,14 +187,15 @@ export default {
         })
         },
 
-        updateData(){
-            this.ukuran.append('nama', this.form.nama);
-            var uri = "http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId;
-            this.load = true
-            this.$http.put(uri,this.ukuran).then(response =>{     
+        updateData(){      
+            axios.put("http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId,{
+                nama: this.form.nama
+            })
+            .then(response =>{     
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
+                this.color = 'green';
                 this.load = false;
                 this.dialog = false;
                 this.getData(); 
@@ -210,6 +211,7 @@ export default {
             })
         },
 
+        
         editHandler(item){
             this.typeInput = 'edit';
             this.form.nama = item.nama;
