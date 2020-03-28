@@ -37,8 +37,8 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <img :src="'http://kouvee.xbanana.id/uploads/produk/' +item.gambar" alt="Image Gagal Di load" width="100px" height="100px" />
-                            <td>{{ item.idproduk }}</td>
+                            <img :src="'http://kouvee.xbanana.id/uploads/produk/' +item.gambar" alt="Image Gagal di Load"  width="80px" height="80px" />
+                            <td>{{ item.idproduk}}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
                             <td>{{ item.stok}}</td>
@@ -70,6 +70,40 @@
             </v-data-table>
         </v-container>
     </v-card>
+    <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Produk</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                <v-row>
+                    <v-col cols="12">
+                        <label for="gambar">Nama Produk*</label>
+                        <v-text-field v-model="form.nama" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="gambar">Harga*</label>
+                        <v-text-field v-model="form.harga" required></v-text-field> 
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="gambar">Stok*</label>
+                        <v-text-field v-model="form.stok" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="gambar">Stok Minimum*</label>
+                        <v-text-field v-model="form.stokminimum" required></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Produk</span>
@@ -77,10 +111,6 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <!-- <v-col cols="12">
-                        <label for="gambar">Gambar Produk*</label>
-                        <v-text-field v-model="form.gambar" required></v-text-field>
-                    </v-col> -->
                     <v-col cols="12">
                         <label for="gambar">Nama Produk*</label>
                         <v-text-field v-model="form.nama" required></v-text-field>
@@ -112,8 +142,9 @@
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
-    </v-card>
-</v-dialog>
+        </v-card>
+    </v-dialog>
+
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -138,6 +169,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
+            dialogEdit: false,
             dialog: false,
             keyword: '',
             headers: [
@@ -201,14 +233,10 @@ export default {
         }
     },
     methods:{
-        produkChange(e){
-            console.log(e.target.files[0])
-            var fileReader = new FileReader()
-            console.log(e)
-            fileReader.readAsDataURL(e.target.files[0])
-            fileReader.onload = (e) => {
-                this.form.gambar = e.target.result;
-            }
+        produkChange(event){
+            console.log(event.target.files[0])
+            console.log(event)
+            this.form.gambar = event.target.files[0];
             console.log(this.form)
         },
 
@@ -224,11 +252,11 @@ export default {
         },
 
         sendData(){
+            this.produk.append('gambar', this.form.gambar);
             this.produk.append('nama', this.form.nama);
             this.produk.append('harga', this.form.harga);
             this.produk.append('stok', this.form.stok);
             this.produk.append('stokminimum', this.form.stokminimum);
-            this.produk.append('gambar', this.form.gambar);
             var uri = "http://kouvee.xbanana.id/api/produk"
             this.$http.post(uri,this.produk).then(response =>{
                 console.log(response)
@@ -260,7 +288,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialog = false;
+                this.dialogEdit = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -276,7 +304,8 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialog = true;
+            this.dialogEdit = true;
+            this.form.gambar = item.gambar;
             this.form.nama = item.nama;
             this.form.harga = item.harga;
             this.form.stok = item.stok;
