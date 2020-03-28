@@ -37,7 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td><img src="/uploads/produk/' + item.gambar" width="100px"></td>
+                            <img :src="'http://kouvee.xbanana.id/uploads/produk/' +item.gambar" alt="Image Gagal Di load" width="100px" height="100px" />
                             <td>{{ item.idproduk }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
