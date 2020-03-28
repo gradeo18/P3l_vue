@@ -4,14 +4,15 @@
       <div class="overlay-container">
         <div class="overlay">
           <div class="overlay-right">
-            <div class="display-2">WELCOME BACK!</div>
           </div>
         </div>
       </div>
+      
       <form class="sign-in">
+        <span class="headline">LOGIN</span>
           <v-text-field type="username" placeholder="Username Account" v-model="form.username" required></v-text-field>
           <v-text-field type="password" placeholder="Password Account" v-model="form.password" required></v-text-field>
-        <v-btn color="#81948c" @click="signIn()">Log In</v-btn>
+        <v-btn color="green" @click="signIn()">Log In</v-btn>
       </form>
     </div>
     <v-snackbar 
@@ -72,7 +73,7 @@ export default {
           if (this.errorType == true) {
             this.snackbar = true;
             this.text = "Username/Password Salah";
-            this.color = 'gray';
+            this.color = 'red';
             this.load = false;
           }
           else 
@@ -96,8 +97,8 @@ export default {
         }).catch(error =>{ 
             this.errors = error;
             this.snackbar = true;
-            this.text = "User Not Found";
-            this.color = 'gray';
+            this.text = "Username/Password Salah";
+            this.color = 'red';
             this.load = false;
       });
     },
@@ -120,8 +121,7 @@ export default {
   .container {
     max-width: none;
     position: relative;
-    height: 620px;
-    border-radius: 10px;
+    height: 593px;
     overflow: hidden;
     box-shadow: 0 15px 30px rgba(0, 0, 0, .2),
                 0 10px 10px rgba(0, 0, 0, .2);
@@ -142,7 +142,7 @@ export default {
       left: -100%;
       height: 100%;
       width: 200%;
-      background: linear-gradient(to bottom right, #a4b0ab, #5CA2A5);
+      background: linear-gradient(to bottom right, #a4b0ab, black);
       color: #fff;
       transform: translateX(0);
       transition: transform .5s ease-in-out;
@@ -212,30 +212,20 @@ export default {
     width: 50%;
     height: 100%;
     text-align: center;
-    background: linear-gradient(to bottom, #efefef, #ccc);
+    background: linear-gradient(to bottom, white, white);
     transition: all .5s ease-in-out;
   }
 
   .v-text-field {
       flex: none;
-    
       border: 10px;
-     
-      width: calc(100% - 20px);
-      border-radius: 15px;
-      border-bottom: 1px solid #ddd;
-     
+      width: calc(60%);
       overflow: hidden;
     }
   
   .sign-in {
     left: 0;
     z-index: 1;
-  }
-  .sign-up {
-    left: 0;
-    z-index: 1;
-    opacity: 0;
   }
   @keyframes show {
     0% {

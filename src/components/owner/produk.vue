@@ -37,7 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td><img :src="'/img/gambar/'+ item.gambar" width="100px"></td>
+                            <td><img src="/uploads/produk/' + item.gambar" width="100px"></td>
                             <td>{{ item.idproduk }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
@@ -100,7 +100,7 @@
                     <div class="form-group">
                     <v-col cols="12">
                         <label for="gambar">Gambar Produk : </label>
-                        <input type="file" class="form-control" @change="produkChange">
+                        <input required type="file" class="form-control" @change="produkChange">
                     </v-col>
                     </div>
                 </v-row>
@@ -201,14 +201,17 @@ export default {
         }
     },
     methods:{
-         produkChange(e){
+        produkChange(e){
+            console.log(e.target.files[0])
             var fileReader = new FileReader()
             console.log(e)
             fileReader.readAsDataURL(e.target.files[0])
             fileReader.onload = (e) => {
-                this.form.gambar = e.target.result
+                this.form.gambar = e.target.result;
             }
+            console.log(this.form)
         },
+
 
         getData(){
             axios.get("http://kouvee.xbanana.id/api/produk")
@@ -221,11 +224,11 @@ export default {
         },
 
         sendData(){
-            this.produk.append('gambar', this.form.gambar);
             this.produk.append('nama', this.form.nama);
             this.produk.append('harga', this.form.harga);
             this.produk.append('stok', this.form.stok);
             this.produk.append('stokminimum', this.form.stokminimum);
+            this.produk.append('gambar', this.form.gambar);
             var uri = "http://kouvee.xbanana.id/api/produk"
             this.$http.post(uri,this.produk).then(response =>{
                 console.log(response)
@@ -278,7 +281,7 @@ export default {
             this.form.harga = item.harga;
             this.form.stok = item.stok;
             this.form.stokminimum = item.stokminimum;
-            this.updatedId = item.idproduk
+            this.updatedId = item.idproduk;
         },
 
         deleteData(deleteId){
@@ -314,6 +317,7 @@ export default {
                 harga : '',
                 stok : '',
                 stokminimum : '',
+                gambar: '',
             }
         }
         },

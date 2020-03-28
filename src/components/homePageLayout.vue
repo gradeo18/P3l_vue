@@ -1,9 +1,9 @@
 <template>
     <v-app>
-      <v-app-bar app color="#9eb5ab" class="white--text" height="75">
-        <v-toolbar-items>
-          <v-img :src="images" height="70px" width="50px"></v-img>
-        </v-toolbar-items>
+      <v-app-bar app color="black" class="white--text" height="70">
+         <v-app-bar-nav-icon>
+          <v-img :src="images" style="height:55px;width:55px"></v-img>
+         </v-app-bar-nav-icon>
         <v-toolbar-title class="font-weight-medium display-0">
           <span class="ml-5">Kouvee Pet Shop</span>
         </v-toolbar-title>
