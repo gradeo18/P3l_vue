@@ -200,7 +200,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/customer")
+            axios.get("http://kouvee.xbanana.my.id/api/customer")
             .then(
                 response => {this.customers = response.data},
             )
@@ -214,7 +214,7 @@ export default {
             this.customer.append('tgllahir', this.form.tgllahir);
             this.customer.append('alamat', this.form.alamat);
             this.customer.append('notelp', this.form.notelp);
-            var uri = "http://kouvee.xbanana.id/api/customer"
+            var uri = "http://kouvee.xbanana.my.id/api/customer"
             this.$http.post(uri,this.customer).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -231,7 +231,7 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/customer/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/customer/" + this.updatedId,{
                 nama: this.form.nama,
                 tgllahir: this.form.tgllahir,
                 alamat: this.form.alamat,
@@ -270,7 +270,7 @@ export default {
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox){
-            var uri="http://kouvee.xbanana.id/api/customer/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/customer/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

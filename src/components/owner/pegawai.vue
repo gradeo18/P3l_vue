@@ -230,7 +230,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/pegawai")
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
             .then(
                 response => {this.pegawais = response.data},
             )
@@ -247,7 +247,7 @@ export default {
             this.pegawai.append('role', this.form.role);
             this.pegawai.append('username', this.form.username);
             this.pegawai.append('password', this.form.password);
-            var uri = "http://kouvee.xbanana.id/api/pegawai"
+            var uri = "http://kouvee.xbanana.my.id/api/pegawai"
             this.$http.post(uri,this.pegawai).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -265,7 +265,7 @@ export default {
 
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/pegawai/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/pegawai/" + this.updatedId,{
                 nama: this.form.nama,
                 notelp: this.form.noTelp,
                 alamat: this.form.alamat,
@@ -309,7 +309,7 @@ export default {
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/pegawai/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/pegawai/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

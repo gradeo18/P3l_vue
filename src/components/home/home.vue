@@ -15,7 +15,7 @@
                                 <v-card>
                                     <v-img
                                     height="250"
-                                    :src="'http://kouvee.xbanana.id/uploads/produk/' +item.gambar"
+                                    :src="'http://kouvee.xbanana.my.id/uploads/produk/' +item.gambar"
                                     ></v-img>
 
                                     <v-card-title>{{item.nama}}</v-card-title>
@@ -49,13 +49,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data: ()=>({
         produks: []
     }),
     methods: {
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/produk")
+            axios.get("http://kouvee.xbanana.my.id/api/produk")
             .then(
                 response => {this.produks = response.data},
             )

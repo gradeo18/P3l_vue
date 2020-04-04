@@ -160,7 +160,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/ukuran_hewan")
+            axios.get("http://kouvee.xbanana.my.id/api/ukuran_hewan")
             .then(
                 response => {this.ukurans = response.data},
             )
@@ -171,7 +171,7 @@ export default {
 
         sendData(){
           this.ukuran.append('nama',this.form.nama);
-          var uri = "http://kouvee.xbanana.id/api/ukuran_hewan"
+          var uri = "http://kouvee.xbanana.my.id/api/ukuran_hewan"
           this.$http.post(uri,this.ukuran).then(response =>{
             this.snackbar = true; 
             this.text = response.data.message;
@@ -188,7 +188,7 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/ukuran_hewan/" + this.updatedId,{
                 nama: this.form.nama
             })
             .then(response =>{     
@@ -222,7 +222,7 @@ export default {
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/ukuran_hewan/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/ukuran_hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

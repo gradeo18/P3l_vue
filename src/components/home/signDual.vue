@@ -53,7 +53,7 @@ export default {
 
   methods: {
     getData() {
-      axios.get("http://kouvee.xbanana.id/api/pegawai")
+      axios.get("http://kouvee.xbanana.my.id/api/pegawai")
       .then(
         response => {this.pegawais = response.data},
       )
@@ -63,7 +63,7 @@ export default {
     },
 
     signIn() {
-        var uri = "http://kouvee.xbanana.id/api/pegawai/login"
+        var uri = "http://kouvee.xbanana.my.id/api/pegawai/login"
         this.pegawai = new FormData();
         this.pegawai.append('username',this.form.username);
         this.pegawai.append('password',this.form.password);
