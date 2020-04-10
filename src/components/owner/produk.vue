@@ -37,7 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <img :src="'http://kouvee.xbanana.my.id/uploads/produk/' +item.gambar" alt="Image Gagal di Load"  width="80px" height="80px" />
+                            <img :src="'http://kouvee.xbanana.id/uploads/produk/' +item.gambar" alt="Image Gagal di Load"  width="80px" height="80px" />
                             <td>{{ item.idproduk}}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.harga}}</td>
@@ -46,6 +46,7 @@
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
+                            <td>{{ item.aktor}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -211,8 +212,12 @@ export default {
                     },
                     {
                     text: 'Deleted At',
-                    value: 'deleted_at'
-                    },    
+                    value: 'deleted_at',
+                    },
+                    {
+                    text: 'Aktor',
+                    value: 'aktor',    
+                    }    
             ],
             produks: [],
             snackbar: false,
@@ -242,7 +247,7 @@ export default {
 
 
         getData(){
-            axios.get("http://kouvee.xbanana.my.id/api/produk")
+            axios.get("http://kouvee.xbanana.id/api/produk")
             .then(
                 response => {this.produks = response.data},
             )
@@ -257,7 +262,8 @@ export default {
             this.produk.append('harga', this.form.harga);
             this.produk.append('stok', this.form.stok);
             this.produk.append('stokminimum', this.form.stokminimum);
-            var uri = "http://kouvee.xbanana.my.id/api/produk"
+            this.produk.append('aktor', this.form.aktor);
+            var uri = "http://kouvee.xbanana.id/api/produk"
             this.$http.post(uri,this.produk).then(response =>{
                 console.log(response)
                 this.snackbar = true; 
@@ -275,12 +281,13 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/produk/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.id/api/produk/" + this.updatedId,{
                 gambar: this.form.gambar,
                 nama: this.form.nama,
                 harga: this.form.harga,
                 stok: this.form.stok,
-                stokminimum: this.form.stokminimum
+                stokminimum: this.form.stokminimum,
+                aktor: this.form.aktor,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -311,12 +318,13 @@ export default {
             this.form.stok = item.stok;
             this.form.stokminimum = item.stokminimum;
             this.updatedId = item.idproduk;
+            this.aktor = item.aktor;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/produk/"+deleteId;
+            var uri="http://kouvee.xbanana.id/api/produk/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

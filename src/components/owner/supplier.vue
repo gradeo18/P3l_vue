@@ -44,6 +44,7 @@
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
                             <td>{{ item.deleted_at}}</td>
+                            <td>{{ item.aktor}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -152,8 +153,12 @@ export default {
                     },
                     {
                     text: 'Deleted At',
-                    value: 'deleted_at'
-                    },   
+                    value: 'deleted_at',
+                    },
+                    {
+                    text: 'Aktor',
+                    value: 'aktor',
+                    },    
             ],
             suppliers: [],
             snackbar: false,
@@ -173,7 +178,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+            axios.get("http://kouvee.xbanana.id/api/supplier")
             .then(
                 response => {this.suppliers = response.data},
             )
@@ -186,7 +191,8 @@ export default {
             this.supplier.append('nama', this.form.nama);
             this.supplier.append('alamat', this.form.alamat);
             this.supplier.append('notelp', this.form.notelp);
-            var uri = "http://kouvee.xbanana.my.id/api/supplier"
+            this.supplier.append('aktor', this.form.aktor);
+            var uri = "http://kouvee.xbanana.id/api/supplier"
             this.$http.post(uri,this.supplier).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -204,10 +210,11 @@ export default {
 
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/supplier/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.id/api/supplier/" + this.updatedId,{
                 nama: this.form.nama,
                 alamat: this.form.alamat,
-                notelp: this.form.notelp
+                notelp: this.form.notelp,
+                aktor: this.form.aktor,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -235,13 +242,14 @@ export default {
             this.form.nama = item.nama;
             this.form.alamat = item.alamat;
             this.form.notelp = item.notelp;
-            this.updatedId = item.idsupplier
+            this.updatedId = item.idsupplier;
+            this.aktor = item.aktor;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/supplier/"+deleteId;
+            var uri="http://kouvee.xbanana.id/api/supplier/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
