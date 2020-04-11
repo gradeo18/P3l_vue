@@ -192,10 +192,10 @@ export default {
             text: '',
             load: false,
             form: {
-                name : '',
-                merk : '',
-                amount : '',
-        
+                nama : '',
+                tgllahir : '',
+                notelp : '',
+                alamat : '',
             },
             customer : new FormData,
             typeInput: 'new',

@@ -95,6 +95,14 @@
                         <label for="gambar">Stok Minimum*</label>
                         <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="suppliers"
+                            v-model="form.idsupplier"
+                            label="Supplier"
+                            item-text="nama">
+                        </v-select>
+                    </v-col>>
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -130,8 +138,12 @@
                         <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <label for="supplier">Supplier*</label>
-                        <v-text-field v-model="form.idsupplier" required></v-text-field>
+                        <v-select 
+                            :items="suppliers"
+                            v-model="form.idsupplier"
+                            label="Supplier"
+                            item-text="nama">
+                        </v-select>
                     </v-col>
                     <div class="form-group">
                     <v-col cols="12">
@@ -230,6 +242,7 @@ export default {
             ],
             produks: [],
             pegawais: [],
+            suppliers: [],
             snackbar: false,
             color: null,
             text: '',
@@ -240,6 +253,7 @@ export default {
                 harga : '',
                 stok : '',
                 stokminimum : '',
+                idsupplier : '',
             },
             produk : new FormData,
             typeInput: 'new',
@@ -266,6 +280,16 @@ export default {
             });
         },
 
+        getDataSupplier(){
+            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+            .then(
+                response => {this.suppliers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
 
         sendData(){
             this.produk.append('gambar', this.form.gambar);
@@ -277,7 +301,6 @@ export default {
             this.produk.append('aktor', this.$session.get('dataPegawai').idpegawai);
             var uri = "http://kouvee.xbanana.my.id/api/produk"
             this.$http.post(uri,this.produk).then(response =>{
-                console.log(response)
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -285,6 +308,7 @@ export default {
                 this.dialog =false;
                 this.getData();
         }).catch(error =>{ 
+            console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -299,6 +323,7 @@ export default {
                 harga: this.form.harga,
                 stok: this.form.stok,
                 stokminimum: this.form.stokminimum,
+                idsupplier: this.form.idsupplier,
                 aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
@@ -329,6 +354,7 @@ export default {
             this.form.harga = item.harga;
             this.form.stok = item.stok;
             this.form.stokminimum = item.stokminimum;
+            this.form.idsupplier= this.idsupplier,
             this.updatedId = item.idproduk;
         },
 
@@ -366,12 +392,14 @@ export default {
                 stok : '',
                 stokminimum : '',
                 gambar: '',
+                idsupplier: '',
             }
         }
         },
 
         mounted(){
             this.getData();
+            this.getDataSupplier();
         },
     }
 </script>

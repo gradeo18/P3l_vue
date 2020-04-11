@@ -179,6 +179,7 @@ export default {
           this.ukuran.append('aktor', this.$session.get('dataPegawai').idpegawai);
           var uri = "http://kouvee.xbanana.my.id/api/ukuran_hewan"
           this.$http.post(uri,this.ukuran).then(response =>{
+            console.log(this.form)
             this.snackbar = true; 
             this.text = response.data.message;
             this.text = 'Berhasil'; 
