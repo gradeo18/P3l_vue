@@ -178,7 +178,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/supplier")
+            axios.get("http://kouvee.xbanana.my.id/api/supplier")
             .then(
                 response => {this.suppliers = response.data},
             )
@@ -192,7 +192,7 @@ export default {
             this.supplier.append('alamat', this.form.alamat);
             this.supplier.append('notelp', this.form.notelp);
             this.supplier.append('aktor', this.form.aktor);
-            var uri = "http://kouvee.xbanana.id/api/supplier"
+            var uri = "http://kouvee.xbanana.my.id/api/supplier"
             this.$http.post(uri,this.supplier).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -210,11 +210,11 @@ export default {
 
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/supplier/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/supplier/" + this.updatedId,{
                 nama: this.form.nama,
                 alamat: this.form.alamat,
                 notelp: this.form.notelp,
-                aktor: this.form.aktor,
+                aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -243,13 +243,12 @@ export default {
             this.form.alamat = item.alamat;
             this.form.notelp = item.notelp;
             this.updatedId = item.idsupplier;
-            this.aktor = item.aktor;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/supplier/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/supplier/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

@@ -83,7 +83,6 @@
                     </v-col>
                     <v-col cols="12">
                         <v-menu
-                            v-model="menuDate"
                             :close-on-content-click="false"
                             :nudge-right="40"
                             transition="scale-transition"
@@ -102,16 +101,39 @@
                             <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
                         </v-menu>
                     </v-col>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <v-text-field label="ID Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
+                    </v-col> -->
+                    <v-col cols="12">
+                        <v-select 
+                            :items="jenishewans"
+                            v-model="form.idjenis"
+                            label="Jenis Hewan"
+                            item-text="nama">
+                        </v-select>
+                    </v-col>    
+                    <v-col cols="12">
+                        <v-select 
+                            :items="ukuranhewans"
+                            v-model="form.idukuran"
+                            label="Ukuran Hewan"
+                            item-text="nama">
+                        </v-select>
                     </v-col>
                     <v-col cols="12">
+                        <v-select 
+                            :items="customers"
+                            v-model="form.idcustomer"
+                            label="Customer"
+                            item-text="nama">
+                        </v-select>
+                    </v-col>
+                    <!-- <v-col cols="12">
                         <v-text-field label="ID Ukuran Hewan*" v-model="form.idukuran" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="ID Customer*" v-model="form.idcustomer" required></v-text-field>
-                    </v-col>
-                    
+                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -196,15 +218,19 @@ export default {
                     },   
             ],
             hewans: [],
+            jenishewans:[],
+            ukuranhewans: [],
+            customers: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                name : '',
-                merk : '',
-                amount : '',
-        
+                nama : '',
+                tgllahir : '',
+                idjenis : '',
+                idukuran: '',
+                idcustomer: '',
             },
             hewan : new FormData,
             typeInput: 'new',
@@ -214,9 +240,39 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/hewan")
+            axios.get("http://kouvee.xbanana.my.id/api/hewan")
             .then(
                 response => {this.hewans = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataJenisHewan(){
+            axios.get("http://kouvee.xbanana.my.id/api/jenis_hewan")
+            .then(
+                response => {this.jenishewans = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataUkuranHewan(){
+            axios.get("http://kouvee.xbanana.my.id/api/ukuran_hewan")
+            .then(
+                response => {this.ukuranhewans = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataCustomer(){
+            axios.get("http://kouvee.xbanana.my.id/api/customer")
+            .then(
+                response => {this.customers = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -229,9 +285,10 @@ export default {
             this.hewan.append('idjenis', this.form.idjenis);
             this.hewan.append('idukuran', this.form.idukuran);
             this.hewan.append('idcustomer', this.form.idcustomer);
-            this.hewan.append('aktor', this.form.aktor);
-            var uri = "http://kouvee.xbanana.id/api/hewan"
+            this.hewan.append('aktor', this.$session.get('dataPegawai').idpegawai);
+            var uri = "http://kouvee.xbanana.my.id/api/hewan"
             this.$http.post(uri,this.hewan).then(response =>{
+                console.log(this.form)
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -239,6 +296,7 @@ export default {
                 this.dialog =false;
                 this.getData();
         }).catch(error =>{ 
+            console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -247,13 +305,13 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/hewan/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/hewan/" + this.updatedId,{
                 nama: this.form.nama,
                 tgllahir: this.form.tgllahir,
                 idjenis: this.form.idjenis,
                 idukuran: this.form.idukuran,
                 idcustomer: this.form.idcustomer,
-                aktor: this.form.aktor,
+                aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -284,13 +342,12 @@ export default {
             this.form.idukuran = item.idukuran;
             this.form.idcustomer = item.idcustomer;
             this.updatedId = item.idhewan;
-            this.aktor = item.aktor;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox){
-            var uri="http://kouvee.xbanana.id/api/hewan/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
@@ -328,6 +385,9 @@ export default {
 
         mounted(){
             this.getData();
+            this.getDataJenisHewan();
+            this.getDataUkuranHewan();
+            this.getDataCustomer();
         },
     }
 </script>

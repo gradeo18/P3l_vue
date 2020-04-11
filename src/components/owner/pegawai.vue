@@ -40,7 +40,7 @@
                             <td>{{ item.idpegawai }}</td>
                             <td>{{ item.nama}}</td>
                             <td>{{ item.tgllahir}}</td>
-                            <td>{{ item.noTelp}}</td>
+                            <td>{{ item.notelp}}</td>
                             <td>{{ item.alamat}}</td>
                             <td>{{ item.role}}</td>
                             <td>{{ item.username}}</td>
@@ -84,14 +84,13 @@
                         <v-text-field label="Nama*" v-model="form.nama" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="No Telp*" v-model="form.noTelp" required></v-text-field>
+                        <v-text-field label="No Telp*" v-model="form.notelp" required counter maxlength="12"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-menu
-                            v-model="menuDate"
                             :close-on-content-click="false"
                             :nudge-right="40"
                             transition="scale-transition"
@@ -180,7 +179,7 @@ export default {
                     },
                     {
                     text: 'Nomor Telepon',
-                    value: 'noTelp'
+                    value: 'notelp'
                     },
                     {
                     text: 'Alamat',
@@ -235,7 +234,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/pegawai")
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
             .then(
                 response => {this.pegawais = response.data},
             )
@@ -246,14 +245,14 @@ export default {
 
         sendData(){
             this.pegawai.append('nama', this.form.nama);
-            this.pegawai.append('notelp', this.form.noTelp);
+            this.pegawai.append('notelp', this.form.notelp);
             this.pegawai.append('alamat', this.form.alamat);
             this.pegawai.append('tgllahir', this.form.tgllahir);
             this.pegawai.append('role', this.form.role);
             this.pegawai.append('username', this.form.username);
             this.pegawai.append('password', this.form.password);
             this.pegawai.append('aktor', this.form.aktor);
-            var uri = "http://kouvee.xbanana.id/api/pegawai"
+            var uri = "http://kouvee.xbanana.my.id/api/pegawai"
             this.$http.post(uri,this.pegawai).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -271,15 +270,15 @@ export default {
 
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/pegawai/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/pegawai/" + this.updatedId,{
                 nama: this.form.nama,
-                notelp: this.form.noTelp,
+                notelp: this.form.notelp,
                 alamat: this.form.alamat,
                 tgllahir: this.form.tgllahir,
                 role: this.form.role,
                 username: this.form.username,
                 password: this.form.password,
-                aktor: this.form.aktor,
+                aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -306,18 +305,19 @@ export default {
             this.typeInput = 'edit';
             this.dialog = true;
             this.form.nama = item.nama;
-            this.form.noTelp = item.noTelp;
+            this.form.notelp = item.notelp;
             this.form.alamat = item.alamat;
             this.form.role = item.role;
             this.form.tgllahir = item.tgllahir;
+            this.form.username = item.username;
+            this.form.password = item.password;
             this.updatedId = item.idpegawai;
-            this.aktor = item.aktor;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/pegawai/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/pegawai/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

@@ -165,7 +165,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/ukuran_hewan")
+            axios.get("http://kouvee.xbanana.my.id/api/ukuran_hewan")
             .then(
                 response => {this.ukurans = response.data},
             )
@@ -176,8 +176,8 @@ export default {
 
         sendData(){
           this.ukuran.append('nama',this.form.nama);
-          this.ukuran.append('aktor',this.form.aktor);
-          var uri = "http://kouvee.xbanana.id/api/ukuran_hewan"
+          this.ukuran.append('aktor', this.$session.get('dataPegawai').idpegawai);
+          var uri = "http://kouvee.xbanana.my.id/api/ukuran_hewan"
           this.$http.post(uri,this.ukuran).then(response =>{
             this.snackbar = true; 
             this.text = response.data.message;
@@ -186,6 +186,7 @@ export default {
             this.dialog =false;
             this.getData();
         }).catch(error =>{ 
+            console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -194,10 +195,9 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/ukuran_hewan/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/ukuran_hewan/" + this.updatedId,{
                 nama: this.form.nama,
-                aktor: this.form.aktor,
-
+                aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -224,14 +224,13 @@ export default {
             this.typeInput = 'edit';
             this.form.nama = item.nama;
             this.updatedId = item.idukuran;
-            this.aktor = item.aktor;
             this.dialog = true;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/ukuran_hewan/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/ukuran_hewan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;

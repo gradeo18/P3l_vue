@@ -179,7 +179,7 @@ export default {
     },
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.id/api/layanan")
+            axios.get("http://kouvee.xbanana.my.id/api/layanan")
             .then(
                 response => {this.layanans = response.data},
             )
@@ -191,8 +191,8 @@ export default {
         sendData(){
             this.layanan.append('nama', this.form.nama);
             this.layanan.append('harga', this.form.harga);
-            this.layanan.append('aktor', this.form.aktor);
-            var uri = "http://kouvee.xbanana.id/api/layanan"
+            this.layanan.append('aktor', this.$session.get('dataPegawai').idpegawai);
+            var uri = "http://kouvee.xbanana.my.id/api/layanan"
             this.$http.post(uri,this.layanan).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
@@ -209,10 +209,10 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.id/api/layanan/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/layanan/" + this.updatedId,{
                 nama: this.form.nama,
                 harga: this.form.harga,
-                aktor: this.form.aktor,
+                aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -240,13 +240,13 @@ export default {
             this.form.nama = item.nama;
             this.form.harga = item.harga;
             this.updatedId = item.idlayanan;
-            this.aktor = item.aktor;
+            this.aktor = this.$session.get('dataPegawai').idpegawai;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.id/api/layanan/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/layanan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
