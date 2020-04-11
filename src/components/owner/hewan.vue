@@ -109,7 +109,9 @@
                             :items="jenishewans"
                             v-model="form.idjenis"
                             label="Jenis Hewan"
-                            item-text="nama">
+                            item-text="nama"
+                            item-value="idjenis"
+                            >
                         </v-select>
                     </v-col>    
                     <v-col cols="12">
@@ -117,7 +119,9 @@
                             :items="ukuranhewans"
                             v-model="form.idukuran"
                             label="Ukuran Hewan"
-                            item-text="nama">
+                            item-text="nama"
+                            item-value="idukuran"
+                            >
                         </v-select>
                     </v-col>
                     <v-col cols="12">
@@ -125,7 +129,9 @@
                             :items="customers"
                             v-model="form.idcustomer"
                             label="Customer"
-                            item-text="nama">
+                            item-text="nama"
+                            item-value="idcustomer"
+                            >
                         </v-select>
                     </v-col>
                     <!-- <v-col cols="12">
