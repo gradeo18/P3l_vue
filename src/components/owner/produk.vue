@@ -97,10 +97,11 @@
                     </v-col>
                     <v-col cols="12">
                         <v-select 
+                            type="number"
                             :items="suppliers"
                             v-model="form.idsupplier"
                             label="Supplier"
-                            item-text="nama">
+                            item-text="idsupplier">
                         </v-select>
                     </v-col>>
                 </v-row>
@@ -308,7 +309,7 @@ export default {
                 this.dialog =false;
                 this.getData();
         }).catch(error =>{ 
-            console.log(this.form)
+             console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 

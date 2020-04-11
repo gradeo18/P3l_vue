@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Hewan
+                            Tambah Hewan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -388,6 +388,7 @@ export default {
             this.getDataJenisHewan();
             this.getDataUkuranHewan();
             this.getDataCustomer();
+            this.getDataUser();
         },
     }
 </script>

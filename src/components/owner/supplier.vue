@@ -191,7 +191,7 @@ export default {
             this.supplier.append('nama', this.form.nama);
             this.supplier.append('alamat', this.form.alamat);
             this.supplier.append('notelp', this.form.notelp);
-            this.supplier.append('aktor', this.form.aktor);
+            this.supplier.append('aktor', this.$session.get('dataPegawai').idpegawai);
             var uri = "http://kouvee.xbanana.my.id/api/supplier"
             this.$http.post(uri,this.supplier).then(response =>{
                 this.snackbar = true; 
