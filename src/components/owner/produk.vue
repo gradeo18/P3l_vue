@@ -96,8 +96,7 @@
                         <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-select 
-                            type="number"
+                        <v-select @input="selectChange()"
                             :items="suppliers"
                             v-model="form.idsupplier"
                             label="Supplier"
@@ -139,12 +138,16 @@
                         <v-text-field v-model="form.stokminimum" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-select 
+                        <!-- <v-select 
                             :items="suppliers"
                             v-model="form.idsupplier"
                             label="Supplier"
                             item-text="nama">
-                        </v-select>
+                        </v-select> -->
+                        <v-col cols="12">
+                        <label for="stokminimum">Supplier*</label>
+                        <v-text-field v-model="form.idsupplier" required></v-text-field>
+                    </v-col>
                     </v-col>
                     <div class="form-group">
                     <v-col cols="12">
