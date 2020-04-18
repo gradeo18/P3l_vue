@@ -2,10 +2,10 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Hewan</h2> 
+                <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                         <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Hewan 
+                            Tambah Transaksi Penjualan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -28,7 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="hewans"
+                    :items="penjualanproduks"
                     :search="keyword"
                     :loading="load"
                 >
@@ -37,16 +37,12 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.idhewan }}</td>
-                            <td>{{ item.nama}}</td>
-                            <td>{{ item.tgllahir}}</td>
-                            <td>{{ item.idjenis}}</td>
-                            <td>{{ item.idukuran}}</td>
-                            <td>{{ item.idcustomer}}</td>
-                            <td>{{ item.created_at}}</td>
-                            <td>{{ item.updated_at}}</td>
-                            <td>{{ item.deleted_at}}</td>
-                            <td>{{ item.aktor}} </td>
+                            <td>{{ item.idtransaksipenjualan}} </td>
+                            <td>{{ item.noPR}}</td>
+                            <td>{{ item.idpegawai}}</td>
+                            <td>{{ item.idhewan}}</td>
+                            <td>{{ item.diskon}}</td>
+                            <td>{{ item.total}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -60,7 +56,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idhewan)"
+                                @click="deleteData(item.idtransaksipenjualan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -73,73 +69,39 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Hewan</span>
+            <span class="headline">Transaksi Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
-                <v-row>
-                    <v-col cols="12">
-                        <v-text-field label="Nama Hewan*" v-model="form.nama" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-menu
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                        >
-                            <template v-slot:activator="{ on }">
-                            <v-text-field
-                                v-model="form.tgllahir"
-                                label="Tanggal Lahir*"
-                                readonly
-                                v-on="on"
-                                required
-                            ></v-text-field>
-                            </template>
-                            <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
-                        </v-menu>
-                    </v-col>
-                    <!-- <v-col cols="12">
-                        <v-text-field label="ID Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
-                    </v-col> -->
+                 <v-row>
                     <v-col cols="12">
                         <v-select 
-                            :items="jenishewans"
-                            v-model="form.idjenis"
-                            label="Jenis Hewan"
+                            :items="pegawais"
+                            v-model="form.idpegawai"
+                            label="Pegawai"
                             item-text="nama"
-                            item-value="idjenis"
+                            item-value="idpegawai"
                             >
                         </v-select>
                     </v-col>    
-                    <v-col cols="12">
+                     <v-col cols="12">
                         <v-select 
-                            :items="ukuranhewans"
-                            v-model="form.idukuran"
-                            label="Ukuran Hewan"
+                            :items="hewans"
+                            v-model="form.idhewan"
+                            label="Hewan"
                             item-text="nama"
-                            item-value="idukuran"
+                            item-value="idhewan"
                             >
                         </v-select>
                     </v-col>
                     <v-col cols="12">
-                        <v-select 
-                            :items="customers"
-                            v-model="form.idcustomer"
-                            label="Customer"
-                            item-text="nama"
-                            item-value="idcustomer"
-                            >
-                        </v-select>
-                    </v-col>
-                    <!-- <v-col cols="12">
-                        <v-text-field label="ID Ukuran Hewan*" v-model="form.idukuran" required></v-text-field>
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="ID Customer*" v-model="form.idcustomer" required></v-text-field>
-                    </v-col> -->
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" required></v-text-field>
+                    </v-col>
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -149,8 +111,9 @@
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
-    </v-card>
-</v-dialog>
+        </v-card>
+    </v-dialog>
+    
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -178,74 +141,83 @@ export default {
             dialog: false,
             keyword: '',
             headers: [
-                {
+                    {
                     text: 'No',
                     value: 'no',
+                    },
+                    {
+                    text: 'ID Penjualan Produk',
+                    value: 'idtransaksipenjualan',
+                    },
+                    {
+                    text: 'NoPR',
+                    value: 'noPR'
+                    },
+                    {
+                    text: 'ID Pegawai',
+                    value: 'idpegawai'
                     },
                     {
                     text: 'ID Hewan',
                     value: 'idhewan'
                     },
                     {
-                    text: 'Nama Hewan',
-                    value: 'nama'
+                    text: 'Diskon',
+                    value: 'diskon'
                     },
                     {
-                    text: 'Tanggal Lahir',
-                    value: 'tgllahir'
+                    text: 'Total',
+                    value: 'total',
                     },
-                    {
-                    text: 'ID Jenis',
-                    value: 'idjenis',
-                    },
-                    {
-                    text: 'ID Ukuran',
-                    value: 'idukuran',
-                    },
-                    {
-                    text: 'ID Customer',
-                    value: 'idcustomer',
-                    },
-                    {
-                    text: 'Created At',
-                    value: 'created_at',
-                    },
-                    {
-                    text: 'Updated At',
-                    value: 'updated_at',
-                    },
-                    {
-                    text: 'Deleted At',
-                    value: 'deleted_at',
-                    },
-                    {
-                    text: 'Aktor',
-                    value: 'aktor',
-                    },   
             ],
+            penjualanproduks: [],
+            pegawais: [],
             hewans: [],
-            jenishewans:[],
-            ukuranhewans: [],
-            customers: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                nama : '',
-                tgllahir : '',
-                idjenis : '',
-                idukuran: '',
-                idcustomer: '',
+                idpegawai: '',
+                idhewan : '',
+                diskon : '',
+                total : '',
             },
-            hewan : new FormData,
+            penjualanproduk : new FormData,
             typeInput: 'new',
             errors : '',
-            updatedId : '',
+            updatedId : '',     
         }
     },
     methods:{
+        // produkChange(event){
+        //     console.log(event.target.files[0])
+        //     console.log(event)
+        //     this.form.gambar = event.target.files[0];
+        //     console.log(this.form)
+        // },
+
+
         getData(){
+            axios.get("http://kouvee.xbanana.my.id/api/transaksi_penjualan")
+            .then(
+                response => {this.penjualanproduks = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataPegawai(){
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
+            .then(
+                response => {this.pegawais = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+        getDataHewan(){
             axios.get("http://kouvee.xbanana.my.id/api/hewan")
             .then(
                 response => {this.hewans = response.data},
@@ -255,37 +227,15 @@ export default {
             });
         },
 
-        getDataJenisHewan(){
-            axios.get("http://kouvee.xbanana.my.id/api/jenis_hewan")
-            .then(
-                response => {this.jenishewans = response.data},
-            )
-            .catch(e => {
-                this.errors.push(e)
-            });
-        },
-
-        getDataUkuranHewan(){
-            axios.get("http://kouvee.xbanana.my.id/api/ukuran_hewan")
-            .then(
-                response => {this.ukuranhewans = response.data},
-            )
-            .catch(e => {
-                this.errors.push(e)
-            });
-        },
-
 
         sendData(){
-            this.hewan.append('nama', this.form.nama);
-            this.hewan.append('tgllahir', this.form.tgllahir);
-            this.hewan.append('idjenis', this.form.idjenis);
-            this.hewan.append('idukuran', this.form.idukuran);
-            this.hewan.append('idcustomer', this.form.idcustomer);
-            this.hewan.append('aktor', this.$session.get('dataPegawai').idpegawai);
-            var uri = "http://kouvee.xbanana.my.id/api/hewan"
-            this.$http.post(uri,this.hewan).then(response =>{
-                console.log(this.form)
+            this.penjualanproduk.append('noPR', this.form.noPR);
+            this.penjualanproduk.append('idpegawai', this.form.idpegawai);
+            this.penjualanproduk.append('idhewan', this.form.idhewan);
+            this.penjualanproduk.append('diskon', this.form.diskon);
+            this.penjualanproduk.append('total', this.form.total);
+            var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
+            this.$http.post(uri,this.penjualanproduk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -293,7 +243,7 @@ export default {
                 this.dialog =false;
                 this.getData();
         }).catch(error =>{ 
-            console.log(this.form)
+             console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -302,13 +252,11 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/hewan/" + this.updatedId,{
-                nama: this.form.nama,
-                tgllahir: this.form.tgllahir,
-                idjenis: this.form.idjenis,
-                idukuran: this.form.idukuran,
-                idcustomer: this.form.idcustomer,
-                aktor: this.$session.get('dataPegawai').idpegawai,
+            axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
+                idpegawai: this.form.idpegawai,
+                idhewan: this.form.idhewan,
+                diskon: this.form.diskon,
+                total: this.form.total,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -333,18 +281,17 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.nama = item.nama;
-            this.form.tgllahir = item.tgllahir;
-            this.form.idjenis = item.idjenis;
-            this.form.idukuran = item.idukuran;
-            this.form.idcustomer = item.idcustomer;
-            this.updatedId = item.idhewan;
+            this.form.idpegawai = item.idpegawai;
+            this.form.idhewan = item.idhewan;
+            this.form.diskon = item.diskon;
+            this.form.total = item.total;
+            this.updatedId = item.idtransaksipenjualan;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
-            if(confirmBox){
-            var uri="http://kouvee.xbanana.my.id/api/hewan/"+deleteId;
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
@@ -358,7 +305,6 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
-            }
         },
     
         setForm(){
@@ -371,21 +317,18 @@ export default {
 
         resetForm(){
             this.form = {
-                nama : '',
-                tgllahir : '',
-                idjenis : '',
-                idukuran : '',
-                idcustomer : '',
+                idpegawai : '',
+                idhewan : '',
+                diskon : '',
+                total : '',
             }
         }
         },
 
         mounted(){
             this.getData();
-            this.getDataJenisHewan();
-            this.getDataUkuranHewan();
-            this.getDataCustomer();
-            this.getDataUser();
+            this.getDataPegawai();
+            this.getDataHewan();
         },
     }
 </script>

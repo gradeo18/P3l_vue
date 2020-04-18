@@ -70,12 +70,12 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Pemesanan Produk</span>
+            <span class="headline">Transaksi Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="12">
+                      <!-- <v-col cols="12">
                         <v-select 
                             :items="pegawais"
                             v-model="form.idpegawai"
@@ -83,8 +83,8 @@
                             item-text="nama"
                             item-value="idpegawai"
                             >
-                        </v-select>
-                    </v-col>    
+                        </v-select>    
+                    </v-col> -->
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
@@ -156,7 +156,6 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            dialogEdit: false,
             dialog: false,
             keyword: '',
             status: ['Dipesan','Diterima'],
@@ -171,7 +170,7 @@ export default {
                     },
                     {
                     text: 'Pegawai',
-                    value: 'pegawai'
+                    value: 'idpegawai'
                     },
                     {
                     text: 'Tanggal Pesan',
@@ -194,16 +193,18 @@ export default {
                     value: 'status',
                     }  
             ],
-            pegawais:[],
             pemesananproduks: [],
+            pegawais: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
+                idpegawai: '',
                 tglpesan : '',
                 alamat : '',
                 notelp : '',
+                tglcetak : '',
                 status : '',
             },
             pemesananproduk : new FormData,
@@ -231,16 +232,16 @@ export default {
                 this.errors.push(e)
             });
         },
-
         sendData(){
             this.pemesananproduk.append('noPO', this.form.noPO);
-            this.pemesananproduk.append('idpegawai', this.form.idpegawai);
+            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.pemesananproduk.append('tglpesan', this.form.tglpesan);
             this.pemesananproduk.append('alamat', this.form.alamat);
             this.pemesananproduk.append('notelp', this.form.notelp);
+            this.pemesananproduk.append('tglcetak', this.form.tglcetak);
             this.pemesananproduk.append('status', this.form.status);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
-            this.$http.post(uri,this.pemesananproduk).then(response =>{
+            this.$http.post(uri,this.produk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -255,13 +256,13 @@ export default {
             this.color = 'red';
         })
         },
-
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/pemesanan_barang/" + this.updatedId,{
                 idpegawai : this.$session.get('dataPegawai').idpegawai,
                 tglpesan : this.form.tglpesan,
                 alamat : this.form.alamat,
                 notelp :  this.form.notelp,
+                tglcetak: this.form.tglcetak,
                 status : this.form.status,
             })
             .then(response =>{     
@@ -270,7 +271,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialogEdit = false;
+                this.dialog = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -283,16 +284,16 @@ export default {
             this.typeInput = 'dddd';
             })
         },
-
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialogEdit = true;
+            this.dialog = true;
+                this.fomr.idpegawai = item.idpegawai;
                 this.form.tglpesan = item.tglpesan;
                 this.form.alamat = item.alamat;
                 this.form.notelp = item.notelp;
+                this.form.tglcetak = item.tglcetak;
                 this.status = item.status;
         },
-
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
@@ -319,17 +320,17 @@ export default {
                 this.updateData()
             }
         },
-
         resetForm(){
             this.form = {
+                idpegawai: '',
                 tglpesan: '',
                 alamat : '',
                 notelp : '',
+                tglcetak : '',
                 status: '',
             }
         }
         },
-
         mounted(){
             this.getData();
             this.getDataPegawai();
