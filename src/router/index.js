@@ -83,6 +83,11 @@ children: [
         path: '/jenishewan',
         component: ownerView('jenishewan')   
     },
+    {
+        name: 'pengadaanproduk',
+        path: '/pengadaanproduk',
+        component: ownerView('pengadaanproduk')   
+    },
     
 ]
 },
@@ -96,9 +101,9 @@ children: [
         component: csView('penjualanproduk')   
     },
     {
-        name: 'pengadaanproduk',
-        path: '/pengadaanproduk',
-        component: csView('pengadaanproduk')   
+        name: 'penjualanlayanan',
+        path: '/penjualanlayanan',
+        component: csView('penjualanlayanan')   
     },
 ]
 },

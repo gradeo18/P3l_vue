@@ -70,11 +70,21 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Transaksi Produk</span>
+            <span class="headline">Pemesanan Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="pegawais"
+                            v-model="form.idpegawai"
+                            label="Pegawai"
+                            item-text="nama"
+                            item-value="idpegawai"
+                            >
+                        </v-select>
+                    </v-col>    
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
@@ -184,18 +194,17 @@ export default {
                     value: 'status',
                     }  
             ],
+            pegawais:[],
             pemesananproduks: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                noPO : '',
                 tglpesan : '',
                 alamat : '',
                 notelp : '',
                 status : '',
-                idpegawai: '',
             },
             pemesananproduk : new FormData,
             typeInput: 'new',
@@ -213,16 +222,25 @@ export default {
                 this.errors.push(e)
             });
         },
+        getDataPegawai(){
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
+            .then(
+                response => {this.pegawais = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
 
         sendData(){
             this.pemesananproduk.append('noPO', this.form.noPO);
+            this.pemesananproduk.append('idpegawai', this.form.idpegawai);
             this.pemesananproduk.append('tglpesan', this.form.tglpesan);
             this.pemesananproduk.append('alamat', this.form.alamat);
             this.pemesananproduk.append('notelp', this.form.notelp);
             this.pemesananproduk.append('status', this.form.status);
-            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
-            this.$http.post(uri,this.produk).then(response =>{
+            this.$http.post(uri,this.pemesananproduk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -314,6 +332,7 @@ export default {
 
         mounted(){
             this.getData();
+            this.getDataPegawai();
         },
     }
 </script>
