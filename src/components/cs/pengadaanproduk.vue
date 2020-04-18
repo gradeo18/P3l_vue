@@ -156,7 +156,6 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            dialogEdit: false,
             dialog: false,
             keyword: '',
             status: ['Dipesan','Diterima'],
@@ -275,7 +274,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialogEdit = false;
+                this.dialog = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -291,7 +290,7 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialogEdit = true;
+            this.dialog = true;
                 this.fomr.idpegawai = item.idpegawai;
                 this.form.tglpesan = item.tglpesan;
                 this.form.alamat = item.alamat;

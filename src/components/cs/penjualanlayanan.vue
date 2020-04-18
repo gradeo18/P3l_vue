@@ -57,7 +57,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idhewan)"
+                                @click="deleteData(item.idtransaksipelayanan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -96,8 +96,19 @@
                         </v-select>
                     </v-col>
                     <v-col cols="12">
+                        <v-select
+                            :items="status"
+                            v-model="form.status"
+                            label="Status*"
+                        >
+                        </v-select>  
+                    </v-col>
+                    <v-col cols="12">
                         <v-text-field label="Diskon*" v-model="form.diskon" required></v-text-field>
-                    </v-col> -->
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field label="Total*" v-model="form.total" required></v-text-field>
+                    </v-col>
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -135,6 +146,7 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            status: ['Diproses','Selesai'],
             headers: [
                     {
                     text: 'No',
@@ -196,6 +208,8 @@ export default {
                 idpegawai : '',
                 idhewan : '',
                 diskon : '',
+                status : '',
+                total : '',
             },
             hewan : new FormData,
             typeInput: 'new',
@@ -235,7 +249,6 @@ export default {
         },
 
         sendData(){
-            this.penjualanlayanan.append('idtransaksipelayanan', this.form.idtransaksipelayanan);
             this.penjualanlayanan.append('noLY', this.form.noLY);
             this.penjualanlayanan.append('idpegawai', this.form.idpegawai);
             this.penjualanlayanan.append('idhewan', this.form.idhewan);
@@ -262,8 +275,6 @@ export default {
 
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_pelayanan/" + this.updatedId,{
-                idtransaksipelayanan: this.form.idtransaksipelayanan,
-                noLY: this.form.noLY,
                 idpegawai: this.form.idpegawai,
                 idhewan: this.form.idhewan,
                 status: this.form.status,
@@ -293,13 +304,12 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.idtransaksipelayanan = item.idtransaksipelayanan;
-            this.form.noLY = item.noLY;
             this.form.idpegawai = item.idpegawai;
             this.form.idhewan = item.idhewan;
             this.form.status = item.status;
             this.diskon = item.diskon;
             this.total = item.total;
+            this.updatedId = item.idtransaksipelayanan;
         },
 
         deleteData(deleteId){
@@ -332,7 +342,6 @@ export default {
 
         resetForm(){
             this.form = {
-                noLY : '',
                 idpegawai : '',
                 idhewan : '',
                 status : '',

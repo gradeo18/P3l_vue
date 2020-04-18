@@ -104,7 +104,7 @@ children: [
         name: 'penjualanlayanan',
         path: '/penjualanlayanan',
         component: csView('penjualanlayanan')
-    }
+    },
 ]
 },
 
