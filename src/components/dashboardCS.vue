@@ -29,6 +29,25 @@
                             <v-list-item-title> <span class="white--text">Penjualan Produk</span></v-list-item-title>
                         </v-list-item-content>
                         </v-list-item>
+
+                         <v-list-item @click="$router.push('/pengadaanproduk')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Pemesanan Produk</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+
+                         <v-list-item @click="$router.push('/penjualanlayanan')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Penjualan Layanan</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+
                         <template v-slot:append>
                             <div class="pa-2">
                                 <v-btn block @click="logout()">Logout</v-btn>

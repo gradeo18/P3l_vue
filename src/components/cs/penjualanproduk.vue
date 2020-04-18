@@ -5,7 +5,7 @@
                 <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                         <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Penjualan Produk
+                            Tambah Transaksi Penjualan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -55,7 +55,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idproduk)"
+                                @click="deleteData(item.idpenjualanproduk)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -66,34 +66,40 @@
             </v-data-table>
         </v-container>
     </v-card>
-    <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
+    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
-                <v-row>
-                    <v-col cols="12">
-                        <label for="gambar">Hewan*</label>
-                        <v-text-field v-model="form.harga" required></v-text-field> 
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="gambar">Diskon*</label>
-                        <v-text-field v-model="form.stok" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="gambar">Stok Minimum*</label>
-                        <v-text-field v-model="form.stokminimum" required></v-text-field>
-                    </v-col>
+                 <v-row>
                     <v-col cols="12">
                         <v-select 
-                            :items="suppliers"
-                            v-model="form.idsupplier"
-                            label="Supplier"
+                            :items="pegawais"
+                            v-model="form.idpegawai"
+                            label="Pegawai"
                             item-text="nama"
-                            item-value="idsupplier"
+                            item-value="idpegawai"
                             >
                         </v-select>
+                    </v-col>    
+                     <v-col cols="12">
+                        <v-select 
+                            :items="hewans"
+                            v-model="form.idhewan"
+                            label="Hewan"
+                            item-text="nama"
+                            item-value="idhewan"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" required></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -101,7 +107,7 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
         </v-card>
@@ -131,7 +137,6 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            dialogEdit: false,
             dialog: false,
             keyword: '',
             headers: [
@@ -140,78 +145,52 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'Gambar',
-                    value: 'gambar'
+                    text: 'NoPR',
+                    value: 'noPR'
                     },
                     {
-                    text: 'ID Produk',
-                    value: 'idproduk'
+                    text: 'ID Pegawai',
+                    value: 'idpegawai'
                     },
                     {
-                    text: 'Nama Produk',
-                    value: 'nama'
+                    text: 'ID Hewan',
+                    value: 'idhewan'
                     },
                     {
-                    text: 'Harga',
-                    value: 'harga'
+                    text: 'Diskon',
+                    value: 'diskon'
                     },
                     {
-                    text: 'Stok',
-                    value: 'stok',
+                    text: 'Total',
+                    value: 'total',
                     },
-                    {
-                    text: 'Stok Minimum',
-                    value: 'stokminimum',
-                    },
-                    {
-                    text: 'Supplier',
-                    value: 'idsupplier',
-                    },
-                    {
-                    text: 'Created At',
-                    value: 'created_at',
-                    },
-                    {
-                    text: 'Updated At',
-                    value: 'updated_at',
-                    },
-                    {
-                    text: 'Deleted At',
-                    value: 'deleted_at',
-                    },
-                    {
-                    text: 'Aktor',
-                    value: 'aktor',    
-                    }    
             ],
-            produks: [],
+            penjualanproduks: [],
             pegawais: [],
-            suppliers: [],
+            hewans: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                gambar: '',
-                nama : '',
-                harga : '',
-                stok : '',
-                stokminimum : '',
-                idsupplier : '',
+                idpegawai: '',
+                idhewan : '',
+                diskon : '',
+                total : '',
             },
-            produk : new FormData,
+            penjualanproduk : new FormData,
             typeInput: 'new',
             errors : '',
             updatedId : '',     
         }
     },
     methods:{
-        produkChange(event){
-            console.log(event.target.files[0])
-            console.log(event)
-            this.form.gambar = event.target.files[0];
-            console.log(this.form)
-        },
+        // produkChange(event){
+        //     console.log(event.target.files[0])
+        //     console.log(event)
+        //     this.form.gambar = event.target.files[0];
+        //     console.log(this.form)
+        // },
 
 
         getData(){
@@ -224,10 +203,19 @@ export default {
             });
         },
 
-        getDataSupplier(){
-            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+        getDataPegawai(){
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
             .then(
-                response => {this.suppliers = response.data},
+                response => {this.pegawais = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+        getDataHewan(){
+            axios.get("http://kouvee.xbanana.my.id/api/hewan")
+            .then(
+                response => {this.hewans = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -236,15 +224,13 @@ export default {
 
 
         sendData(){
-            this.produk.append('gambar', this.form.gambar);
-            this.produk.append('nama', this.form.nama);
-            this.produk.append('harga', this.form.harga);
-            this.produk.append('stok', this.form.stok);
-            this.produk.append('stokminimum', this.form.stokminimum);
-            this.produk.append('idsupplier', this.form.idsupplier);
-            this.produk.append('aktor', this.$session.get('dataPegawai').idpegawai);
-            var uri = "http://kouvee.xbanana.my.id/api/produk"
-            this.$http.post(uri,this.produk).then(response =>{
+            this.penjualanproduk.append('noPR', this.form.noPR);
+            this.penjualanproduk.append('idpegawai', this.form.idpegawai);
+            this.penjualanproduk.append('idhewan', this.form.idhewan);
+            this.penjualanproduk.append('diskon', this.form.diskon);
+            this.penjualanproduk.append('total', this.form.total);
+            var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
+            this.$http.post(uri,this.penjualanproduk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -261,14 +247,11 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/produk/" + this.updatedId,{
-                gambar: this.form.gambar,
-                nama: this.form.nama,
-                harga: this.form.harga,
-                stok: this.form.stok,
-                stokminimum: this.form.stokminimum,
-                idsupplier: this.form.idsupplier,
-                aktor: this.$session.get('dataPegawai').idpegawai,
+            axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
+                idpegawai: this.form.idpegawai,
+                idhewan: this.form.idhewan,
+                diskon: this.form.diskon,
+                total: this.form.total,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -276,7 +259,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialogEdit = false;
+                this.dialog = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -292,20 +275,18 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialogEdit = true;
-            this.form.gambar = item.gambar;
-            this.form.nama = item.nama;
-            this.form.harga = item.harga;
-            this.form.stok = item.stok;
-            this.form.stokminimum = item.stokminimum;
-            this.form.idsupplier= this.idsupplier,
-            this.updatedId = item.idproduk;
+            this.dialog = true;
+            this.form.idpegawai = item.idpegawai;
+            this.form.idhewan = item.idhewan;
+            this.form.diskon = item.diskon;
+            this.form.total = item.total;
+            this.updatedId = item.idpenjualanproduk;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/produk/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
@@ -331,19 +312,18 @@ export default {
 
         resetForm(){
             this.form = {
-                nama : '',
-                harga : '',
-                stok : '',
-                stokminimum : '',
-                gambar: '',
-                idsupplier: '',
+                idpegawai : '',
+                idhewan : '',
+                diskon : '',
+                total : '',
             }
         }
         },
 
         mounted(){
             this.getData();
-            this.getDataSupplier();
+            this.getDataPegawai();
+            this.getDataHewan();
         },
     }
 </script>

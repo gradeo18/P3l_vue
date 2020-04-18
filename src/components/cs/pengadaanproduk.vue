@@ -75,6 +75,16 @@
         <v-card-text>
             <v-container>
                 <v-row>
+                      <!-- <v-col cols="12">
+                        <v-select 
+                            :items="pegawais"
+                            v-model="form.idpegawai"
+                            label="Pegawai"
+                            item-text="nama"
+                            item-value="idpegawai"
+                            >
+                        </v-select>    
+                    </v-col> -->
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
@@ -161,7 +171,7 @@ export default {
                     },
                     {
                     text: 'Pegawai',
-                    value: 'pegawai'
+                    value: 'idpegawai'
                     },
                     {
                     text: 'Tanggal Pesan',
@@ -185,17 +195,18 @@ export default {
                     }  
             ],
             pemesananproduks: [],
+            pegawais: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                noPO : '',
+                idpegawai: '',
                 tglpesan : '',
                 alamat : '',
                 notelp : '',
+                tglcetak : '',
                 status : '',
-                idpegawai: '',
             },
             pemesananproduk : new FormData,
             typeInput: 'new',
@@ -214,13 +225,24 @@ export default {
             });
         },
 
+        getDataPegawai(){
+            axios.get("http://kouvee.xbanana.my.id/api/pegawai")
+            .then(
+                response => {this.pegawais = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
         sendData(){
             this.pemesananproduk.append('noPO', this.form.noPO);
+            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.pemesananproduk.append('tglpesan', this.form.tglpesan);
             this.pemesananproduk.append('alamat', this.form.alamat);
             this.pemesananproduk.append('notelp', this.form.notelp);
+            this.pemesananproduk.append('tglcetak', this.form.tglcetak);
             this.pemesananproduk.append('status', this.form.status);
-            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
             this.$http.post(uri,this.produk).then(response =>{
                 this.snackbar = true; 
@@ -244,6 +266,7 @@ export default {
                 tglpesan : this.form.tglpesan,
                 alamat : this.form.alamat,
                 notelp :  this.form.notelp,
+                tglcetak: this.form.tglcetak,
                 status : this.form.status,
             })
             .then(response =>{     
@@ -269,9 +292,11 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialogEdit = true;
+                this.fomr.idpegawai = item.idpegawai;
                 this.form.tglpesan = item.tglpesan;
                 this.form.alamat = item.alamat;
                 this.form.notelp = item.notelp;
+                this.form.tglcetak = item.tglcetak;
                 this.status = item.status;
         },
 
@@ -304,9 +329,11 @@ export default {
 
         resetForm(){
             this.form = {
+                idpegawai: '',
                 tglpesan: '',
                 alamat : '',
                 notelp : '',
+                tglcetak : '',
                 status: '',
             }
         }
@@ -314,6 +341,7 @@ export default {
 
         mounted(){
             this.getData();
+            this.getDataPegawai();
         },
     }
 </script>
