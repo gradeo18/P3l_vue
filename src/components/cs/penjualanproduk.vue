@@ -37,6 +37,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
+                            <td>{{ item.idtransaksipenjualan}} </td>
                             <td>{{ item.noPR}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
@@ -55,7 +56,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idpenjualanproduk)"
+                                @click="deleteData(item.idtransaksipenjualan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -143,6 +144,10 @@ export default {
                     {
                     text: 'No',
                     value: 'no',
+                    },
+                    {
+                    text: 'ID Penjualan Produk',
+                    value: 'idtransaksipenjualan',
                     },
                     {
                     text: 'NoPR',
@@ -280,7 +285,7 @@ export default {
             this.form.idhewan = item.idhewan;
             this.form.diskon = item.diskon;
             this.form.total = item.total;
-            this.updatedId = item.idpenjualanproduk;
+            this.updatedId = item.idtransaksipenjualan;
         },
 
         deleteData(deleteId){
