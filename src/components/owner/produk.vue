@@ -358,7 +358,7 @@ export default {
             this.form.harga = item.harga;
             this.form.stok = item.stok;
             this.form.stokminimum = item.stokminimum;
-            this.form.idsupplier= this.idsupplier,
+            this.form.idsupplier= item.idsupplier;
             this.updatedId = item.idproduk;
         },
 

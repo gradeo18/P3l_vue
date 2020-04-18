@@ -95,6 +95,11 @@ children: [
         path: '/penjualanproduk',
         component: csView('penjualanproduk')   
     },
+    {
+        name: 'pengadaanproduk',
+        path: '/pengadaanproduk',
+        component: csView('pengadaanproduk')   
+    },
 ]
 },
 
