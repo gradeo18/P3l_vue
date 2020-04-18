@@ -251,7 +251,7 @@ export default {
             this.pegawai.append('role', this.form.role);
             this.pegawai.append('username', this.form.username);
             this.pegawai.append('password', this.form.password);
-            this.pegawai.append('aktor', this.form.aktor);
+            this.pegawai.append('aktor', this.$session.get('dataPegawai').idpegawai);
             var uri = "http://kouvee.xbanana.my.id/api/pegawai"
             this.$http.post(uri,this.pegawai).then(response =>{
                 this.snackbar = true; 

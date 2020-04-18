@@ -1,4 +1,5 @@
 <template>
+
 <div>
     <v-navigation-drawer
     v-model="drawer"
@@ -9,25 +10,25 @@
     fixed
     temporary
     >
-        <v-list-item>
+            <v-list-item>
                 <v-list-item-content>
                 <v-list-item-title class="title">
                     Dashboard
                 </v-list-item-title>
                 <v-list-item-subtitle>
-                    Owner
+                    Owner - Hi, {{$session.get('dataPegawai').nama}} !
                 </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
 
                 <v-divider></v-divider>
                 <v-list-item @click="$router.push('/produk')">
-                <v-list-item-action>
-                    <v-icon color="white">mdi-check-bold</v-icon>
-                </v-list-item-action>
-                <v-list-item-content>
-                    <v-list-item-title> <span class="white--text">Produk</span></v-list-item-title>
-                </v-list-item-content>
+                    <v-list-item-action>
+                        <v-icon color="white">mdi-check-bold</v-icon>
+                    </v-list-item-action>
+                    <v-list-item-content>
+                        <v-list-item-title> <span class="white--text">Produk</span></v-list-item-title>
+                    </v-list-item-content>
                 </v-list-item>
 
                 <v-list-item @click="$router.push('/layanan')">
@@ -121,6 +122,7 @@
                 </v-app-bar>
                 
                 <VContent>
+                    <h1><center> Hi, {{$session.get('dataPegawai').nama}} !  </center></h1>
                     <router-view/>
                 </VContent>
             </div>

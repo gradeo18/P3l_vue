@@ -1,60 +1,84 @@
 <template>
-    <div class="dashboard">
-        <template>
-            <v-row align="center" justify="center">
-            <v-layout row wrap align="center">
-                <v-flex xs12 class="my-2">
-                    <v-card height="100%">
-                        <v-container grid-list-md mb-0>
-                            <v-row dense>
-                                <v-col
-                                v-for="(item) in produks" 
-                                :key="item.idproduk"
-                                :cols="3"
-                                md="4">
-                                <v-card>
-                                    <v-img
-                                    height="250"
-                                    :src="'http://kouvee.xbanana.my.id/uploads/produk/' +item.gambar"
-                                    ></v-img>
+    <v-container>   
+        <v-card>
+            <v-container grid-list-md mb-0>
+                <h2 class="text-md-center">List Produk Kouvee Pet Shop</h2> 
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6 class="text-right">
+                        <v-text-field
+                            v-model="keyword" 
+                            append-icon="mdi-magnify" 
+                            label="Search" 
+                            hide-details
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
 
-                                    <v-card-title>{{item.nama}}</v-card-title>
-                                    <v-card-subtitle>{{item.kategori}}</v-card-subtitle>
-                                    <v-card-text>
-                                    <div>{{item.waktu}}|{{item.tempat}}|{{item.penyelenggara}}</div>
-                                    </v-card-text>
-                                    <v-divider class="mx-4"></v-divider>
-                                    <v-card-text>
-                                    <v-row
-                                    :align="center"
-                                    :justify="space-around">
-                                        <v-col>
-                                        Price
-                                        </v-col>
-                                        <v-col>
-                                        IDR {{item.harga}}
-                                        </v-col>
-                                    </v-row>
-                                    </v-card-text>
-                                </v-card>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card>
-                </v-flex> 
-            </v-layout>
-            </v-row>
-        </template>
-    </div>
+                <v-data-table
+                    :headers="headers"
+                    :items="produks"
+                    :search="keyword"
+                    :loading="load"
+                >
+
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="(item,index) in items" :key="item.id"> 
+                            <td>{{ index + 1 }}</td>
+                            <img :src="'http://kouvee.xbanana.my.id/uploads/produk/' +item.gambar" alt="Image Gagal di Load"  width="80px" height="80px" />
+                            <td>{{ item.idproduk}}</td>
+                            <td>{{ item.nama}}</td>
+                            <td>{{ item.harga}}</td>
+                            <td>{{ item.stok}}</td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-container>
+    </v-card>
+</v-container>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
-    data: ()=>({
-        produks: []
-    }),
-    methods: {
+    data () {
+        return {
+            keyword: '',
+            headers: [
+                    {
+                    text: 'No',
+                    value: 'no',
+                    },
+                    {
+                    text: 'Gambar',
+                    value: 'gambar'
+                    },
+                    {
+                    text: 'ID Produk',
+                    value: 'idproduk'
+                    },
+                    {
+                    text: 'Nama Produk',
+                    value: 'nama'
+                    },
+                    {
+                    text: 'Harga',
+                    value: 'harga'
+                    },
+                    {
+                    text: 'Stok',
+                    value: 'stok',
+                    },
+            ],
+            produks: [],
+            color: null,
+            text: '',
+            load: false,
+            produk : new FormData,  
+        }
+    },
+    methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/produk")
             .then(
@@ -63,22 +87,11 @@ export default {
             .catch(e => {
                 this.errors.push(e)
             });
+        }
         },
 
-    },
-    mounted(){
-        this.getData()
-  }
-}
-</script>
-
-<style lang="scss" scoped>
-    .v-card {
-        align-content: center;
-        padding: 2%;
-        margin-left: 8%;
-        margin-right: 8%;
-        margin-top: 1%;
+        mounted(){
+            this.getData();
+        },
     }
-</style>
-
+</script>

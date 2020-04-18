@@ -9,6 +9,10 @@ function ownerView(view) {
     return () => import(/* webpackChunkName: "view-[request]" */ `../components/owner/${view}.vue`) 
 }
 
+function csView(view) {
+    return () => import(/* webpackChunkName: "view-[request]" */ `../components/cs/${view}.vue`) 
+}
+
 function loadHomePage(view){
     return () => import(`../components/home/${view}.vue`)
 }
@@ -86,7 +90,11 @@ children: [
 path: '/dashboardCS',
 component: DashboardCS,
 children: [
-    
+    {
+        name: 'penjualanproduk',
+        path: '/penjualanproduk',
+        component: csView('penjualanproduk')   
+    },
 ]
 },
 

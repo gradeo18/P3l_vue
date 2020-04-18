@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Ukuran Hewan</h2> 
+                <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                         <v-btn depressed 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Ukuran Hewan
+                            Tambah Penjualan Produk
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -28,7 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="ukurans"
+                    :items="penjualanproduks"
                     :search="keyword"
                     :loading="load"
                 >
@@ -37,12 +37,11 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.idukuran }}</td>
-                            <td>{{ item.nama}}</td>
-                            <td>{{ item.created_at}}</td>
-                            <td>{{ item.updated_at}}</td>
-                            <td>{{ item.deleted_at}}</td>
-                            <td>{{ item.aktor}}</td>
+                            <td>{{ item.noPR}}</td>
+                            <td>{{ item.idpegawai}}</td>
+                            <td>{{ item.idhewan}}</td>
+                            <td>{{ item.diskon}}</td>
+                            <td>{{ item.total}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -56,7 +55,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idukuran)"
+                                @click="deleteData(item.idproduk)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -67,21 +66,34 @@
             </v-data-table>
         </v-container>
     </v-card>
-    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
+    <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Ukuran Hewan</span>
+            <span class="headline">Transaksi Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <label for="gambar">Ukuran Hewan*</label>
-                        <v-text-field v-model="form.nama" required></v-text-field>
-                        <!-- <v-select
-                            :items="ukuranselect"
-                            v-model="form.nama"
-                            label="Nama Ukuran Hewan*"
-                        />   -->
+                        <label for="gambar">Hewan*</label>
+                        <v-text-field v-model="form.harga" required></v-text-field> 
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="gambar">Diskon*</label>
+                        <v-text-field v-model="form.stok" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="gambar">Stok Minimum*</label>
+                        <v-text-field v-model="form.stokminimum" required></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="suppliers"
+                            v-model="form.idsupplier"
+                            label="Supplier"
+                            item-text="nama"
+                            item-value="idsupplier"
+                            >
+                        </v-select>
                     </v-col>
                 </v-row>
             </v-container>
@@ -89,11 +101,12 @@
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
-    </v-card>
-</v-dialog>
+        </v-card>
+    </v-dialog>
+    
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -118,21 +131,41 @@ import axios from 'axios'
 export default {
     data () {
         return {
+            dialogEdit: false,
             dialog: false,
             keyword: '',
-            ukuranselect: ['SMALL','MEDIUM','LARGE'],
             headers: [
-                {
+                    {
                     text: 'No',
                     value: 'no',
                     },
                     {
-                    text: 'ID ukuran Hewan',
-                    value: 'idukuran'
+                    text: 'Gambar',
+                    value: 'gambar'
                     },
                     {
-                    text: 'Nama Ukuran Hewan',
+                    text: 'ID Produk',
+                    value: 'idproduk'
+                    },
+                    {
+                    text: 'Nama Produk',
                     value: 'nama'
+                    },
+                    {
+                    text: 'Harga',
+                    value: 'harga'
+                    },
+                    {
+                    text: 'Stok',
+                    value: 'stok',
+                    },
+                    {
+                    text: 'Stok Minimum',
+                    value: 'stokminimum',
+                    },
+                    {
+                    text: 'Supplier',
+                    value: 'idsupplier',
                     },
                     {
                     text: 'Created At',
@@ -148,48 +181,78 @@ export default {
                     },
                     {
                     text: 'Aktor',
-                    value: 'aktor',
-                    },      
+                    value: 'aktor',    
+                    }    
             ],
-            ukurans: [],
+            produks: [],
+            pegawais: [],
+            suppliers: [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
+                gambar: '',
                 nama : '',
+                harga : '',
+                stok : '',
+                stokminimum : '',
+                idsupplier : '',
             },
-            ukuran : new FormData,
+            produk : new FormData,
             typeInput: 'new',
             errors : '',
-            updatedId : '',
+            updatedId : '',     
         }
     },
     methods:{
+        produkChange(event){
+            console.log(event.target.files[0])
+            console.log(event)
+            this.form.gambar = event.target.files[0];
+            console.log(this.form)
+        },
+
+
         getData(){
-            axios.get("http://kouvee.xbanana.my.id/api/ukuran_hewan")
+            axios.get("http://kouvee.xbanana.my.id/api/transaksi_penjualan")
             .then(
-                response => {this.ukurans = response.data},
+                response => {this.penjualanproduks = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
             });
         },
 
+        getDataSupplier(){
+            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+            .then(
+                response => {this.suppliers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+
         sendData(){
-          this.ukuran.append('nama',this.form.nama);
-          this.ukuran.append('aktor', this.$session.get('dataPegawai').idpegawai);
-          var uri = "http://kouvee.xbanana.my.id/api/ukuran_hewan"
-          console.log(this.get)
-          this.$http.post(uri,this.ukuran).then(response =>{
-            this.snackbar = true; 
-            this.text = response.data.message;
-            this.text = 'Berhasil'; 
-            this.color = 'green';
-            this.dialog =false;
-            this.getData();
+            this.produk.append('gambar', this.form.gambar);
+            this.produk.append('nama', this.form.nama);
+            this.produk.append('harga', this.form.harga);
+            this.produk.append('stok', this.form.stok);
+            this.produk.append('stokminimum', this.form.stokminimum);
+            this.produk.append('idsupplier', this.form.idsupplier);
+            this.produk.append('aktor', this.$session.get('dataPegawai').idpegawai);
+            var uri = "http://kouvee.xbanana.my.id/api/produk"
+            this.$http.post(uri,this.produk).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialog =false;
+                this.getData();
         }).catch(error =>{ 
-            console.log(this.form)
+             console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -198,8 +261,13 @@ export default {
         },
 
         updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/ukuran_hewan/" + this.updatedId,{
+            axios.put("http://kouvee.xbanana.my.id/api/produk/" + this.updatedId,{
+                gambar: this.form.gambar,
                 nama: this.form.nama,
+                harga: this.form.harga,
+                stok: this.form.stok,
+                stokminimum: this.form.stokminimum,
+                idsupplier: this.form.idsupplier,
                 aktor: this.$session.get('dataPegawai').idpegawai,
             })
             .then(response =>{     
@@ -208,7 +276,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialog = false;
+                this.dialogEdit = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -222,18 +290,22 @@ export default {
             })
         },
 
-        
         editHandler(item){
             this.typeInput = 'edit';
+            this.dialogEdit = true;
+            this.form.gambar = item.gambar;
             this.form.nama = item.nama;
-            this.updatedId = item.idukuran;
-            this.dialog = true;
+            this.form.harga = item.harga;
+            this.form.stok = item.stok;
+            this.form.stokminimum = item.stokminimum;
+            this.form.idsupplier= this.idsupplier,
+            this.updatedId = item.idproduk;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/ukuran_hewan/"+deleteId;
+            var uri="http://kouvee.xbanana.my.id/api/produk/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
                 this.text = response.data.message;
@@ -259,13 +331,19 @@ export default {
 
         resetForm(){
             this.form = {
-                nama : '',            
+                nama : '',
+                harga : '',
+                stok : '',
+                stokminimum : '',
+                gambar: '',
+                idsupplier: '',
             }
         }
         },
 
         mounted(){
             this.getData();
+            this.getDataSupplier();
         },
     }
 </script>

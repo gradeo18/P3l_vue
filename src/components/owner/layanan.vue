@@ -88,7 +88,13 @@
                             v-model="form.harga"
                             label="Harga Layanan Hewan*"
                         />  
+                        <!-- <label for="layanan">Nama Layanan Hewan*</label>
+                        <v-text-field v-model="form.nama" required></v-text-field> -->
                     </v-col>
+                    <!-- <v-col cols="12">
+                    <label for="harga">Harga Layanan*</label>
+                        <v-text-field v-model="form.harga" required></v-text-field>
+                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -127,7 +133,7 @@ export default {
             dialog: false,
             keyword: '',
             layananselect: ['Grooming','Penitipan','Potong Bulu'],
-            hargaselect: ['50000','100000','150.000'],
+            hargaselect: ['50000','100000','150000'],
             headers: [
                 {
                     text: 'No',

@@ -15,13 +15,20 @@
                             Dashboard
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            CS
+                            CS - Hi, {{$session.get('dataPegawai').nama}} !
                         </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
         
                         <v-divider></v-divider>
-                        
+                        <v-list-item @click="$router.push('/penjualanproduk')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Penjualan Produk</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
                         <template v-slot:append>
                             <div class="pa-2">
                                 <v-btn block @click="logout()">Logout</v-btn>
@@ -50,6 +57,7 @@
                         </v-app-bar>
                         
                         <VContent>
+                            <h1><center> Hi, {{$session.get('dataPegawai').nama}} !  </center></h1>
                             <router-view/>
                         </VContent>
                     </div>
