@@ -75,16 +75,6 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                      <!-- <v-col cols="12">
-                        <v-select 
-                            :items="pegawais"
-                            v-model="form.idpegawai"
-                            label="Pegawai"
-                            item-text="nama"
-                            item-value="idpegawai"
-                            >
-                        </v-select>    
-                    </v-col> -->
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"

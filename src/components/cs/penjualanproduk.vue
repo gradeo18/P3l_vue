@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
+                <h2 class="text-md-center">Transaksi Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                          <v-btn depressed 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Transaksi Penjualan 
+                            Tambah Transaksi Produk 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -41,6 +41,7 @@
                             <td>{{ item.noPR}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
+                            <td>{{ item.status}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
                             <td class="text-center">
@@ -74,7 +75,7 @@
         <v-card-text>
             <v-container>
                  <v-row>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <v-select 
                             :items="pegawais"
                             v-model="form.idpegawai"
@@ -83,7 +84,7 @@
                             item-value="idpegawai"
                             >
                         </v-select>
-                    </v-col>    
+                    </v-col>     -->
                      <v-col cols="12">
                         <v-select 
                             :items="hewans"
@@ -150,7 +151,7 @@ export default {
                     value: 'idtransaksipenjualan',
                     },
                     {
-                    text: 'NoPR',
+                    text: 'No Produk',
                     value: 'noPR'
                     },
                     {
@@ -190,14 +191,6 @@ export default {
         }
     },
     methods:{
-        // produkChange(event){
-        //     console.log(event.target.files[0])
-        //     console.log(event)
-        //     this.form.gambar = event.target.files[0];
-        //     console.log(this.form)
-        // },
-
-
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_penjualan")
             .then(
@@ -230,7 +223,7 @@ export default {
 
         sendData(){
             this.penjualanproduk.append('noPR', this.form.noPR);
-            this.penjualanproduk.append('idpegawai', this.form.idpegawai);
+            this.penjualanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanproduk.append('idhewan', this.form.idhewan);
             this.penjualanproduk.append('diskon', this.form.diskon);
             this.penjualanproduk.append('total', this.form.total);
@@ -253,7 +246,7 @@ export default {
 
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
-                idpegawai: this.form.idpegawai,
+                idpegawai: this.$session.get('dataPegawai').idpegawai,
                 idhewan: this.form.idhewan,
                 diskon: this.form.diskon,
                 total: this.form.total,
@@ -281,7 +274,6 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.idpegawai = item.idpegawai;
             this.form.idhewan = item.idhewan;
             this.form.diskon = item.diskon;
             this.form.total = item.total;

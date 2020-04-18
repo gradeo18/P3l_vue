@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Penjualan</h2> 
+                <h2 class="text-md-center">Transaksi Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                         <v-btn depressed 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Transaksi Penjualan 
+                            Tambah Transaksi Layanan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -75,7 +75,7 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <v-select 
                             :items="pegawais"
                             v-model="form.idpegawai"
@@ -84,7 +84,7 @@
                             item-value="idpegawai"
                             >
                         </v-select>
-                    </v-col>    
+                    </v-col>     -->
                     <v-col cols="12">
                         <v-select 
                             :items="hewans"
@@ -180,22 +180,6 @@ export default {
                     text: 'Total',
                     value: 'total',
                     },
-                    // {
-                    // text: 'Created At',
-                    // value: 'created_at',
-                    // },
-                    // {
-                    // text: 'Updated At',
-                    // value: 'updated_at',
-                    // },
-                    // {
-                    // text: 'Deleted At',
-                    // value: 'deleted_at',
-                    // },
-                    // {
-                    // text: 'Aktor',
-                    // value: 'aktor',
-                    // },   
             ],
             penjualanlayanans: [],
             pegawais:[],
@@ -211,7 +195,7 @@ export default {
                 status : '',
                 total : '',
             },
-            hewan : new FormData,
+            penjualanlayanan : new FormData,
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -247,7 +231,7 @@ export default {
         },
         sendData(){
             this.penjualanlayanan.append('noLY', this.form.noLY);
-            this.penjualanlayanan.append('idpegawai', this.form.idpegawai);
+            this.penjualanlayanan.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanlayanan.append('idhewan', this.form.idhewan);
             this.penjualanlayanan.append('status', this.form.status);
             this.penjualanlayanan.append('diskon', this.form.diskon);
@@ -271,11 +255,11 @@ export default {
         },
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_pelayanan/" + this.updatedId,{
-                idpegawai: this.form.idpegawai,
+                idpegawai: this.$session.get('dataPegawai').idpegawai,
                 idhewan: this.form.idhewan,
                 status: this.form.status,
                 diskon: this.form.diskon,
-                total: this.total,
+                total: this.form.total,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -299,11 +283,10 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.idpegawai = item.idpegawai;
             this.form.idhewan = item.idhewan;
             this.form.status = item.status;
-            this.diskon = item.diskon;
-            this.total = item.total;
+            this.form.diskon = item.diskon;
+            this.form.total = item.total;
             this.updatedId = item.idtransaksipelayanan;
         },
         deleteData(deleteId){
