@@ -39,7 +39,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idpemesanan }}</td>
                             <td>{{ item.noPO}}</td>
-                            <td>{{ item.idsupplier}}</td>
+                            <td>{{ item.idsupplier.nama}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.tglpesan}}</td>
                             <td>{{ item.tglcetak}}</td>
