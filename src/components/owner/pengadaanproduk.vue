@@ -86,7 +86,7 @@
                             >
                         </v-select>
                     </v-col>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <v-select 
                             :items="hewans"
                             v-model="form.idhewan"
@@ -105,7 +105,7 @@
                             item-value="idsupplier"
                             >
                         </v-select>
-                    </v-col>    
+                    </v-col>     -->
                     <!-- <v-col cols="12">
                         <v-select 
                             :items="pegawais"
@@ -202,7 +202,7 @@ export default {
             status: ["Dipesan","Diterima"],
             dialog: false,
             keyword: '',
-            status: ['Dipesan','Diterima'],
+            // status: ['Dipesan','Diterima'],
             headers: [
                     {
                     text: 'No',
@@ -290,25 +290,25 @@ export default {
                 this.errors.push(e)
             });
         },
-        getDataHewan(){
-            axios.get("http://kouvee.xbanana.my.id/api/hewan")
-            .then(
-                response => {this.hewans = response.data},
-            )
-            .catch(e => {
-                this.errors.push(e)
-            });
-        },
+        // getDataHewan(){
+        //     axios.get("http://kouvee.xbanana.my.id/api/hewan")
+        //     .then(
+        //         response => {this.hewans = response.data},
+        //     )
+        //     .catch(e => {
+        //         this.errors.push(e)
+        //     });
+        // },
 
-        getDataSupplier(){
-            axios.get("http://kouvee.xbanana.my.id/api/supplier")
-            .then(
-                response => {this.suppliers = response.data},
-            )
-            .catch(e => {
-                this.errors.push(e)
-            });
-        },
+        // getDataSupplier(){
+        //     axios.get("http://kouvee.xbanana.my.id/api/supplier")
+        //     .then(
+        //         response => {this.suppliers = response.data},
+        //     )
+        //     .catch(e => {
+        //         this.errors.push(e)
+        //     });
+        // },
 
 
         sendData(){
@@ -419,8 +419,8 @@ export default {
             this.getData();
             this.getDataSupplier();
             this.getDataPegawai();
-            this.getDataHewan();
-            this.getDataSupplier();
+            // this.getDataHewan();
+            // this.getDataSupplier();
         },
     }
 </script>
