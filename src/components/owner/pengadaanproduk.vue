@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Pemesanan Produk 
+                            Tambah Transaksi Pemesanan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -28,7 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="pemesananproduks"
+                    :items="pengadaanproduks"
                     :search="keyword"
                     :loading="load"
                 >
@@ -37,12 +37,14 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.idpemesanan}} </td>
+                            <td>{{ item.idpemesanan }}</td>
                             <td>{{ item.noPO}}</td>
-                            <td>{{ item.idsupplier  .nama}}</td>
+                            <td>{{ item.idsupplier}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.tglpesan}}</td>
+                            <td>{{ item.tglcetak}}</td>
                             <td>{{ item.status}}</td>
+                            <td> {{ item.detil}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -69,7 +71,7 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Transaksi Produk</span>
+            <span class="headline">Transaksi Pengadaan Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -95,6 +97,26 @@
                         </v-select>
                     </v-col>
                     <v-col cols="12">
+                        <v-select 
+                            :items="suppliers"
+                            v-model="form.idsupplier"
+                            label="Supplier"
+                            item-text="nama"
+                            item-value="idsupplier"
+                            >
+                        </v-select>
+                    </v-col>    
+                    <!-- <v-col cols="12">
+                        <v-select 
+                            :items="pegawais"
+                            v-model="form.idpegawai"
+                            label="Pegawai"
+                            item-text="nama"
+                            item-value="idpegawai"
+                            >
+                        </v-select>
+                    </v-col> -->
+                    <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
                             :nudge-right="40"
@@ -114,12 +136,33 @@
                             <v-date-picker v-model="form.tglpesan" @input="menuDate = false"></v-date-picker>
                         </v-menu>
                     </v-col>
+                   <v-col cols="12">
+                        <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="form.tglcetak"
+                                label="Tanggal Cetak*"
+                                readonly
+                                v-on="on"
+                                required
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="form.tglcetak" @input="menuDate = false"></v-date-picker>
+                        </v-menu>
+                    </v-col>    
                     <v-col cols="12">
                         <v-select
                             :items="status"
                             v-model="form.status"
                             label="Status*"
-                        /> 
+                        >
+                        </v-select>  
                     </v-col>
                 </v-row>
             </v-container>
@@ -130,9 +173,8 @@
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
-        </v-card>
-    </v-dialog>
-    
+    </v-card>
+</v-dialog>
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -160,61 +202,79 @@ export default {
             status: ["Dipesan","Diterima"],
             dialog: false,
             keyword: '',
+            status: ['Dipesan','Diterima'],
             headers: [
                     {
                     text: 'No',
                     value: 'no',
                     },
                     {
-                    text: 'ID Pemesanan',
+                    text: 'ID Transaksi Pengadaaan',
                     value: 'idpemesanan',
                     },
                     {
-                    text: 'No Pemesanan',
+                    text: 'No Pengadaan',
                     value: 'noPO'
                     },
                     {
-                    text: 'Supplier',
+                    text: 'ID Supplier',
                     value: 'idsupplier'
                     },
                     {
-                    text: 'Pegawai',
+                    text: 'ID Pegawai',
                     value: 'idpegawai'
                     },
                     {
                     text: 'Tanggal Pesan',
-                    value: 'tglpesan'
+                    value: 'tglpesan',
+                    },
+                    {
+                    text: 'Tanggal Cetak',
+                    value: 'tglcetak',
                     },
                     {
                     text: 'Status',
-                    value: 'status'
+                    value: 'status',
+                    },
+                    {
+                    text: 'Detil',
+                    value: 'detil',
                     },
             ],
-            pemesananproduks: [],
-            pegawais: [],
-            hewans: [],
-            suppliers : [],
+            pengadaanproduks: [],
+            suppliers: [],
+            pegawais:[],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                idsupplier: '',
+                idsupplier : '',
                 idpegawai : '',
                 tglpesan : '',
+                tglcetak : '',
                 status : '',
             },
-            pemesananproduk : new FormData,
+            pengadaanproduk : new FormData,
             typeInput: 'new',
             errors : '',
-            updatedId : '',     
+            updatedId : '',
         }
     },
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/pemesanan_barang")
             .then(
-                response => {this.pemesananproduks = response.data},
+                response => {this.pengadaanproduks = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+        getDataSupplier(){
+            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+            .then(
+                response => {this.suppliers = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -252,13 +312,16 @@ export default {
 
 
         sendData(){
-            this.pemesananproduk.append('noPR', this.form.noPO);
-            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
-            this.pemesananproduk.append('idsupplier', this.form.idsupplier);
-            this.pemesananproduk.append('tglpesan', this.form.tglpesan);
-            this.pemesananproduk.append('status', this.form.status);
+            this.pengadaanproduk.append('noPO', this.form.noPO);
+            this.pengadaanproduk.append('idsupplier', this.form.idsupplier);
+            this.pengadaanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
+            this.pengadaanproduk.append('tglpesan', this.form.tglpesan);
+            this.pengadaanproduk.append('tglcetak', this.form.tglcetak);
+            this.pengadaanproduk.append('status', this.form.status);
+             this.pengadaanproduk.append('detil', this.form.detil);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
-            this.$http.post(uri,this.pemesananproduk).then(response =>{
+            this.$http.post(uri,this.pengadaanproduk).then(response =>{
+                console.log(this.form)
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -266,7 +329,7 @@ export default {
                 this.dialog =false;
                 this.getData();
         }).catch(error =>{ 
-             console.log(this.form)
+            console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Try Again'; 
@@ -276,10 +339,11 @@ export default {
 
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/pemesanan_barang/" + this.updatedId,{
+                idsupplier: this.form.idsupplier,
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
-                idhewan: this.form.idhewan,
-                diskon: this.form.diskon,
-                total: this.form.total,
+                tglpesan: this.form.tglpesan,
+                tglcetak: this.form.tglcetak,
+                status: this.form.status,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -304,15 +368,17 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-            this.form.idhewan = item.idhewan;
-            this.form.diskon = item.diskon;
-            this.form.total = item.total;
-            this.updatedId = item.idtransaksipenjualan;
+            this.form.idsupplier = item.idsupplier;
+            this.form.idpegawai = item.idpegawai;
+            this.form.tglpesan = item.tglpesan;
+            this.form.tglcetak = item.tglcetak;
+            this.form.status = item.status;
+            this.updatedId = item.idpemesanan;
         },
 
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
-            if(confirmBox)
+            if(confirmBox){
             var uri="http://kouvee.xbanana.my.id/api/pemesanan_barang/"+deleteId;
             this.$http.delete(uri).then(response =>{
                 this.snackbar=true;
@@ -327,6 +393,7 @@ export default {
                     this.text='Try Again';
                     this.color='red';
                 })
+            }
         },
     
         setForm(){
@@ -339,16 +406,18 @@ export default {
 
         resetForm(){
             this.form = {
+                idsupplier : '',
                 idpegawai : '',
-                idhewan : '',
-                diskon : '',
-                total : '',
+                tglpesan : '',
+                tglcetak   : '',
+                status : '',
             }
         }
         },
 
         mounted(){
             this.getData();
+            this.getDataSupplier();
             this.getDataPegawai();
             this.getDataHewan();
             this.getDataSupplier();
