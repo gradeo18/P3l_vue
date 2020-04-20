@@ -2,10 +2,10 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Pemesanan Produk</h2> 
+                <h2 class="text-md-center">Pemesanan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                         <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Pemesanan Produk
+                            Tambah Pemesanan Produk 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -37,12 +37,11 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
+                            <td>{{ item.idpemesanan}} </td>
                             <td>{{ item.noPO}}</td>
+                            <td>{{ item.idsupplier  .nama}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.tglpesan}}</td>
-                            <td>{{ item.alamat}}</td>
-                            <td>{{ item.notelp}}</td>
-                            <td>{{ item.tglcetak}}</td>
                             <td>{{ item.status}}</td>
                             <td class="text-center">
                                 <v-btn 
@@ -57,7 +56,7 @@
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idpemesanan)"
+                                @click="deleteData(item.idtransaksipenjualan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -74,7 +73,27 @@
         </v-card-title>
         <v-card-text>
             <v-container>
-                <v-row>
+                 <v-row>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="suppliers"
+                            v-model="form.idsupplier"
+                            label="Supplier"
+                            item-text="nama"
+                            item-value="idsupplier"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="hewans"
+                            v-model="form.idhewan"
+                            label="Hewan"
+                            item-text="nama"
+                            item-value="idhewan"
+                            >
+                        </v-select>
+                    </v-col>
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
@@ -96,19 +115,11 @@
                         </v-menu>
                     </v-col>
                     <v-col cols="12">
-                        <label for="gambar">Alamat*</label>
-                        <v-text-field v-model="form.alamat" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="gambar">Nomor Telepon*</label>
-                        <v-text-field v-model="form.notelp" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
                         <v-select
                             :items="status"
                             v-model="form.status"
                             label="Status*"
-                        />  
+                        /> 
                     </v-col>
                 </v-row>
             </v-container>
@@ -146,17 +157,25 @@ import axios from 'axios'
 export default {
     data () {
         return {
+            status: ["Dipesan","Diterima"],
             dialog: false,
             keyword: '',
-            status: ['Dipesan','Diterima'],
-            headers: [  
+            headers: [
                     {
                     text: 'No',
                     value: 'no',
                     },
                     {
-                    text: 'Nomor PO',
+                    text: 'ID Pemesanan',
+                    value: 'idpemesanan',
+                    },
+                    {
+                    text: 'No Pemesanan',
                     value: 'noPO'
+                    },
+                    {
+                    text: 'Supplier',
+                    value: 'idsupplier'
                     },
                     {
                     text: 'Pegawai',
@@ -167,34 +186,22 @@ export default {
                     value: 'tglpesan'
                     },
                     {
-                    text: 'Alamat',
-                    value: 'alamat'
-                    },
-                    {
-                    text: 'Nomor Telepon',
-                    value: 'notelp',
-                    },
-                    {
-                    text: 'Tanggal Cetak',
-                    value: 'tglcetak',
-                    },
-                    {
                     text: 'Status',
-                    value: 'status',
-                    }  
+                    value: 'status'
+                    },
             ],
             pemesananproduks: [],
             pegawais: [],
+            hewans: [],
+            suppliers : [],
             snackbar: false,
             color: null,
             text: '',
             load: false,
             form: {
-                idpegawai: '',
+                idsupplier: '',
+                idpegawai : '',
                 tglpesan : '',
-                alamat : '',
-                notelp : '',
-                tglcetak : '',
                 status : '',
             },
             pemesananproduk : new FormData,
@@ -213,6 +220,7 @@ export default {
                 this.errors.push(e)
             });
         },
+
         getDataPegawai(){
             axios.get("http://kouvee.xbanana.my.id/api/pegawai")
             .then(
@@ -222,16 +230,35 @@ export default {
                 this.errors.push(e)
             });
         },
+        getDataHewan(){
+            axios.get("http://kouvee.xbanana.my.id/api/hewan")
+            .then(
+                response => {this.hewans = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataSupplier(){
+            axios.get("http://kouvee.xbanana.my.id/api/supplier")
+            .then(
+                response => {this.suppliers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+
         sendData(){
-            this.pemesananproduk.append('noPO', this.form.noPO);
+            this.pemesananproduk.append('noPR', this.form.noPO);
             this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
+            this.pemesananproduk.append('idsupplier', this.form.idsupplier);
             this.pemesananproduk.append('tglpesan', this.form.tglpesan);
-            this.pemesananproduk.append('alamat', this.form.alamat);
-            this.pemesananproduk.append('notelp', this.form.notelp);
-            this.pemesananproduk.append('tglcetak', this.form.tglcetak);
             this.pemesananproduk.append('status', this.form.status);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
-            this.$http.post(uri,this.produk).then(response =>{
+            this.$http.post(uri,this.pemesananproduk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -246,14 +273,13 @@ export default {
             this.color = 'red';
         })
         },
+
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/pemesanan_barang/" + this.updatedId,{
-                idpegawai : this.$session.get('dataPegawai').idpegawai,
-                tglpesan : this.form.tglpesan,
-                alamat : this.form.alamat,
-                notelp :  this.form.notelp,
-                tglcetak: this.form.tglcetak,
-                status : this.form.status,
+                idpegawai: this.$session.get('dataPegawai').idpegawai,
+                idhewan: this.form.idhewan,
+                diskon: this.form.diskon,
+                total: this.form.total,
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -274,16 +300,16 @@ export default {
             this.typeInput = 'dddd';
             })
         },
+
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
-                this.fomr.idpegawai = item.idpegawai;
-                this.form.tglpesan = item.tglpesan;
-                this.form.alamat = item.alamat;
-                this.form.notelp = item.notelp;
-                this.form.tglcetak = item.tglcetak;
-                this.status = item.status;
+            this.form.idhewan = item.idhewan;
+            this.form.diskon = item.diskon;
+            this.form.total = item.total;
+            this.updatedId = item.idtransaksipenjualan;
         },
+
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox)
@@ -310,20 +336,22 @@ export default {
                 this.updateData()
             }
         },
+
         resetForm(){
             this.form = {
-                idpegawai: '',
-                tglpesan: '',
-                alamat : '',
-                notelp : '',
-                tglcetak : '',
-                status: '',
+                idpegawai : '',
+                idhewan : '',
+                diskon : '',
+                total : '',
             }
         }
         },
+
         mounted(){
             this.getData();
             this.getDataPegawai();
+            this.getDataHewan();
+            this.getDataSupplier();
         },
     }
 </script>

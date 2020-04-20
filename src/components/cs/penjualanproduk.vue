@@ -41,9 +41,9 @@
                             <td>{{ item.noPR}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
-                            <td>{{ item.status}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
+                            <td>{{ item.detil.jumlah}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -75,16 +75,6 @@
         <v-card-text>
             <v-container>
                  <v-row>
-                    <!-- <v-col cols="12">
-                        <v-select 
-                            :items="pegawais"
-                            v-model="form.idpegawai"
-                            label="Pegawai"
-                            item-text="nama"
-                            item-value="idpegawai"
-                            >
-                        </v-select>
-                    </v-col>     -->
                      <v-col cols="12">
                         <v-select 
                             :items="hewans"
