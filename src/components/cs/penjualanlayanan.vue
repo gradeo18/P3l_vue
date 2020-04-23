@@ -83,6 +83,7 @@
                             label="Hewan"
                             item-text="nama"
                             item-value="idhewan"
+                            :class="{ 'hasError': $v.form.idhewan.$error }"
                             >
                         </v-select>
                     </v-col>
@@ -93,6 +94,7 @@
                             label="Customer"
                             item-text="nama"
                             item-value="idcustomer"
+                            :class="{ 'hasError': $v.form.idcustomer.$error }"
                             >
                         </v-select>
                     </v-col>
@@ -101,14 +103,15 @@
                             :items="status"
                             v-model="form.status"
                             label="Status*"
+                            :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Diskon*" v-model="form.diskon" required></v-text-field>
+                        <v-text-field label="Diskon*" v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Total*" v-model="form.total" required></v-text-field>
+                        <v-text-field label="Total*" v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -141,6 +144,7 @@
 </template>
 
 <script>
+import { required, numeric } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
@@ -207,6 +211,15 @@ export default {
             updatedId : '',
         }
     },
+    validations: {
+        form: {
+            status: { required },
+            diskon: { required, numeric },
+            total: { required, numeric },
+            idcustomer: { required },
+            idhewan: { required },
+        }
+    },
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_pelayanan")
@@ -245,6 +258,7 @@ export default {
             });
         },
         sendData(){
+            this.$v.form.$touch();
             this.penjualanlayanan.append('noLY', this.form.noLY);
             this.penjualanlayanan.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanlayanan.append('idhewan', this.form.idhewan);
@@ -252,6 +266,11 @@ export default {
             this.penjualanlayanan.append('status', this.form.status);
             this.penjualanlayanan.append('diskon', this.form.diskon);
             this.penjualanlayanan.append('total', this.form.total);
+            if(this.$v.form.idhewan.$error) return alert('Hewan Masih Kosong !')
+            else if(this.$v.form.idcustomer.$error) return alert('Customer Masih Kosong !')
+            else if(this.$v.form.status.$error) return alert('Status Masih Kosong !')
+            else if(this.$v.form.diskon.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
+            else if(this.$v.form.total.$error) return alert('Total Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/transaksi_pelayanan"
             this.$http.post(uri,this.penjualanlayanan).then(response =>{
                 console.log(this.form)

@@ -4,7 +4,9 @@ import Axios from 'axios'
 import router from './router'
 import vuetify from './plugins/vuetify';
 import session from './plugins/session';
+import Vuelidate from 'vuelidate'
 
+Vue.use(Vuelidate)
 Vue.prototype.$http = Axios;
 Vue.prototype.$apiUrl = 'http://localhost:8080/backend/index.php';    
 Vue.config.productionTip = false
