@@ -41,6 +41,7 @@
                             <td>{{ item.noLY}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
+                            <td>{{ item.idcustomer.nama}}</td>
                             <td>{{ item.status}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
@@ -75,16 +76,6 @@
         <v-card-text>
             <v-container>
                 <v-row>
-                    <!-- <v-col cols="12">
-                        <v-select 
-                            :items="pegawais"
-                            v-model="form.idpegawai"
-                            label="Pegawai"
-                            item-text="nama"
-                            item-value="idpegawai"
-                            >
-                        </v-select>
-                    </v-col>     -->
                     <v-col cols="12">
                         <v-select 
                             :items="hewans"
@@ -92,6 +83,16 @@
                             label="Hewan"
                             item-text="nama"
                             item-value="idhewan"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="customers"
+                            v-model="form.idcustomer"
+                            label="Customer"
+                            item-text="nama"
+                            item-value="idcustomer"
                             >
                         </v-select>
                     </v-col>
@@ -161,12 +162,16 @@ export default {
                     value: 'noLY'
                     },
                     {
-                    text: 'ID Pegawai',
+                    text: 'Pegawai',
                     value: 'idpegawai'
                     },
                     {
-                    text: 'ID Hewan',
+                    text: 'Hewan',
                     value: 'idhewan'
+                    },
+                    {
+                    text: 'Customer',
+                    value: 'idcustomer'
                     },
                     {
                     text: 'Status',
@@ -184,6 +189,7 @@ export default {
             penjualanlayanans: [],
             pegawais:[],
             hewans: [],
+            customers: [],
             snackbar: false,
             color: null,
             text: '',
@@ -229,10 +235,20 @@ export default {
                 this.errors.push(e)
             });
         },
+        getDataCustomer(){
+            axios.get("http://kouvee.xbanana.my.id/api/customer")
+            .then(
+                response => {this.customers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
         sendData(){
             this.penjualanlayanan.append('noLY', this.form.noLY);
             this.penjualanlayanan.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanlayanan.append('idhewan', this.form.idhewan);
+            this.penjualanlayanan.append('idcustomer', this.form.idcustomer);
             this.penjualanlayanan.append('status', this.form.status);
             this.penjualanlayanan.append('diskon', this.form.diskon);
             this.penjualanlayanan.append('total', this.form.total);
@@ -249,7 +265,7 @@ export default {
             console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -257,6 +273,7 @@ export default {
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_pelayanan/" + this.updatedId,{
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
                 idhewan: this.form.idhewan,
+                idcustomer: this.form.idcustomer,
                 status: this.form.status,
                 diskon: this.form.diskon,
                 total: this.form.total,
@@ -274,7 +291,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -284,6 +301,7 @@ export default {
             this.typeInput = 'edit';
             this.dialog = true;
             this.form.idhewan = item.idhewan;
+            this.form.idcustomer = item.idcustomer;
             this.form.status = item.status;
             this.form.diskon = item.diskon;
             this.form.total = item.total;
@@ -303,7 +321,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
             }
@@ -320,6 +338,7 @@ export default {
             this.form = {
                 idpegawai : '',
                 idhewan : '',
+                idcustomer: '',
                 status : '',
                 diskon : '',
                 total   : '',
@@ -330,6 +349,7 @@ export default {
             this.getData();
             this.getDataHewan();
             this.getDataPegawai();
+            this.getDataCustomer();
         },
     }
 </script>

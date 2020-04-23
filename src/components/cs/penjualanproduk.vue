@@ -41,6 +41,7 @@
                             <td>{{ item.noPR}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
+                            <td>{{ item.idcustomer.nama}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
                             <td>{{ item.detil.jumlah}}</td>
@@ -82,6 +83,16 @@
                             label="Hewan"
                             item-text="nama"
                             item-value="idhewan"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="customers"
+                            v-model="form.idcustomer"
+                            label="Customer"
+                            item-text="nama"
+                            item-value="idcustomer"
                             >
                         </v-select>
                     </v-col>
@@ -131,6 +142,9 @@ export default {
         return {
             dialog: false,
             keyword: '',
+            inputRules : [
+                v => v.length >= 1 || 'Field Masih Kosong !'
+            ],
             headers: [
                     {
                     text: 'No',
@@ -145,12 +159,16 @@ export default {
                     value: 'noPR'
                     },
                     {
-                    text: 'ID Pegawai',
+                    text: 'Pegawai',
                     value: 'idpegawai'
                     },
                     {
-                    text: 'ID Hewan',
+                    text: 'Hewan',
                     value: 'idhewan'
+                    },
+                    {
+                    text: 'Customer',
+                    value: 'idcustomer'
                     },
                     {
                     text: 'Diskon',
@@ -164,6 +182,7 @@ export default {
             penjualanproduks: [],
             pegawais: [],
             hewans: [],
+            customers: [],
             snackbar: false,
             color: null,
             text: '',
@@ -209,12 +228,21 @@ export default {
                 this.errors.push(e)
             });
         },
-
+        getDataCustomer(){
+            axios.get("http://kouvee.xbanana.my.id/api/customer")
+            .then(
+                response => {this.customers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
 
         sendData(){
             this.penjualanproduk.append('noPR', this.form.noPR);
             this.penjualanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanproduk.append('idhewan', this.form.idhewan);
+            this.penjualanproduk.append('idcustomer', this.form.idcustomer);
             this.penjualanproduk.append('diskon', this.form.diskon);
             this.penjualanproduk.append('total', this.form.total);
             var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
@@ -229,7 +257,7 @@ export default {
              console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -238,6 +266,7 @@ export default {
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
                 idhewan: this.form.idhewan,
+                idcustomer: this.form.idcustomer,
                 diskon: this.form.diskon,
                 total: this.form.total,
             })
@@ -254,7 +283,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -265,6 +294,7 @@ export default {
             this.typeInput = 'edit';
             this.dialog = true;
             this.form.idhewan = item.idhewan;
+            this.form.idcustomer = item.idcustomer
             this.form.diskon = item.diskon;
             this.form.total = item.total;
             this.updatedId = item.idtransaksipenjualan;
@@ -284,7 +314,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
         },
@@ -311,6 +341,7 @@ export default {
             this.getData();
             this.getDataPegawai();
             this.getDataHewan();
+            this.getDataCustomer();
         },
     }
 </script>

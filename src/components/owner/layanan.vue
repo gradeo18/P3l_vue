@@ -88,13 +88,7 @@
                             v-model="form.harga"
                             label="Harga Layanan Hewan*"
                         />  
-                        <!-- <label for="layanan">Nama Layanan Hewan*</label>
-                        <v-text-field v-model="form.nama" required></v-text-field> -->
                     </v-col>
-                    <!-- <v-col cols="12">
-                    <label for="harga">Harga Layanan*</label>
-                        <v-text-field v-model="form.harga" required></v-text-field>
-                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -160,10 +154,6 @@ export default {
                     value: 'updated_at',
                     },
                     {
-                    text: 'Deleted At',
-                    value: 'deleted_at',
-                    },
-                    {
                     text: 'Aktor',
                     value: 'aktor',   
                     },  
@@ -209,7 +199,7 @@ export default {
         }).catch(error =>{ 
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -233,7 +223,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -263,7 +253,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
         },

@@ -44,8 +44,16 @@
                             <td>{{ item.tglpesan}}</td>
                             <td>{{ item.tglcetak}}</td>
                             <td>{{ item.status}}</td>
-                            <td> {{ item.detil}}</td>
+                            <td>{{ item.detil}}</td>
                             <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="viewHandler(item)"
+                                >
+                                <v-icon>mdi-eye</v-icon>
+                                </v-btn>
                                 <v-btn 
                                 icon 
                                 color="indigo" 
@@ -86,36 +94,6 @@
                             >
                         </v-select>
                     </v-col>
-                    <!-- <v-col cols="12">
-                        <v-select 
-                            :items="hewans"
-                            v-model="form.idhewan"
-                            label="Hewan"
-                            item-text="nama"
-                            item-value="idhewan"
-                            >
-                        </v-select>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-select 
-                            :items="suppliers"
-                            v-model="form.idsupplier"
-                            label="Supplier"
-                            item-text="nama"
-                            item-value="idsupplier"
-                            >
-                        </v-select>
-                    </v-col>     -->
-                    <!-- <v-col cols="12">
-                        <v-select 
-                            :items="pegawais"
-                            v-model="form.idpegawai"
-                            label="Pegawai"
-                            item-text="nama"
-                            item-value="idpegawai"
-                            >
-                        </v-select>
-                    </v-col> -->
                     <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
@@ -135,27 +113,7 @@
                             </template>
                             <v-date-picker v-model="form.tglpesan" @input="menuDate = false"></v-date-picker>
                         </v-menu>
-                    </v-col>
-                   <v-col cols="12">
-                        <v-menu
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                        >
-                            <template v-slot:activator="{ on }">
-                            <v-text-field
-                                v-model="form.tglcetak"
-                                label="Tanggal Cetak*"
-                                readonly
-                                v-on="on"
-                                required
-                            ></v-text-field>
-                            </template>
-                            <v-date-picker v-model="form.tglcetak" @input="menuDate = false"></v-date-picker>
-                        </v-menu>
-                    </v-col>    
+                    </v-col>   
                     <v-col cols="12">
                         <v-select
                             :items="status"
@@ -175,6 +133,33 @@
         </v-card-actions>
     </v-card>
 </v-dialog>
+<v-dialog v-model="viewDialog" persistent max-width="1000px"> <v-card>
+        <v-card-title>
+            <span class="headline">Surat Pemesanan</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                        <tr>
+                            <td>{{ form.idpemesanan }}</td>
+                            <td>{{ form.noPO}}</td>
+                            <td>{{ form.idsupplier.nama}}</td>
+                            <td>{{ form.idpegawai}}</td>
+                            <td>{{ form.tglpesan}}</td>
+                            <td>{{ form.tglcetak}}</td>
+                            <td>{{ form.status}}</td>
+                            <td>{{ form.detil}}</td>
+                        </tr>
+                </v-row>
+            </v-container>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="viewDialog = false">Close</v-btn>
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -200,9 +185,9 @@ export default {
     data () {
         return {
             status: ["Dipesan","Diterima"],
+            viewDialog: false,
             dialog: false,
             keyword: '',
-            // status: ['Dipesan','Diterima'],
             headers: [
                     {
                     text: 'No',
@@ -290,26 +275,6 @@ export default {
                 this.errors.push(e)
             });
         },
-        // getDataHewan(){
-        //     axios.get("http://kouvee.xbanana.my.id/api/hewan")
-        //     .then(
-        //         response => {this.hewans = response.data},
-        //     )
-        //     .catch(e => {
-        //         this.errors.push(e)
-        //     });
-        // },
-
-        // getDataSupplier(){
-        //     axios.get("http://kouvee.xbanana.my.id/api/supplier")
-        //     .then(
-        //         response => {this.suppliers = response.data},
-        //     )
-        //     .catch(e => {
-        //         this.errors.push(e)
-        //     });
-        // },
-
 
         sendData(){
             this.pengadaanproduk.append('noPO', this.form.noPO);
@@ -318,7 +283,7 @@ export default {
             this.pengadaanproduk.append('tglpesan', this.form.tglpesan);
             this.pengadaanproduk.append('tglcetak', this.form.tglcetak);
             this.pengadaanproduk.append('status', this.form.status);
-             this.pengadaanproduk.append('detil', this.form.detil);
+            this.pengadaanproduk.append('detil', this.form.detil);
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
             this.$http.post(uri,this.pengadaanproduk).then(response =>{
                 console.log(this.form)
@@ -332,7 +297,7 @@ export default {
             console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -358,7 +323,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -376,6 +341,16 @@ export default {
             this.updatedId = item.idpemesanan;
         },
 
+        viewHandler(item){
+            this.viewDialog = true;
+            this.form.idsupplier = item.idsupplier;
+            this.form.idpegawai = item.idpegawai;
+            this.form.tglpesan = item.tglpesan;
+            this.form.tglcetak = item.tglcetak;
+            this.form.status = item.status;
+            this.form.detil = item.detil;
+        },
+
         deleteData(deleteId){
             const confirmBox = confirm("Are you sure want remove?")
             if(confirmBox){
@@ -390,7 +365,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
             }
@@ -419,8 +394,6 @@ export default {
             this.getData();
             this.getDataSupplier();
             this.getDataPegawai();
-            // this.getDataHewan();
-            // this.getDataSupplier();
         },
     }
 </script>

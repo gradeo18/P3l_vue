@@ -44,7 +44,6 @@
                             <td>{{ item.alamat}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
-                            <td>{{ item.deleted_at}}</td>
                             <td>{{ item.aktor}}</td>
                             <td class="text-center">
                                 <v-btn 
@@ -102,7 +101,7 @@
                         </v-menu>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="No.Telp*" v-model="form.notelp" required></v-text-field>
+                        <v-text-field label="No.Telp*" v-model="form.notelp" class="{invalid:form.notelp < 11||form.notelp > 13 }" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field>
@@ -178,10 +177,6 @@ export default {
                     value: 'updated_at',
                     },
                     {
-                    text: 'Deleted At',
-                    value: 'deleted_at',
-                    },
-                    {
                     text: 'Aktor',
                     value: 'aktor',
                     },   
@@ -231,7 +226,7 @@ export default {
         }).catch(error =>{ 
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -257,7 +252,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -289,7 +284,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
             }

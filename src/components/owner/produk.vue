@@ -46,7 +46,6 @@
                             <td>{{ item.idsupplier}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
-                            <td>{{ item.deleted_at}}</td>
                             <td>{{ item.aktor}}</td>
                             <td class="text-center">
                                 <v-btn 
@@ -236,10 +235,6 @@ export default {
                     value: 'updated_at',
                     },
                     {
-                    text: 'Deleted At',
-                    value: 'deleted_at',
-                    },
-                    {
                     text: 'Aktor',
                     value: 'aktor',    
                     }    
@@ -315,7 +310,7 @@ export default {
              console.log(this.form)
             this.errors = error; 
             this.snackbar = true; 
-            this.text = 'Try Again'; 
+            this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
         },
@@ -343,7 +338,7 @@ export default {
             }).catch(error =>{
             this.errors = error
             this.snackbar = true;
-            this.text = 'Try Again';
+            this.text = 'Masukan Data dengan Benar !';
             this.color = 'red';
             this.load = false;
             this.typeInput = 'dddd';
@@ -376,7 +371,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Try Again';
+                    this.text='Masukan Data dengan Benar !';
                     this.color='red';
                 })
         },
