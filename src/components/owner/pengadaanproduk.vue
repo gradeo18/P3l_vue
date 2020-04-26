@@ -146,6 +146,54 @@
     </v-card>
 </v-dialog>
 
+<v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Edit Transaksi Pemesanan Produk</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <v-menu
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                        >
+                            <template v-slot:activator="{ on }">
+                            <v-text-field
+                                v-model="form.tglpesan"
+                                label="Tanggal Pesan*"
+                                readonly
+                                v-on="on"
+                                :class="{ 'hasError': $v.form.tglpesan.$error }"
+                            ></v-text-field>
+                            </template>
+                            <v-date-picker v-model="form.tglpesan" @input="menuDate = false"></v-date-picker>
+                        </v-menu>
+                    </v-col>   
+                    <v-col cols="12">
+                        <v-select
+                            :items="status"
+                            v-model="form.status"
+                            label="Status*"
+                            :class="{ 'hasError': $v.form.status.$error }"
+                        >
+                        </v-select>  
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
 <v-dialog v-model="detilDialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Pemesanan Produk</span>
@@ -259,6 +307,7 @@ export default {
             viewDialog: false,
             dialog: false,
             detilDialog: false,
+            dialogEdit: false,
             keyword: '',
             headers: [
                     {
@@ -403,10 +452,8 @@ export default {
 
         updateData(){      
             axios.put("http://kouvee.xbanana.my.id/api/pemesanan_barang/" + this.updatedId,{
-                idsupplier: this.form.idsupplier,
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
                 tglpesan: this.form.tglpesan,
-                tglcetak: this.form.tglcetak,
                 status: this.form.status,
             })
             .then(response =>{     
@@ -415,7 +462,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.load = false;
-                this.dialog = false;
+                this.dialogEdit = false;
                 this.getData(); 
                 this.resetForm();
                 this.typeInput = 'dddd';
@@ -431,11 +478,9 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialog = true;
-            this.form.idsupplier = item.idsupplier;
+            this.dialogEdit = true;
             this.form.idpegawai = item.idpegawai;
             this.form.tglpesan = item.tglpesan;
-            this.form.tglcetak = item.tglcetak;
             this.form.status = item.status;
             this.updatedId = item.idpemesanan;
         },
