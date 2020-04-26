@@ -77,7 +77,7 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Nama Customer*" v-model="form.nama" required></v-text-field>
+                        <v-text-field label="Nama Customer*" v-model="form.nama" :class="{ 'hasError': $v.form.nama.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-menu
@@ -94,17 +94,17 @@
                                 label="Tanggal Lahir*"
                                 readonly
                                 v-on="on"
-                                required
+                                :class="{ 'hasError': $v.form.tgllahir.$error }"
                             ></v-text-field>
                             </template>
                             <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
                         </v-menu>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="No.Telp*" v-model="form.notelp" class="{invalid:form.notelp < 11||form.notelp > 13 }" required></v-text-field>
+                        <v-text-field label="No.Telp*" v-model="form.notelp" counter maxlength="12" :class="{ 'hasError': $v.form.notelp.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                        <v-text-field label="Alamat*" v-model="form.alamat" required></v-text-field>
+                        <v-text-field label="Alamat*" v-model="form.alamat" :class="{ 'hasError': $v.form.alamat.$error }"></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -137,6 +137,7 @@
 </template>
 
 <script>
+import { required, numeric, minLength, maxLength } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
@@ -198,6 +199,14 @@ export default {
             updatedId : '',
         }
     },
+    validations: {
+        form: {
+            nama: { required },
+            tgllahir: { required },
+            notelp: { required, numeric, minLength: minLength(6), maxLength: maxLength(12)},
+            alamat: { required },
+        }
+    },
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/customer")
@@ -210,11 +219,16 @@ export default {
         },
 
         sendData(){
+            this.$v.form.$touch();
             this.customer.append('nama', this.form.nama);
             this.customer.append('tgllahir', this.form.tgllahir);
             this.customer.append('alamat', this.form.alamat);
             this.customer.append('notelp', this.form.notelp);
             this.customer.append('aktor', this.$session.get('dataPegawai').idpegawai);
+            if(this.$v.form.nama.$error) return alert('Nama Masih Kosong !')
+            else if(this.$v.form.tgllahir.$error) return alert('Tanggal Lahir Masih Kosong !')
+            else if(this.$v.form.notelp.$error) return alert('No Telp Masih Kosong dan Harus Angka (6-12 digit) !')
+            else if(this.$v.form.alamat.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/customer"
             this.$http.post(uri,this.customer).then(response =>{
                 this.snackbar = true; 

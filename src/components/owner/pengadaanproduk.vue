@@ -91,6 +91,7 @@
                             label="Supplier"
                             item-text="nama"
                             item-value="idsupplier"
+                            :class="{ 'hasError': $v.form.idsupplier.$error }"
                             >
                         </v-select>
                     </v-col>
@@ -108,7 +109,7 @@
                                 label="Tanggal Pesan*"
                                 readonly
                                 v-on="on"
-                                required
+                                :class="{ 'hasError': $v.form.tglpesan.$error }"
                             ></v-text-field>
                             </template>
                             <v-date-picker v-model="form.tglpesan" @input="menuDate = false"></v-date-picker>
@@ -119,6 +120,7 @@
                             :items="status"
                             v-model="form.status"
                             label="Status*"
+                            :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
                     </v-col>
@@ -180,6 +182,7 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
@@ -246,6 +249,14 @@ export default {
             updatedId : '',
         }
     },
+    validations: {
+        form: {
+            idsupplier: { required },
+            tglpesan: { required },
+            tglcetak: { required },
+            status: { required },
+        }
+    },
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/pemesanan_barang")
@@ -277,6 +288,7 @@ export default {
         },
 
         sendData(){
+            this.$v.form.$touch();
             this.pengadaanproduk.append('noPO', this.form.noPO);
             this.pengadaanproduk.append('idsupplier', this.form.idsupplier);
             this.pengadaanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
@@ -284,6 +296,9 @@ export default {
             this.pengadaanproduk.append('tglcetak', this.form.tglcetak);
             this.pengadaanproduk.append('status', this.form.status);
             this.pengadaanproduk.append('detil', this.form.detil);
+            if(this.$v.form.idsupplier.$error) return alert('Supplier Masih Kosong !')
+            else if(this.$v.form.tglpesan.$error) return alert('Tanggal Pesan Masih Kosong !')
+            else if(this.$v.form.status.$error) return alert('Status Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
             this.$http.post(uri,this.pengadaanproduk).then(response =>{
                 console.log(this.form)
