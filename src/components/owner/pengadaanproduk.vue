@@ -15,6 +15,16 @@
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Pemesanan 
                         </v-btn>
+                        <v-btn depressed 
+                        dark 
+                        rounded 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="detilDialog = true"
+                        >
+                        <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
+                            Tambah Detil Transaksi 
+                        </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -76,6 +86,7 @@
             </v-data-table>
         </v-container>
     </v-card>
+    
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Pemesanan Produk</span>
@@ -134,6 +145,61 @@
         </v-card-actions>
     </v-card>
 </v-dialog>
+
+<v-dialog v-model="detilDialog" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Transaksi Pemesanan Produk</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="pemesananproduks"
+                            v-model="detilform.idpemesanan"
+                            label="ID Pemesanan"
+                            item-text="noPO"
+                            item-value="idpemesanan"
+                            :class="{ 'hasError': $v.detilform.idpemesanan.$error }"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="produks"
+                            v-model="detilform.idproduk"
+                            label="Produk"
+                            item-text="nama"
+                            item-value="idproduk"
+                            :class="{ 'hasError': $v.detilform.idproduk.$error }"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="jumlah">Jumlah*</label>
+                        <v-text-field v-model="detilform.jumlah" :class="{ 'hasError': $v.detilform.jumlah.$error }"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                    <v-select
+                            :items="satuan"
+                            v-model="detilform.satuan"
+                            label="Satuan*"
+                            :class="{ 'hasError': $v.detilform.satuan.$error }"
+                        >
+                    </v-select>  
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="detilDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="detilPemesanan()">Save</v-btn> 
+        </v-card-actions>
+    </v-card>
+</v-dialog>
+
 <v-dialog v-model="viewDialog" persistent max-width="1000px"> <v-card>
         <v-card-title>
             <span class="headline">Surat Pemesanan</span>
@@ -161,6 +227,8 @@
     </v-card>
 </v-dialog>
 
+
+
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -181,14 +249,16 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required,numeric } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
         return {
             status: ["Dipesan","Diterima"],
+            satuan: ["Pcs"],
             viewDialog: false,
             dialog: false,
+            detilDialog: false,
             keyword: '',
             headers: [
                     {
@@ -227,6 +297,7 @@ export default {
             pemesananproduks: [],
             suppliers: [],
             pegawais:[],
+            produks:[],
             snackbar: false,
             color: null,
             text: '',
@@ -237,6 +308,13 @@ export default {
                 status : '',
             },
             pemesananproduk : new FormData,
+            detilpemesanan : new FormData,
+            detilform:{
+                idproduk:'',
+                jumlah:'',
+                satuan:'',
+                idpemesanan:'',
+            },
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -248,6 +326,12 @@ export default {
             tglpesan: { required },
             tglcetak: { required },
             status: { required },
+        },
+        detilform: {
+            idpemesanan: {required},
+            idproduk: {required},
+            jumlah: {required,numeric},
+            satuan: {required},
         }
     },
     methods:{
@@ -274,6 +358,16 @@ export default {
             axios.get("http://kouvee.xbanana.my.id/api/pegawai")
             .then(
                 response => {this.pegawais = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
+        getDataProduk(){
+            axios.get("http://kouvee.xbanana.my.id/api/produk")
+            .then(
+                response => {this.produks = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -375,7 +469,34 @@ export default {
                 })
             }
         },
-    
+
+        detilPemesanan(){
+            this.$v.detilform.$touch();
+            this.detilpemesanan.append('idproduk', this.detilform.idproduk);
+            this.detilpemesanan.append('jumlah', this.detilform.jumlah);
+            this.detilpemesanan.append('satuan', this.detilform.satuan);
+            this.detilpemesanan.append('idpemesanan', this.detilform.idpemesanan);
+            if(this.$v.detilform.idpemesanan.$error) return alert('ID Pemesanan Tidak Boleh Kosong !')
+            else if(this.$v.detilform.idproduk.$error) return alert('ID Produk Masih Kosong !')
+            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Masih Kosong dan Harus Angka!')
+            else if(this.$v.detilform.satuan.$error) return alert('Satuan Tidak Boleh Kosong !')
+            var uri = "http://kouvee.xbanana.my.id/api/detil_pemesanan"
+            this.$http.post(uri,this.detilpemesanan).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.detilDialog =false;
+                this.getData();
+        }).catch(error =>{ 
+             console.log(this.detilform)
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Masukan Data dengan Benar !'; 
+            this.color = 'red';
+        })
+        },
+
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()
@@ -399,6 +520,7 @@ export default {
             this.getData();
             this.getDataSupplier();
             this.getDataPegawai();
+            this.getDataProduk();
         },
     }
 </script>
