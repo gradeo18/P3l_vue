@@ -88,6 +88,16 @@ children: [
         path: '/pengadaanproduk',
         component: ownerView('pengadaanproduk')   
     },
+    {
+        name: 'penjualanproduk',
+        path: '/owner/penjualanproduk',
+        component: csView('penjualanproduk')   
+    },
+    {
+        name: 'penjualanlayanan',
+        path: '/owner/penjualanlayanan',
+        component: csView('penjualanlayanan')
+    },
 ]
 },
 {
@@ -96,12 +106,12 @@ component: DashboardCS,
 children: [
     {
         name: 'penjualanproduk',
-        path: '/penjualanproduk',
+        path: '/cs/penjualanproduk',
         component: csView('penjualanproduk')   
     },
     {
         name: 'penjualanlayanan',
-        path: '/penjualanlayanan',
+        path: '/cs/penjualanlayanan',
         component: csView('penjualanlayanan')
     },
 ]

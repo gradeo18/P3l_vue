@@ -28,7 +28,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="pengadaanproduks"
+                    :items="pemesananproduks"
                     :search="keyword"
                     :loading="load"
                 >
@@ -44,7 +44,6 @@
                             <td>{{ item.tglpesan}}</td>
                             <td>{{ item.tglcetak}}</td>
                             <td>{{ item.status}}</td>
-                            <td>{{ item.detil}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -79,7 +78,7 @@
     </v-card>
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Transaksi Pengadaan Produk</span>
+            <span class="headline">Transaksi Pemesanan Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -197,11 +196,11 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'ID Transaksi Pengadaaan',
+                    text: 'ID Pemesanan',
                     value: 'idpemesanan',
                     },
                     {
-                    text: 'No Pengadaan',
+                    text: 'No Pemesanan',
                     value: 'noPO'
                     },
                     {
@@ -224,12 +223,8 @@ export default {
                     text: 'Status',
                     value: 'status',
                     },
-                    {
-                    text: 'Detil',
-                    value: 'detil',
-                    },
             ],
-            pengadaanproduks: [],
+            pemesananproduks: [],
             suppliers: [],
             pegawais:[],
             snackbar: false,
@@ -238,12 +233,10 @@ export default {
             load: false,
             form: {
                 idsupplier : '',
-                idpegawai : '',
                 tglpesan : '',
-                tglcetak : '',
                 status : '',
             },
-            pengadaanproduk : new FormData,
+            pemesananproduk : new FormData,
             typeInput: 'new',
             errors : '',
             updatedId : '',
@@ -261,7 +254,7 @@ export default {
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/pemesanan_barang")
             .then(
-                response => {this.pengadaanproduks = response.data},
+                response => {this.pemesananproduks = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -289,19 +282,16 @@ export default {
 
         sendData(){
             this.$v.form.$touch();
-            this.pengadaanproduk.append('noPO', this.form.noPO);
-            this.pengadaanproduk.append('idsupplier', this.form.idsupplier);
-            this.pengadaanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
-            this.pengadaanproduk.append('tglpesan', this.form.tglpesan);
-            this.pengadaanproduk.append('tglcetak', this.form.tglcetak);
-            this.pengadaanproduk.append('status', this.form.status);
-            this.pengadaanproduk.append('detil', this.form.detil);
+            this.pemesananproduk.append('noPO', this.form.noPO);
+            this.pemesananproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
+            this.pemesananproduk.append('tglpesan', this.form.tglpesan);
+            this.pemesananproduk.append('status', this.form.status);
+            this.pemesananproduk.append('idsupplier', this.form.idsupplier);
             if(this.$v.form.idsupplier.$error) return alert('Supplier Masih Kosong !')
             else if(this.$v.form.tglpesan.$error) return alert('Tanggal Pesan Masih Kosong !')
             else if(this.$v.form.status.$error) return alert('Status Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
-            this.$http.post(uri,this.pengadaanproduk).then(response =>{
-                console.log(this.form)
+            this.$http.post(uri,this.pemesananproduk).then(response =>{
                 this.snackbar = true; 
                 this.text = response.data.message;
                 this.text = 'Berhasil'; 
@@ -399,7 +389,7 @@ export default {
                 idsupplier : '',
                 idpegawai : '',
                 tglpesan : '',
-                tglcetak   : '',
+                tglcetak : '',
                 status : '',
             }
         }

@@ -21,7 +21,7 @@
                     </v-list-item>
         
                         <v-divider></v-divider>
-                        <v-list-item @click="$router.push('/penjualanproduk')">
+                        <v-list-item @click="$router.push('/cs/penjualanproduk')">
                         <v-list-item-action>
                             <v-icon color="white">mdi-check-bold</v-icon>
                         </v-list-item-action>
@@ -30,7 +30,7 @@
                         </v-list-item-content>
                         </v-list-item>
 
-                         <v-list-item @click="$router.push('/penjualanlayanan')">
+                         <v-list-item @click="$router.push('/cs/penjualanlayanan')">
                         <v-list-item-action>
                             <v-icon color="white">mdi-check-bold</v-icon>
                         </v-list-item-action>

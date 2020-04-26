@@ -22,7 +22,7 @@
                         color = "green accent-3"
                         @click="dialogDetil = true"
                         >
-                        <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
+                        <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Transaksi 
                         </v-btn>
                     </v-flex>
@@ -49,9 +49,10 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idtransaksipenjualan}} </td>
                             <td>{{ item.noPR}}</td>
+                            <td>{{ item.tanggaltransaksi}} </td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
-                            <td>{{ item.idcustomer.nama}}</td>
+                            <td>{{ item.idcustomer}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
                             <td class="text-center">
@@ -213,6 +214,10 @@ export default {
                     {
                     text: 'No Produk',
                     value: 'noPR'
+                    },
+                    {
+                    text: 'Tanggal Penjualan',
+                    value: 'tgltransaksi'
                     },
                     {
                     text: 'Pegawai',
@@ -379,8 +384,8 @@ export default {
         editHandler(item){
             this.typeInput = 'edit';
             this.dialog = true;
+            this.form.idcustomer = item.idcustomer;
             this.form.idhewan = item.idhewan;
-            this.form.idcustomer = item.idcustomer
             this.form.diskon = item.diskon;
             this.form.total = item.total;
             this.updatedId = item.idtransaksipenjualan;
@@ -438,6 +443,7 @@ export default {
         resetForm(){
             this.form = {
                 idpegawai : '',
+                idcustomer: '',
                 idhewan : '',
                 diskon : '',
                 total : '',

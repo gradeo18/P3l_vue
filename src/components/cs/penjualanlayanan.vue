@@ -41,7 +41,7 @@
                             <td>{{ item.noLY}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
-                            <td>{{ item.idcustomer.nama}}</td>
+                            <td>{{ item.idcustomer}}</td>
                             <td>{{ item.status}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
