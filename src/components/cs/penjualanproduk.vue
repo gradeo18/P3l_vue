@@ -2,10 +2,10 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Produk</h2> 
+                <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                         <v-btn depressed 
+                        <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -14,6 +14,16 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Produk 
+                        </v-btn>
+                        <v-btn depressed 
+                        dark 
+                        rounded 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="dialogDetil = true"
+                        >
+                        <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
+                            Tambah Detil Transaksi 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -44,7 +54,6 @@
                             <td>{{ item.idcustomer.nama}}</td>
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
-                            <td>{{ item.detil.jumlah}}</td>
                             <td class="text-center">
                                 <v-btn 
                                 icon 
@@ -117,6 +126,52 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog v-model="dialogDetil" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Detil Transaksi Produk</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="penjualanproduks"
+                            v-model="detilform.idtransaksipenjualan"
+                            label="ID Transaksi Penjualan"
+                            item-text="noPR"
+                            item-value="idtransaksipenjualan"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="produks"
+                            v-model="detilform.idproduk"
+                            label="Produk"
+                            item-text="nama"
+                            item-value="idproduk"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="jumlah">Jumlah*</label>
+                        <v-text-field v-model="detilform.jumlah" >></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="subtotal">SubTotal*</label>
+                        <v-text-field v-model="detilform.subtotal" ></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogDetil = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="detilPenjualan()">Save</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
     
 <v-snackbar
     v-model="snackbar"
@@ -138,11 +193,12 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, numeric } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
         return {
+            dialogDetil: false,
             dialog: false,
             keyword: '',
             headers: [
@@ -183,6 +239,7 @@ export default {
             pegawais: [],
             hewans: [],
             customers: [],
+            produks: [],
             snackbar: false,
             color: null,
             text: '',
@@ -193,7 +250,14 @@ export default {
                 diskon : '',
                 total : '',
             },
+            detilform: {
+                idtransaksipenjualan: '',
+                idproduk : '',
+                jumlah : '',
+                subtotal : '',
+            },
             penjualanproduk : new FormData,
+            detilproduk : new FormData,
             typeInput: 'new',
             errors : '',
             updatedId : '',     
@@ -201,8 +265,8 @@ export default {
     },
     validations: {
         form: {
-            diskon: { required },
-            total: { required },
+            diskon: { required, numeric },
+            total: { required,numeric },
             idcustomer: { required },
             idhewan: { required },
         }
@@ -245,6 +309,15 @@ export default {
                 this.errors.push(e)
             });
         },
+        getDataProduk(){
+            axios.get("http://kouvee.xbanana.my.id/api/produk")
+            .then(
+                response => {this.produks = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
 
         sendData(){
             this.$v.form.$touch();
@@ -256,7 +329,6 @@ export default {
             this.penjualanproduk.append('total', this.form.total);
             if(this.$v.form.idhewan.$error) return alert('Hewan Masih Kosong !')
             else if(this.$v.form.idcustomer.$error) return alert('Customer Masih Kosong !')
-            else if(this.$v.form.status.$error) return alert('Status Masih Kosong !')
             else if(this.$v.form.diskon.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
             else if(this.$v.form.total.$error) return alert('Total Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
@@ -332,7 +404,29 @@ export default {
                     this.color='red';
                 })
         },
-    
+
+        detilPenjualan(){
+            this.detilproduk.append('idproduk', this.detilform.idproduk);
+            this.detilproduk.append('jumlah', this.detilform.jumlah);
+            this.detilproduk.append('subtotal', this.detilform.subtotal);
+            this.detilproduk.append('idtransaksipenjualan', this.detilform.idtransaksipenjualan);
+            var uri = "http://kouvee.xbanana.my.id/api/detil_penjualan"
+            this.$http.post(uri,this.detilproduk).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.dialogDetil =false;
+                this.getData();
+        }).catch(error =>{ 
+             console.log(this.detilform)
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Masukan Data dengan Benar !'; 
+            this.color = 'red';
+        })
+        },
+
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()
@@ -356,6 +450,7 @@ export default {
             this.getDataPegawai();
             this.getDataHewan();
             this.getDataCustomer();
+            this.getDataProduk();
         },
     }
 </script>
