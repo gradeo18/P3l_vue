@@ -131,8 +131,8 @@
                     </tbody>
                 </template>
             </v-data-table>
-        </v-container>
-    </v-card> -->
+        </v-container> -->
+    </v-card>
     <!-- END TABEL DETIL LAYANAN -->
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
