@@ -5,6 +5,7 @@ import router from './router'
 import vuetify from './plugins/vuetify';
 import session from './plugins/session';
 import Vuelidate from 'vuelidate'
+import 'vue-search-select/dist/VueSearchSelect.css'
 
 Vue.use(Vuelidate)
 Vue.prototype.$http = Axios;

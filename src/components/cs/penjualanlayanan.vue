@@ -39,6 +39,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idtransaksipelayanan }}</td>
                             <td>{{ item.noLY}}</td>
+                            <td>{{ item.tanggaltransaksi}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
                             <td>{{ item.idcustomer}}</td>
@@ -68,7 +69,71 @@
                 </template>
             </v-data-table>
         </v-container>
-    </v-card>
+        <!--TABLE DETIL LAYANAN  -->
+        <!-- <v-container grid-list-md mb-0>
+                <h2 class="text-md-center">Detil Transaksi Layanan</h2> 
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <v-btn depressed 
+                        dark 
+                        rounded 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="dialogDetil = true"
+                        >
+                        <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
+                            Tambah Detil Transaksi Layanan 
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 class="text-right">
+                        <v-text-field
+                            v-model="keyword" 
+                            append-icon="mdi-search" 
+                            label="Search" 
+                            hide-details
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
+
+                <v-data-table
+                    :headers="detilHeaders"
+                    :items="detils"
+                    :search="keyword"
+                    :loading="load"
+                >
+
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="(item) in items" :key="item.id"> 
+                            <td>{{ item.idtransaksipelayanan }}</td>
+                            <td>{{ item.iddetilpelayanan}}</td>
+                            <td>{{ item.jumlah}}</td>
+                            <td>{{ item.subtotal}}</td>
+                            <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="editHandler(item)"
+                                >
+                                <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="error" 
+                                light
+                                @click="deleteData(item.iddetilpelayanan)"
+                                >
+                                <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-container>
+    </v-card> -->
+    <!-- END TABEL DETIL LAYANAN -->
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi penjualan Layanan</span>
@@ -143,6 +208,8 @@
 </v-container>
 </template>
 
+
+
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
 import axios from 'axios'
@@ -158,12 +225,16 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'ID Transaksi Pelayanan',
+                    text: 'ID Transaksi Layanan',
                     value: 'idtransaksipelayanan',
                     },
                     {
                     text: 'No Layanan',
                     value: 'noLY'
+                    },
+                    {
+                    text: 'Tanggal Transaksi',
+                    value: 'tanggaltransaksi'
                     },
                     {
                     text: 'Pegawai',
@@ -190,10 +261,29 @@ export default {
                     value: 'total',
                     },
             ],
+            // detilHeaders:[
+            //     {
+            //     text: 'ID Transaksi Layanan',
+            //     value: 'idtransaksipelayanan',
+            //     },
+            //     {
+            //     text: 'ID Detil Layanan',
+            //     value: 'iddetilpelayanan',
+            //     },
+            //     {
+            //     text: 'Jumlah',
+            //     value: 'jumlah',
+            //     },
+            //     {
+            //     text: 'Sub Total',
+            //     value: 'subtotal',
+            //     },
+            // ],
             penjualanlayanans: [],
             pegawais:[],
             hewans: [],
             customers: [],
+            // detils:[],
             snackbar: false,
             color: null,
             text: '',
@@ -252,6 +342,15 @@ export default {
             axios.get("http://kouvee.xbanana.my.id/api/customer")
             .then(
                 response => {this.customers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+        getDataDetil(){
+            axios.get("http://kouvee.xbanana.my.id/api/detil_pelayanan")
+            .then(
+                response => {this.detils = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
@@ -340,7 +439,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Masukan Data dengan Benar !';
+                    this.text='Coba Lagi !';
                     this.color='red';
                 })
             }
@@ -369,6 +468,7 @@ export default {
             this.getDataHewan();
             this.getDataPegawai();
             this.getDataCustomer();
+            this.getDataDetil();
         },
     }
 </script>

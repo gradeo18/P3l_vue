@@ -39,6 +39,7 @@
                 <v-data-table
                     :headers="headers"
                     :items="penjualanproduks"
+                    :detailrows="detils"
                     :search="keyword"
                     :loading="load"
                 >
@@ -52,7 +53,7 @@
                             <td>{{ item.tanggaltransaksi}} </td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.idhewan}}</td>
-                            <td>{{ item.idcustomer}}</td>
+                            <td>{{ item.idcustomer}}</td>   
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
                             <td class="text-center">
@@ -245,6 +246,7 @@ export default {
             hewans: [],
             customers: [],
             produks: [],
+            detils: [],
             snackbar: false,
             color: null,
             text: '',
@@ -323,7 +325,15 @@ export default {
                 this.errors.push(e)
             });
         },
-
+        getDataDetil(){
+            axios.get("http://kouvee.xbanana.my.id/api/detil_penjualan")
+            .then(
+                response => {this.detils = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
         sendData(){
             this.$v.form.$touch();
             this.penjualanproduk.append('noPR', this.form.noPR);
@@ -405,7 +415,7 @@ export default {
                 }).catch(error=>{
                     this.errors=error 
                     this.snackbar=true;
-                    this.text='Masukan Data dengan Benar !';
+                    this.text='Coba Lagi !';
                     this.color='red';
                 })
         },
@@ -457,6 +467,7 @@ export default {
             this.getDataHewan();
             this.getDataCustomer();
             this.getDataProduk();
+            this.getDataDetil();
         },
     }
 </script>

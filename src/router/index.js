@@ -88,16 +88,6 @@ children: [
         path: '/pengadaanproduk',
         component: ownerView('pengadaanproduk')   
     },
-    {
-        name: 'penjualanproduk',
-        path: '/owner/penjualanproduk',
-        component: csView('penjualanproduk')   
-    },
-    {
-        name: 'penjualanlayanan',
-        path: '/owner/penjualanlayanan',
-        component: csView('penjualanlayanan')
-    },
 ]
 },
 {
