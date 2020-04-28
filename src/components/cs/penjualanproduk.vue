@@ -23,7 +23,7 @@
                         @click="dialogDetil = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
-                            Tambah Detil Transaksi 
+                            Tambah Detil Produk 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -146,14 +146,23 @@
                         </v-select>
                     </v-col>
                     <v-col cols="12">
-                        <v-select 
+                        <!-- <v-select 
                             :items="produks"
                             v-model="detilform.idproduk"
                             label="Produk"
                             item-text="nama"
                             item-value="idproduk"
                             >
-                        </v-select>
+                        </v-select> -->
+                        <v-autocomplete
+                            :items="produks"
+                            :filter="customFilter"
+                            v-model="detilform.idproduk"
+                            color="white"
+                            item-text="nama"
+                            item-value="idproduk"
+                            label="Produk*"
+                        ></v-autocomplete>
                     </v-col>
                     <v-col cols="12">
                         <label for="jumlah">Jumlah*</label>
@@ -278,7 +287,21 @@ export default {
             idhewan: { required },
         }
     },
+
+    computed:{
+        subTotal(){
+            return parseInt(this.jumlah * this.harga)
+        }
+    },
+
     methods:{
+        customFilter (item, queryText, itemText) {
+            const textOne = item.nama.toLowerCase()
+            const searchText = queryText.toLowerCase()
+
+            return textOne.indexOf(searchText) > -1
+        },
+
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_penjualan")
             .then(

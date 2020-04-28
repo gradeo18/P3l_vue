@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Penjualan Layanan</h2> 
+                <h2 class="text-md-center">Transaksi Pembayaran Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                         <v-btn depressed 
@@ -10,7 +10,7 @@
                         rounded 
                         style="text-transform: none !important;" 
                         color = "green accent-3"
-                        @click="dialog = true"
+                        @click="inputDialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Layanan 
@@ -23,7 +23,7 @@
                         @click="dialogDetil = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
-                            Tambah Detil Transaksi 
+                            Tambah Detil Layanan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -81,14 +81,14 @@
             </v-data-table>
         </v-container>
     </v-card>
-    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
+    <v-dialog v-model="inputDialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Layanan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                  <v-row>
-                     <v-col cols="12">
+                    <v-col cols="12">
                         <v-select 
                             :items="hewans"
                             v-model="form.idhewan"
@@ -109,7 +109,7 @@
                             :class="{ 'hasError': $v.form.idcustomer.$error }"
                             >
                         </v-select>
-                    </v-col>
+                    </v-col> 
                      <v-col cols="12">
                         <v-select
                             :items="status"
@@ -118,6 +118,36 @@
                             :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="inputDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Transaksi Pembayaran Layanan</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <label for="subtotal">Subtotal</label>
+                        <v-text-field v-model="form.subtotal"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="diskon">Diskon*</label>
@@ -165,7 +195,7 @@
                             >
                         </v-select>
                     </v-col>
-                    <!-- <v-col cols="12">
+                    <v-col cols="12">
                         <v-select
                             :items="status"
                             v-model="form.status"
@@ -173,7 +203,7 @@
                             :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
-                    </v-col> -->
+                    </v-col>
                     <v-col cols="12">
                         <label for="jumlah">Jumlah*</label>
                         <v-text-field v-model="detilform.jumlah" >></v-text-field>
@@ -219,9 +249,10 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            status: ["Diproses","Selesai"],
+            status: ["Diproses"],
             dialogDetil: false,
             dialog: false,
+            inputDialog: false,
             keyword: '',
             headers: [
                     {
@@ -305,6 +336,7 @@ export default {
             status: { required },
         }
     },
+    
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_pelayanan")

@@ -23,7 +23,7 @@
                         @click="dialogDetil = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
-                            Tambah Detil Transaksi 
+                            Tambah Detil Layanan 
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
@@ -165,7 +165,7 @@
                             >
                         </v-select>
                     </v-col>
-                    <!-- <v-col cols="12">
+                    <v-col cols="12">
                         <v-select
                             :items="status"
                             v-model="form.status"
@@ -173,7 +173,7 @@
                             :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
-                    </v-col> -->
+                    </v-col>
                     <v-col cols="12">
                         <label for="jumlah">Jumlah*</label>
                         <v-text-field v-model="detilform.jumlah" >></v-text-field>
@@ -219,7 +219,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            status: ["Diproses","Selesai"],
+            status: ["Diproses"],
             dialogDetil: false,
             dialog: false,
             keyword: '',
