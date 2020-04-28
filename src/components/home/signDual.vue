@@ -93,6 +93,12 @@ export default {
                 path: "/dashboardOwner"
                 });
             }
+            else if(this.$session.get('dataPegawai').role == "Kasir")
+            {
+              this.$router.push({
+              path: "/dashboardKasir"
+              });
+            }
           }
         }).catch(error =>{ 
             this.errors = error;

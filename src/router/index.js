@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 const DashboardLayout = () => import(/* webpackChunkName: "dashboard" */ '../components/dashboardLayout.vue')
 const DashboardCS = () => import(/* webpackChunkName: "dashboard" */ '../components/dashboardCS.vue')
+const DashboardKasir = () => import(/* webpackChunkName: "dashboard" */ '../components/dashboardKasir.vue')
 const HomePageLayout = () => import('../components/homePageLayout.vue')
 
 function ownerView(view) {
@@ -11,6 +12,10 @@ function ownerView(view) {
 
 function csView(view) {
     return () => import(/* webpackChunkName: "view-[request]" */ `../components/cs/${view}.vue`) 
+}
+
+function kasirView(view) {
+    return () => import(/* webpackChunkName: "view-[request]" */ `../components/kasir/${view}.vue`) 
 }
 
 function loadHomePage(view){
@@ -106,6 +111,18 @@ children: [
     },
 ]
 },
+{
+path: '/dashboardKasir',
+component: DashboardKasir,
+children: [
+    {
+        name: 'pembayaranlayanan',
+        path: '/kasir/pembayaranlayanan',
+        component: kasirView('pembayaranlayanan')   
+    },
+]
+},
+
 
 ]
 
