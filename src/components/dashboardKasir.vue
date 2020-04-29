@@ -12,14 +12,24 @@
                 <v-list-item>
                         <v-list-item-content>
                         <v-list-item-title class="title">
-                            Dashboard
+                            Dashboard 
                         </v-list-item-title>
                         <v-list-item-subtitle>
-                            Kasir
+                            Kasir - Hi, {{$session.get('dataPegawai').nama}} !
                         </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-        
+
+                        <v-divider></v-divider>
+                        <v-list-item @click="$router.push('/kasir/pembayaranproduk')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Transaksi Pembayaran Produk</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+
                         <v-divider></v-divider>
                         <v-list-item @click="$router.push('/kasir/pembayaranlayanan')">
                         <v-list-item-action>
@@ -58,6 +68,7 @@
                         </v-app-bar>
                         
                         <VContent>
+                            <h1><center> Hi, {{$session.get('dataPegawai').nama}} !  </center></h1>
                             <router-view/>
                         </VContent>
                     </div>

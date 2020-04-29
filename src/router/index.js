@@ -120,6 +120,11 @@ children: [
         path: '/kasir/pembayaranlayanan',
         component: kasirView('pembayaranlayanan')   
     },
+    {
+        name: 'pembayaranproduk',
+        path: '/kasir/pembayaranproduk',
+        component: kasirView('pembayaranproduk')   
+    },
 ]
 },
 

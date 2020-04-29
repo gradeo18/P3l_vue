@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Pembayaran Layanan</h2> 
+                <h2 class="text-md-center">Transaksi Penjualan Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                         <v-btn depressed 
@@ -10,7 +10,7 @@
                         rounded 
                         style="text-transform: none !important;" 
                         color = "green accent-3"
-                        @click="inputDialog = true"
+                        @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Layanan 
@@ -81,14 +81,14 @@
             </v-data-table>
         </v-container>
     </v-card>
-    <v-dialog v-model="inputDialog" persistent max-width="600px"> <v-card>
+    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Layanan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                  <v-row>
-                    <v-col cols="12">
+                     <v-col cols="12">
                         <v-select 
                             :items="hewans"
                             v-model="form.idhewan"
@@ -109,53 +109,6 @@
                             :class="{ 'hasError': $v.form.idcustomer.$error }"
                             >
                         </v-select>
-                    </v-col> 
-                     <v-col cols="12">
-                        <v-select
-                            :items="status"
-                            v-model="form.status"
-                            label="Status*"
-                            :class="{ 'hasError': $v.form.status.$error }"
-                        >
-                        </v-select>  
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="diskon">Diskon*</label>
-                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="total">Total*</label>
-                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
-                    </v-col>
-                </v-row>
-            </v-container>
-            <small>*indicates required field</small>
-        </v-card-text>
-        <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="inputDialog = false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
-        </v-card-actions>
-        </v-card>
-    </v-dialog>
-    <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
-        <v-card-title>
-            <span class="headline">Transaksi Pembayaran Layanan</span>
-        </v-card-title>
-        <v-card-text>
-            <v-container>
-                 <v-row>
-                    <v-col cols="12">
-                        <label for="subtotal">Subtotal</label>
-                        <v-text-field v-model="form.subtotal"></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="diskon">Diskon*</label>
-                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <label for="total">Total*</label>
-                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -164,6 +117,33 @@
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <!-- DIALOG EDIT -->
+    <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Edit Transaksi Layanan</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
             <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
         </v-card-actions>
         </v-card>
@@ -182,7 +162,8 @@
                             label="ID Transaksi Pelayanan"
                             item-text="noLY"
                             item-value="idtransaksipelayanan"
-                            >
+                            :class="{ 'hasError': $v.detilform.idtransaksipelayanan.$error }"
+                        >
                         </v-select>
                     </v-col>
                     <v-col cols="12">
@@ -192,25 +173,28 @@
                             label="Layanan"
                             item-text="nama"
                             item-value="idlayanan"
+                            :class="{ 'hasError': $v.detilform.idlayanan.$error }"
+                        >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="harga">Harga*</label>
+                        <v-select v-if="detilform.idlayanan"
+                            :items="layanans.filter(item => item.idlayanan === detilform.idlayanan)"
+                            v-model="detilform.harga"
+                            color="white"
+                            item-text="harga"
+                            item-value="harga"
                             >
                         </v-select>
                     </v-col>
                     <v-col cols="12">
-                        <v-select
-                            :items="status"
-                            v-model="form.status"
-                            label="Status*"
-                            :class="{ 'hasError': $v.form.status.$error }"
-                        >
-                        </v-select>  
-                    </v-col>
-                    <v-col cols="12">
                         <label for="jumlah">Jumlah*</label>
-                        <v-text-field v-model="detilform.jumlah" >></v-text-field>
+                        <v-text-field v-model="detilform.jumlah" :class="{ 'hasError': $v.detilform.jumlah.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="subtotal">SubTotal*</label>
-                        <v-text-field v-model="detilform.subtotal" ></v-text-field>
+                        <v-text-field v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{detilform.subtotal=detilform.harga * detilform.jumlah}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -252,7 +236,7 @@ export default {
             status: ["Diproses"],
             dialogDetil: false,
             dialog: false,
-            inputDialog: false,
+            dialogEdit: false,
             keyword: '',
             headers: [
                     {
@@ -334,9 +318,14 @@ export default {
             idcustomer: { required },
             idhewan: { required },
             status: { required },
+        },
+        detilform: {
+            idtransaksipelayanan: {required},
+            idlayanan: {required},
+            jumlah: {required, numeric},
+            subtotal: {required, numeric},
         }
     },
-    
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_pelayanan")
@@ -399,13 +388,13 @@ export default {
             this.penjualanlayanan.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
             this.penjualanlayanan.append('idhewan', this.form.idhewan);
             this.penjualanlayanan.append('idcustomer', this.form.idcustomer);
-            this.penjualanlayanan.append('status', this.form.status);
-            this.penjualanlayanan.append('diskon', this.form.diskon);
-            this.penjualanlayanan.append('total', this.form.total);
+            this.penjualanlayanan.append('status', "Diproses");
+            this.penjualanlayanan.append('diskon', "0");
+            this.penjualanlayanan.append('total', "0");
             if(this.$v.form.idhewan.$error) return alert('Hewan Masih Kosong !')
             else if(this.$v.form.idcustomer.$error) return alert('Customer Masih Kosong !')
-            else if(this.$v.form.diskon.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
-            else if(this.$v.form.total.$error) return alert('Total Tidak Boleh Kosong dan Harus Angka !')
+            // else if(this.$v.form.diskon.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
+            // else if(this.$v.form.total.$error) return alert('Total Tidak Boleh Kosong dan Harus Angka !')
             var uri = "http://kouvee.xbanana.my.id/api/transaksi_pelayanan"
             this.$http.post(uri,this.penjualanlayanan).then(response =>{
                 this.snackbar = true; 
@@ -428,7 +417,7 @@ export default {
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
                 idhewan: this.form.idhewan,
                 idcustomer: this.form.idcustomer,
-                status: this.form.status,
+                status: "Diproses",
                 diskon: this.form.diskon,
                 total: this.form.total,
             })
@@ -454,9 +443,7 @@ export default {
 
         editHandler(item){
             this.typeInput = 'edit';
-            this.dialog = true;
-            this.form.idcustomer = item.idcustomer;
-            this.form.idhewan = item.idhewan;
+            this.dialogEdit = true;
             this.form.status = item.status;
             this.form.diskon = item.diskon;
             this.form.total = item.total;
@@ -483,10 +470,15 @@ export default {
         },
 
         detilPelayanan(){
+            this.$v.detilform.$touch();
             this.detillayanan.append('idlayanan', this.detilform.idlayanan);
             this.detillayanan.append('jumlah', this.detilform.jumlah);
             this.detillayanan.append('subtotal', this.detilform.subtotal);
             this.detillayanan.append('idtransaksipelayanan', this.detilform.idtransaksipelayanan);
+            if(this.$v.detilform.idtransaksipelayanan.$error) return alert('ID Transaksi Pelayanan Tidak Boleh Kosong !')
+            else if(this.$v.detilform.idlayanan.$error) return alert('ID Layanan Penjualan Masih Kosong !')
+            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Masih Kosong dan Harus Angka !')
+            else if(this.$v.detilform.subtotal.$error) return alert('Subtotal Tidak Boleh Kosong dan Harus Angka !')            
             var uri = "http://kouvee.xbanana.my.id/api/detil_pelayanan"
             this.$http.post(uri,this.detillayanan).then(response =>{
                 this.snackbar = true; 
@@ -520,6 +512,12 @@ export default {
                 status : '',
                 diskon : '',
                 total : '',
+            },
+            this.detilform={
+                idtransaksipelayanan: '',
+                idlayanan: '',
+                jumlah: '',
+                subtotal: '',
             }
         }
         },

@@ -2,8 +2,8 @@ import Vue from 'vue'
 import App from './App'
 import Axios from 'axios'
 import router from './router'
-import vuetify from './plugins/vuetify';
-import session from './plugins/session';
+import vuetify from './plugins/vuetify'
+import session from './plugins/session'
 import Vuelidate from 'vuelidate'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
