@@ -49,7 +49,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ item.idpemesanan }}</td>
                             <td>{{ item.noPO}}</td>
-                            <td>{{ item.idsupplier.nama}}</td>
+                            <td>{{ item.idsupplier}}</td>
                             <td>{{ item.idpegawai}}</td>
                             <td>{{ item.tglpesan}}</td>
                             <td>{{ item.tglcetak}}</td>
@@ -59,9 +59,9 @@
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="viewHandler(item)"
+                                @click="printHandler(item)"
                                 >
-                                <v-icon>mdi-eye</v-icon>
+                                <v-icon>mdi-printer</v-icon>
                                 </v-btn>
                                 <v-btn 
                                 icon 
@@ -485,14 +485,20 @@ export default {
             this.updatedId = item.idpemesanan;
         },
 
-        viewHandler(item){
-            this.viewDialog = true;
-            this.form.idsupplier = item.idsupplier;
-            this.form.idpegawai = item.idpegawai;
-            this.form.tglpesan = item.tglpesan;
-            this.form.tglcetak = item.tglcetak;
-            this.form.status = item.status;
-            this.form.detil = item.detil;
+        printHandler(item){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/pemesanan_barang/cetak_struk/' + item.idpemesanan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'pemesananbarang.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+
         },
 
         deleteData(deleteId){

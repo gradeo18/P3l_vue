@@ -55,8 +55,15 @@
                             <td>{{ item.idcustomer}}</td>   
                             <td>{{ item.diskon}}</td>
                             <td>{{ item.total}}</td>
-                            <td>{{ item.subtotal}}</td>
                             <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="printHandler(item)"
+                                >
+                                <v-icon>mdi-printer</v-icon>
+                                </v-btn>
                                 <v-btn 
                                 icon 
                                 color="indigo" 
@@ -191,7 +198,7 @@
                     </v-col>
                     <v-col cols="12">
                         <label for="subtotal">SubTotal*</label>
-                        <v-text-field readonly v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{detilform.subtotal=detilform.harga * detilform.jumlah}}</v-text-field>
+                        <v-text-field readonly v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{parseInt(detilform.subtotal=detilform.harga * detilform.jumlah)}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -317,7 +324,22 @@ export default {
     },
     
     methods:{
-     
+        printHandler(item){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/transaksi_penjualan/cetak_struk/' + item.idtransaksipenjualan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'penjualanproduk.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+
+        },
+
         customFilter (item, queryText) {
             const textOne = item.nama.toLowerCase()
             const searchText = queryText.toLowerCase()

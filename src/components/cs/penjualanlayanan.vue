@@ -62,6 +62,14 @@
                                 icon 
                                 color="indigo" 
                                 light
+                                @click="printHandler(item)"
+                                >
+                                <v-icon>mdi-printer</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
                                 @click="editHandler(item)"
                                 >
                                 <v-icon>mdi-pencil</v-icon>
@@ -194,7 +202,7 @@
                     </v-col>
                     <v-col cols="12">
                         <label for="subtotal">SubTotal*</label>
-                        <v-text-field v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{detilform.subtotal=detilform.harga * detilform.jumlah}}</v-text-field>
+                        <v-text-field v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{parseInt(detilform.subtotal=detilform.harga * detilform.jumlah)}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -327,6 +335,22 @@ export default {
         }
     },
     methods:{
+        printHandler(item){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/transaksi_pelayanan/cetak_struk/' + item.idtransaksipelayanan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'transaksilayanan.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+
+        },
+
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/transaksi_pelayanan")
             .then(
