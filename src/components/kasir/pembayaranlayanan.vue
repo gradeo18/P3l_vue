@@ -66,6 +66,7 @@
                                 >
                                 <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
+
                                 <v-btn 
                                 icon 
                                 color="error" 
@@ -74,6 +75,13 @@
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
+
+                               <v-btn 
+                               color="success"
+                               light
+                               @click="printstruck(item.idtransaksipelayanan)"
+                               depressed small>Bayar</v-btn>
+                                <!-- </v-btn> -->
                             </td>
                         </tr>
                     </tbody>
@@ -148,6 +156,34 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+    <!-- DIALOG Pembayaran -->
+    <v-dialog v-model="dialogPembayaran" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Pembayaran Layanan</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <!-- <v-col cols="12">
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
+                    </v-col> -->
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small> </small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogPembayaran = false">Close</v-btn>
+            <!-- <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn>  -->
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <!-- DIALOG DETIL -->
     <v-dialog v-model="dialogDetil" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Detil Transaksi Layanan</span>
@@ -208,6 +244,7 @@
         </v-card>
     </v-dialog>
     
+    
 <v-snackbar
     v-model="snackbar"
     :color="color"
@@ -237,6 +274,7 @@ export default {
             dialogDetil: false,
             dialog: false,
             dialogEdit: false,
+            dialogPembayaran: false,
             keyword: '',
             headers: [
                     {
@@ -496,6 +534,10 @@ export default {
         })
         },
 
+        printstruck()
+        {
+            this.dialogPembayaran = true;
+        },
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()

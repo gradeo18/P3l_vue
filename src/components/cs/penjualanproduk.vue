@@ -130,7 +130,7 @@
     <!-- DIALOG EDIT -->
     <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Transaksi Produk</span>
+            <span class="headline">Print Struck Pembayaran</span>
         </v-card-title>
         <v-card-text>
             <v-container>

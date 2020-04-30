@@ -72,6 +72,12 @@
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
+
+                                <v-btn 
+                                color="success"
+                                light
+                                @click="printstruck(item.idtransaksipelayanan)"
+                                depressed small>Bayar</v-btn>
                             </td>
                         </tr>
                     </tbody>
@@ -109,6 +115,34 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+    <!-- DIALOG Pembayaran -->
+    <v-dialog v-model="dialogPembayaran" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Pembayaran Produk</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <!-- <v-col cols="12">
+                        <label for="total">Total*</label>
+                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
+                    </v-col> -->
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small> </small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogPembayaran = false">Close</v-btn>
+            <!-- <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn>  -->
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <!-- DIALOG DETIL -->
     <v-dialog v-model="dialogDetil" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Detil Transaksi Produk</span>
@@ -205,6 +239,7 @@ export default {
         return {
             dialogDetil: false,
             dialog: false,
+            dialogPembayaran: false,
             keyword: '',
             headers: [
                     {
@@ -463,6 +498,11 @@ export default {
             this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
+        },
+
+        printstruck()
+        {
+            this.dialogPembayaran = true;
         },
 
         setForm(){
