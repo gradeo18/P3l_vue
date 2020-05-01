@@ -2,7 +2,7 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Penjualan Produk</h2> 
+                <h2 class="text-md-center">Penjualan Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
                         <v-btn depressed 
@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Transaksi Produk 
+                            Tambah Penjualan Produk 
                         </v-btn>
                         <v-btn depressed 
                         dark 
@@ -64,14 +64,14 @@
                                 >
                                 <v-icon>mdi-printer</v-icon>
                                 </v-btn>
-                                <v-btn 
+                                <!-- <v-btn 
                                 icon 
                                 color="indigo" 
                                 light
                                 @click="editHandler(item)"
                                 >
                                 <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
+                                </v-btn> -->
                                 <v-btn 
                                 icon 
                                 color="error" 
@@ -87,6 +87,74 @@
             </v-data-table>
         </v-container>
     </v-card>
+    <v-card>
+    <v-container grid-list-md mb-0>
+                <h2 class="text-md-center">Detil Penjualan Produk</h2> 
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <v-btn depressed 
+                        dark 
+                        rounded 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="dialogDetil = true"
+                        >
+                        <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
+                            Tambah Detil Produk 
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 class="text-right">
+                        <v-text-field
+                            v-model="keyword" 
+                            append-icon="mdi-search" 
+                            label="Search" 
+                            hide-details
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
+
+                <v-data-table
+                    :headers="detilheaders"
+                    :items="detils"
+                    :search="keyword"
+                    :loading="load"
+                >
+
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="(item,index) in items" :key="item.id"> 
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ item.iddetilpenjualan}}</td>
+                            <td>{{ item.idtransaksipenjualan}} </td>
+                            <td>{{ item.idproduk}}</td>
+                            <td>{{ item.jumlah}}</td>
+                            <td>{{ item.subtotal}}</td>   
+                            <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="editHandler(item)"
+                                >
+                                <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="error" 
+                                light
+                                @click="deleteDetil(item.iddetilpenjualan)"
+                                >
+                                <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-container>
+        </v-card>
+
+    <!-- Transaksi Produk -->
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
             <span class="headline">Transaksi Produk</span>
@@ -127,17 +195,56 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
-    <!-- DIALOG EDIT -->
+
+    <!-- DIALOG EDIT DETIL -->
     <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Edit Transaksi Produk</span>
+            <span class="headline">Edit Detil Penjualan</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                  <v-row>
+                    <!-- <v-col cols="12">
+                        <v-select 
+                            :items="detils"
+                            v-model="editform.iddetilpenjualan"
+                            label="ID Detil Penjualan"
+                            item-text="iddetilpenjualan"
+                            item-value="iddetilpenjualan"
+                            :class="{ 'hasError': $v.editform.iddetilpenjualan.$error }"
+                            >
+                        </v-select>
+                    </v-col> -->
                     <v-col cols="12">
-                        <label for="jumlah">Diskon*</label>
-                        <v-text-field v-model="form.diskon"></v-text-field>
+                        <v-autocomplete
+                            :items="produks"
+                            :filter="customFilter"
+                            v-model="editform.idproduk"
+                            color="white"
+                            item-text="nama"
+                            item-value="idproduk"
+                            label="Produk*"
+                            :class="{ 'hasError': $v.editform.idproduk.$error }"
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="harga">Harga*</label>
+                        <v-select v-if="editform.idproduk"
+                            :items="produks.filter(item => item.idproduk === editform.idproduk)"
+                            v-model="editform.harga"
+                            color="white"
+                            item-text="harga"
+                            item-value="harga"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="jumlah">Jumlah*</label>
+                        <v-text-field v-model="editform.jumlah" :class="{ 'hasError': $v.editform.jumlah.$error }"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="subtotal">SubTotal*</label>
+                        <v-text-field readonly v-model="editform.subtotal" :class="{ 'hasError': $v.editform.subtotal.$error }" >{{parseInt(editform.subtotal=editform.harga * editform.jumlah)}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -146,14 +253,14 @@
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+            <v-btn color="blue darken-1" text @click="updateDetil()">Save</v-btn> 
         </v-card-actions>
         </v-card>
     </v-dialog>
     <!-- DIALOG DETIL -->
     <v-dialog v-model="dialogDetil" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Detil Transaksi Produk</span>
+            <span class="headline">Detil Penjualan Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -279,6 +386,32 @@ export default {
                     value: 'total',
                     },
             ],
+            detilheaders: [
+                    {
+                    text: 'No',
+                    value: 'no',
+                    },
+                    {
+                    text: 'ID Detil Penjualan',
+                    value: 'iddetilpenjualan'
+                    },
+                    {
+                    text: 'ID Transaksi Penjualan',
+                    value: 'idtransaksipenjualan'
+                    },
+                    {
+                    text: 'Produk',
+                    value: 'idproduk'
+                    },
+                    {
+                    text: 'Jumlah',
+                    value: 'jumlah'
+                    },
+                    {
+                    text: 'Subtotal',
+                    value: 'subtotal'
+                    },
+            ],
             penjualanproduks: [],
             pegawais: [],
             hewans: [],
@@ -301,6 +434,12 @@ export default {
                 jumlah : '',
                 subtotal : '',
             },
+            editform:{
+                iddetilpenjualan: '',
+                idproduk: '',
+                jumlah: '',
+                subtotal: '',
+            },
             penjualanproduk : new FormData,
             detilproduk : new FormData,
             typeInput: 'new',
@@ -320,8 +459,14 @@ export default {
             idproduk: {required},
             jumlah: {numeric,required},
             subtotal: {numeric,required},
-        }
-    },
+        },
+        editform:{
+                iddetilpenjualan: {required},
+                idproduk: {required},
+                jumlah: {required,numeric},
+                subtotal: {required},
+            },
+        },
     
     methods:{
         printHandler(item){
@@ -402,6 +547,7 @@ export default {
                 this.errors.push(e)
             });
         },
+
         sendData(){
             this.$v.form.$touch();
             this.penjualanproduk.append('noPR', this.form.noPR);
@@ -431,58 +577,6 @@ export default {
         })
         },
 
-        updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
-                diskon: this.form.diskon,
-                total: this.form.total,
-            })
-            .then(response =>{     
-                this.snackbar = true; 
-                this.text = response.data.message;
-                this.text = 'Berhasil'; 
-                this.color = 'green';
-                this.load = false;
-                this.dialogEdit = false;
-                this.getData(); 
-                this.resetForm();
-                this.typeInput = 'dddd';
-            }).catch(error =>{
-            this.errors = error
-            this.snackbar = true;
-            this.text = 'Masukan Data dengan Benar !';
-            this.color = 'red';
-            this.load = false;
-            this.typeInput = 'dddd';
-            })
-        },
-
-        editHandler(item){
-            this.typeInput = 'edit';
-            this.dialogEdit = true;
-            this.form.diskon = item.diskon;
-            this.form.total = item.total;
-            this.updatedId = item.idtransaksipenjualan;
-        },
-
-        deleteData(deleteId){
-            const confirmBox = confirm("Are you sure want remove?")
-            if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
-            this.$http.delete(uri).then(response =>{
-                this.snackbar=true;
-                this.text = response.data.message;
-                this.text="Berhasil";
-                this.color='green'
-                this.deleteDialog=false;
-                this.getData();
-                }).catch(error=>{
-                    this.errors=error 
-                    this.snackbar=true;
-                    this.text='Coba Lagi !';
-                    this.color='red';
-                })
-        },
-
         detilPenjualan(){
             this.$v.detilform.$touch();
             this.detilproduk.append('idproduk', this.detilform.idproduk);
@@ -508,6 +602,85 @@ export default {
             this.text = 'Masukan Data dengan Benar !'; 
             this.color = 'red';
         })
+        },
+
+        updateDetil(){    
+            this.$v.detilform.$touch();  
+            if(this.$v.detilform.idproduk.$error) return alert('Produk Masih Kosong !')
+            else if(this.$v.detilform.harga.$error) return alert('Harga Masih Kosong !')
+            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Tidak Boleh Kosong dan Harus Angka !')
+            else if(this.$v.detilform.subtotal.$error) return alert('Subtotal Tidak Boleh Kosong dan Harus Angka !')
+            axios.put("http://kouvee.xbanana.my.id/api/detil_penjualan/" + this.updatedId,{
+                idproduk: this.editform.idproduk,
+                jumlah: this.editform.jumlah,
+                subtotal: this.editform.subtotal,
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.dialogEdit = false;
+                this.getDataDetil(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Masukan Data dengan Benar !';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
+        },
+
+        editHandler(item){
+            this.dialogEdit = true;
+            this.editform.idproduk = item.idproduk;
+            this.editform.jumlah = item.jumlah;
+            this.editform.subtotal = item.subtotal;
+            this.updatedId = item.iddetilpenjualan;
+        },
+
+        deleteData(deleteId){
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
+                this.text = response.data.message;
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getData();
+                this.getDataDetil();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Coba Lagi !';
+                    this.color='red';
+                })
+        },
+
+        deleteDetil(deleteDetil){
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.my.id/api/detil_penjualan/"+deleteDetil;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
+                this.text = response.data.message;
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getData();
+                this.getDataDetil();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Coba Lagi !';
+                    this.color='red';
+                })
         },
 
         setForm(){

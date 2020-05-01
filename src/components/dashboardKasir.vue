@@ -26,7 +26,7 @@
                             <v-icon color="white">mdi-check-bold</v-icon>
                         </v-list-item-action>
                         <v-list-item-content>
-                            <v-list-item-title> <span class="white--text">Transaksi Pembayaran Produk</span></v-list-item-title>
+                            <v-list-item-title> <span class="white--text">Pembayaran Produk</span></v-list-item-title>
                         </v-list-item-content>
                         </v-list-item>
 
@@ -36,7 +36,7 @@
                             <v-icon color="white">mdi-check-bold</v-icon>
                         </v-list-item-action>
                         <v-list-item-content>
-                            <v-list-item-title> <span class="white--text">Transaksi Pembayaran Layanan</span></v-list-item-title>
+                            <v-list-item-title> <span class="white--text">Pembayaran Layanan</span></v-list-item-title>
                         </v-list-item-content>
                         </v-list-item>
                         

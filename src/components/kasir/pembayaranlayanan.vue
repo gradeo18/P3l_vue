@@ -2,10 +2,10 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Penjualan Layanan</h2> 
+                <h2 class="text-md-center">Transaksi Pembayaran Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -14,7 +14,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Layanan 
-                        </v-btn>
+                        </v-btn> -->
                         <v-btn depressed 
                         dark 
                         rounded 
@@ -451,7 +451,7 @@ export default {
         },
 
         deleteData(deleteId){
-            const confirmBox = confirm("Are you sure want remove?")
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
             if(confirmBox)
             var uri="http://kouvee.xbanana.my.id/api/transaksi_pelayanan/"+deleteId;
             this.$http.delete(uri).then(response =>{

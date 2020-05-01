@@ -2,10 +2,10 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">Transaksi Pembayaran Produk</h2> 
+                <h2 class="text-md-center">Pembayaran Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -14,7 +14,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Produk 
-                        </v-btn>
+                        </v-btn> -->
                         <v-btn depressed 
                         dark 
                         rounded 
@@ -47,7 +47,7 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <td>{{ item.idtransaksipenjualan}} </td>
+                            <td>{{ item.idtransaksipenjualan}}</td>
                             <td>{{ item.noPR}}</td>
                             <td>{{ item.tanggaltransaksi}} </td>
                             <td>{{ item.idpegawai}}</td>
@@ -60,10 +60,18 @@
                                 icon 
                                 color="indigo" 
                                 light
+                                @click="bayarHandler(item)"
+                                >
+                                <v-icon>mdi-account-cash-outline</v-icon>
+                                </v-btn>
+                                <!-- <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
                                 @click="editHandler(item)"
                                 >
                                 <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
+                                </v-btn> -->
                                 <v-btn 
                                 icon 
                                 color="error" 
@@ -79,24 +87,170 @@
             </v-data-table>
         </v-container>
     </v-card>
+    <v-card>
+    <v-container grid-list-md mb-0>
+                <h2 class="text-md-center">Detil Pembayaran Produk</h2> 
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <v-btn depressed 
+                        dark 
+                        rounded 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="dialogDetil = true"
+                        >
+                        <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
+                            Tambah Detil Produk 
+                        </v-btn>
+                    </v-flex>
+                    <v-flex xs6 class="text-right">
+                        <v-text-field
+                            v-model="keyword" 
+                            append-icon="mdi-search" 
+                            label="Search" 
+                            hide-details
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
+
+                <v-data-table
+                    :headers="detilheaders"
+                    :items="detils"
+                    :search="keyword"
+                    :loading="load"
+                >
+
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="(item,index) in items" :key="item.id"> 
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ item.iddetilpenjualan}}</td>
+                            <td>{{ item.idtransaksipenjualan}} </td>
+                            <td>{{ item.idproduk}}</td>
+                            <td>{{ item.jumlah}}</td>
+                            <td>{{ item.subtotal}}</td>   
+                            <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="editHandler(item)"
+                                >
+                                <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="error" 
+                                light
+                                @click="deleteDetil(item.iddetilpenjualan)"
+                                >
+                                <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-container>
+        </v-card>
+    <!-- Dialog Bayar -->
+    <v-dialog v-model="dialogBayar" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Pembayaran</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                     <v-col cols="12">
+                        <v-select 
+                            :items="detils"
+                            v-model="bayarform.idtransaksipenjualan"
+                            label="ID Transaksi Penjualan"
+                            item-text="idtransaksipenjualan"
+                            item-value="idtransaksipenjualan"
+                            >
+                        </v-select>
+                    </v-col>
+                     <v-col cols="12">
+                        <v-autocomplete  v-if="bayarform.idtransaksipenjualan"
+                            :multiple="true"
+                            :items="detils.filter(item => item.idtransaksipenjualan === bayarform.idtransaksipenjualan)"
+                            :filter="customFilter"
+                            v-model="bayarform.subtotal"
+                            color="white"
+                            item-text="subtotal"
+                            item-value="subtotal"
+                            label="Subtotal*"
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12">
+                        <span>{{ sum }}</span>
+                        <label for="diskon">Uang Customer*</label>
+                        <v-text-field v-model="bayarform.uang"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="diskon">Diskon*</label>
+                        <v-text-field v-model="bayarform.diskon"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="total">Total</label>
+                        <v-text-field disabled="" v-model="bayarform.total">{{bayarform.total=parseFloat(bayarform.subtotal)-parseFloat(bayarform.diskon)}}</v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="total">Kembalian</label>
+                        <v-text-field disabled v-model="bayarform.kembalian">{{bayarform.kembalian=parseFloat(bayarform.uang)-parseFloat(bayarform.total)}}</v-text-field>
+                    </v-col>
+                </v-row>
+            </v-container>
+            <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogBayar = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="updateBayar()">Bayar</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <!-- DIALOG TRANSAKSI PEMBAYARAN -->
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Transaksi Pembayaran Produk</span>
+            <span class="headline">Detil Pembayaran Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                  <v-row>
                     <v-col cols="12">
-                        <label for="diskon">Subtotal*</label>
-                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                        <v-autocomplete
+                            :items="produks"
+                            :filter="customFilter"
+                            v-model="detilform.idproduk"
+                            color="white"
+                            item-text="nama"
+                            item-value="idproduk"
+                            label="Produk*"
+                            :class="{ 'hasError': $v.detilform.idproduk.$error }"
+                        ></v-autocomplete>
                     </v-col>
                     <v-col cols="12">
-                        <label for="diskon">Diskon*</label>
-                        <v-text-field v-model="form.diskon" :class="{ 'hasError': $v.form.diskon.$error }">></v-text-field>
+                        <label for="harga">Harga*</label>
+                        <v-select v-if="detilform.idproduk"
+                            :items="produks.filter(item => item.idproduk === detilform.idproduk)"
+                            v-model="detilform.harga"
+                            color="white"
+                            item-text="harga"
+                            item-value="harga"
+                            :class="{ 'hasError': $v.detilform.harga.$error }"
+                            >
+                        </v-select>
                     </v-col>
                     <v-col cols="12">
-                        <label for="total">Total*</label>
-                        <v-text-field v-model="form.total" :class="{ 'hasError': $v.form.total.$error }"></v-text-field>
+                        <label for="jumlah">Jumlah*</label>
+                        <v-text-field v-model="detilform.jumlah" :class="{ 'hasError': $v.detilform.jumlah.$error }"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="subtotal">SubTotal*</label>
+                        <v-text-field readonly v-model="detilform.subtotal" :class="{ 'hasError': $v.detilform.subtotal.$error }" >{{parseFloat(detilform.subtotal=detilform.harga * detilform.jumlah)}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -109,9 +263,10 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+     <!--DIALOG DETIL  -->
     <v-dialog v-model="dialogDetil" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Detil Transaksi Produk</span>
+            <span class="headline">Detil Pembayaran Produk </span>
         </v-card-title>
         <v-card-text>
             <v-container>
@@ -128,14 +283,6 @@
                         </v-select>
                     </v-col>
                     <v-col cols="12">
-                        <!-- <v-select 
-                            :items="produks"
-                            v-model="detilform.idproduk"
-                            label="Produk"
-                            item-text="nama"
-                            item-value="idproduk"
-                            >
-                        </v-select> -->
                         <v-autocomplete
                             :items="produks"
                             :filter="customFilter"
@@ -203,6 +350,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
+            dialogBayar: false,
             dialogDetil: false,
             dialog: false,
             keyword: '',
@@ -212,11 +360,11 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'ID Penjualan Produk',
-                    value: 'idtransaksipenjualan',
+                    text: 'ID Transaksi',
+                    value: 'idtransaksipenjualan'
                     },
                     {
-                    text: 'No Produk',
+                    text: 'No Transaksi',
                     value: 'noPR'
                     },
                     {
@@ -244,6 +392,32 @@ export default {
                     value: 'total',
                     },
             ],
+            detilheaders: [
+                    {
+                    text: 'No',
+                    value: 'no',
+                    },
+                    {
+                    text: 'ID Detil Penjualan',
+                    value: 'iddetilpenjualan'
+                    },
+                    {
+                    text: 'ID Transaksi Penjualan',
+                    value: 'idtransaksipenjualan'
+                    },
+                    {
+                    text: 'Produk',
+                    value: 'idproduk'
+                    },
+                    {
+                    text: 'Jumlah',
+                    value: 'jumlah'
+                    },
+                    {
+                    text: 'Subtotal',
+                    value: 'subtotal'
+                    },
+            ],
             penjualanproduks: [],
             pegawais: [],
             hewans: [],
@@ -254,17 +428,26 @@ export default {
             color: null,
             text: '',
             load: false,
-            form: {
-                idpegawai: '',
-                idhewan : '',
-                diskon : '',
-                total : '',
-            },
+            // form: {
+            //     idpegawai: '',
+            //     idhewan : '',
+            //     diskon : '',
+            //     total : '',
+            // },
             detilform: {
                 idtransaksipenjualan: '',
                 idproduk : '',
+                harga: '',
                 jumlah : '',
                 subtotal : '',
+            },
+            bayarform: {
+                idtransaksipenjualan: '',
+                subtotal: '',
+                diskon: '',
+                total: '',
+                uang: '',
+                harga: '',
             },
             penjualanproduk : new FormData,
             detilproduk : new FormData,
@@ -274,22 +457,38 @@ export default {
         }
     },
     validations: {
-        form: {
-            diskon: { required, numeric },
-            total: { required,numeric },
-            idcustomer: { required },
-            idhewan: { required },
-        },
+        // form: {
+        //     diskon: { required, numeric },
+        //     total: { required,numeric },
+        //     idcustomer: { required },
+        //     idhewan: { required },
+        // },
         detilform: {
             idtransaksipenjualan:{required},
             idproduk: {required},
+            harga: {numeric,required},
             jumlah: {numeric,required},
             subtotal: {numeric,required},
+        },
+        bayarform:{
+            idtransaksipenjualan: {required},
+            diskon: { required, numeric },
+            total: { required, numeric },
+            uang: {required},
+            harga: {required},
+        },
+    },
+    computed: {
+        sum: function(){
+            var sum = 0;
+                this.detils.forEach(bayarform => {
+                sum += parseFloat(bayarform.subtotal);
+                });
+                return sum
         }
     },
 
     methods:{
-
         customFilter (item, queryText) {
             const textOne = item.nama.toLowerCase()
             const searchText = queryText.toLowerCase()
@@ -352,91 +551,6 @@ export default {
                 this.errors.push(e)
             });
         },
-        sendData(){
-            this.$v.form.$touch();
-            this.penjualanproduk.append('noPR', this.form.noPR);
-            this.penjualanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
-            this.penjualanproduk.append('idhewan', this.form.idhewan);
-            this.penjualanproduk.append('idcustomer', this.form.idcustomer);
-            this.penjualanproduk.append('diskon', "0");
-            this.penjualanproduk.append('total', "0");
-            if(this.$v.form.idhewan.$error) return alert('Hewan Masih Kosong !')
-            else if(this.$v.form.idcustomer.$error) return alert('Customer Masih Kosong !')
-            // else if(this.$v.form.diskon.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
-            // else if(this.$v.form.total.$error) return alert('Total Tidak Boleh Kosong dan Harus Angka !')
-            var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
-            this.$http.post(uri,this.penjualanproduk).then(response =>{
-                this.snackbar = true; 
-                this.text = response.data.message;
-                this.text = 'Berhasil'; 
-                this.color = 'green';
-                this.dialog =false;
-                this.getData();
-        }).catch(error =>{ 
-             console.log(this.form)
-            this.errors = error; 
-            this.snackbar = true; 
-            this.text = 'Masukan Data dengan Benar !'; 
-            this.color = 'red';
-        })
-        },
-
-        updateData(){      
-            axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
-                idpegawai: this.$session.get('dataPegawai').idpegawai,
-                idhewan: this.form.idhewan,
-                idcustomer: this.form.idcustomer,
-                diskon: this.form.diskon,
-                total: this.form.total,
-            })
-            .then(response =>{     
-                this.snackbar = true; 
-                this.text = response.data.message;
-                this.text = 'Berhasil'; 
-                this.color = 'green';
-                this.load = false;
-                this.dialog = false;
-                this.getData(); 
-                this.resetForm();
-                this.typeInput = 'dddd';
-            }).catch(error =>{
-            this.errors = error
-            this.snackbar = true;
-            this.text = 'Masukan Data dengan Benar !';
-            this.color = 'red';
-            this.load = false;
-            this.typeInput = 'dddd';
-            })
-        },
-
-        editHandler(item){
-            this.typeInput = 'edit';
-            this.dialog = true;
-            this.form.idcustomer = item.idcustomer;
-            this.form.idhewan = item.idhewan;
-            this.form.diskon = item.diskon;
-            this.form.total = item.total;
-            this.updatedId = item.idtransaksipenjualan;
-        },
-
-        deleteData(deleteId){
-            const confirmBox = confirm("Are you sure want remove?")
-            if(confirmBox)
-            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
-            this.$http.delete(uri).then(response =>{
-                this.snackbar=true;
-                this.text = response.data.message;
-                this.text="Berhasil";
-                this.color='green'
-                this.deleteDialog=false;
-                this.getData();
-                }).catch(error=>{
-                    this.errors=error 
-                    this.snackbar=true;
-                    this.text='Coba Lagi !';
-                    this.color='red';
-                })
-        },
 
         detilPenjualan(){
             this.$v.detilform.$touch();
@@ -465,6 +579,144 @@ export default {
         })
         },
 
+        // sendData(){
+        //     this.$v.form.$touch();
+        //     this.penjualanproduk.append('noPR', this.form.noPR);
+        //     this.penjualanproduk.append('idpegawai', this.$session.get('dataPegawai').idpegawai);
+        //     this.penjualanproduk.append('idhewan', this.form.idhewan);
+        //     this.penjualanproduk.append('idcustomer', this.form.idcustomer);
+        //     this.penjualanproduk.append('diskon', "0");
+        //     this.penjualanproduk.append('total', "0");
+        //     if(this.$v.form.idhewan.$error) return alert('Hewan Masih Kosong !')
+        //     else if(this.$v.form.idcustomer.$error) return alert('Customer Masih Kosong !')
+        //     var uri = "http://kouvee.xbanana.my.id/api/transaksi_penjualan"
+        //     this.$http.post(uri,this.penjualanproduk).then(response =>{
+        //         this.snackbar = true; 
+        //         this.text = response.data.message;
+        //         this.text = 'Berhasil'; 
+        //         this.color = 'green';
+        //         this.dialog =false;
+        //         this.getData();
+        // }).catch(error =>{ 
+        //      console.log(this.form)
+        //     this.errors = error; 
+        //     this.snackbar = true; 
+        //     this.text = 'Masukan Data dengan Benar !'; 
+        //     this.color = 'red';
+        // })
+        // },
+
+        updateData(){      
+            this.$v.detilform.$touch();
+            if(this.$v.detilform.idproduk.$error) return alert('Produk Masih Kosong !')
+            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Tidak Boleh Kosong dan Harus Angka !')
+            axios.put("http://kouvee.xbanana.my.id/api/detil_penjualan/" + this.updatedId,{
+                idproduk: this.detilform.idproduk,
+                jumlah: this.detilform.jumlah,
+                subtotal: this.detilform.subtotal,
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.dialog = false;
+                this.getData(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Masukan Data dengan Benar !';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
+        },
+        
+        updateBayar(){      
+            
+            axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
+                diskon: this.bayarform.diskon,
+                total: this.bayarform.total,
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.dialogBayar = false;
+                this.getData(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Masukan Data dengan Benar !';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
+        },
+
+        bayarHandler(item){
+            this.dialogBayar = true;
+            this.bayarform.diskon = item.diskon;
+            this.bayarform.total = item.total;
+            this.updatedId = item.idtransaksipenjualan;
+        },
+
+        editHandler(item){
+            this.typeInput = 'edit';
+            this.dialog = true;
+            this.detilform.idproduk = item.idproduk;
+            this.detilform.jumlah = item.jumlah;
+            this.detilform.subtotal = item.subtotal;
+            this.updatedId = item.iddetilpenjualan;
+        },
+
+        deleteData(deleteId){
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.my.id/api/transaksi_penjualan/"+deleteId;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
+                this.text = response.data.message;
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getData();
+                this.getDataDetil();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Coba Lagi !';
+                    this.color='red';
+                })
+        },
+
+        deleteDetil(deleteDetil){
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
+            if(confirmBox)
+            var uri="http://kouvee.xbanana.my.id/api/detil_penjualan/"+deleteDetil;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
+                this.text = response.data.message;
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getData();
+                this.getDataDetil();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Coba Lagi !';
+                    this.color='red';
+                })
+        },
+
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()
@@ -480,6 +732,14 @@ export default {
                 idhewan : '',
                 diskon : '',
                 total : '',
+            },
+            this.bayarform ={
+                idtransaksipenjualan: '',
+                subtotal: '',
+                diskon: '',
+                total: '',
+                uang: '',
+                harga: '',
             }
         }
         },

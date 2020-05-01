@@ -310,7 +310,7 @@ export default {
         },
 
         deleteData(deleteId){
-            const confirmBox = confirm("Are you sure want remove?")
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
             if(confirmBox)
             var uri="http://kouvee.xbanana.my.id/api/pegawai/"+deleteId;
             this.$http.delete(uri).then(response =>{
