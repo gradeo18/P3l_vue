@@ -15,7 +15,7 @@
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Layanan 
                         </v-btn> -->
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -24,7 +24,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Layanan 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -60,11 +60,29 @@
                             <td class="text-center">
                                <v-btn 
                                 icon 
-                                color="indigo" 
+                                color="green" 
                                 light
                                 @click="bayarHandler(item)"
                                 >
                                 <v-icon>mdi-account-cash-outline</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="printHandler(item)"
+                                >
+                                <v-icon>mdi-printer</v-icon>
+                                </v-btn>
+                            </td>
+                            <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="tambahDetilHandler(item)"
+                                >
+                                <v-icon>mdi-plus-box-outline</v-icon>
                                 </v-btn>
                                 <v-btn 
                                 icon 
@@ -221,7 +239,7 @@
         <v-card-text>
             <v-container>
                  <v-row>
-                    <v-col cols="12">
+                    <!-- <v-col cols="12">
                         <v-select 
                             :items="penjualanlayanans"
                             v-model="detilform.idtransaksipelayanan"
@@ -231,7 +249,7 @@
                             :class="{ 'hasError': $v.detilform.idtransaksipelayanan.$error }"
                         >
                         </v-select>
-                    </v-col>
+                    </v-col> -->
                     <v-col cols="12">
                         <v-select 
                             :items="layanans"
@@ -459,6 +477,12 @@ export default {
                     text: 'Total',
                     value: 'total',
                     },
+                    {
+                    text: 'Bayar',sortable: false
+                    },
+                    {
+                    text: '',sortable: false
+                    },
             ],
             detilheaders: [
                     {
@@ -571,6 +595,22 @@ export default {
         }
     },
     methods:{
+        printHandler(item){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/transaksi_penjualan/cetak_struk/' + item.idtransaksipenjualan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'penjualanproduk.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+
+        },
+
         customFilter (item, queryText) {
             const textOne = item.nama.toLowerCase()
             const searchText = queryText.toLowerCase()
@@ -681,7 +721,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.dialogDetil =false;
-                this.getData();
+                this.getDataDetil();
         }).catch(error =>{ 
              console.log(this.detilform)
             this.errors = error; 
@@ -769,6 +809,14 @@ export default {
             this.editdetilform.jumlah = item.jumlah;
             this.editdetilform.subtotal = item.subtotal;
             this.updatedId = item.iddetilpelayanan;
+        },
+
+        tambahDetilHandler(item){
+            this.dialogDetil = true;
+            this.detilform.idtransaksipelayanan=item.idtransaksipelayanan
+            this.detilform.idproduk=item.idproduk
+            this.detilform.jumlah=item.jumlah
+            this.detilform.subtotal=item.subtotal
         },
 
         deleteData(deleteId){

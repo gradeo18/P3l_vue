@@ -15,7 +15,7 @@
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Penjualan Layanan 
                         </v-btn>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -24,7 +24,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Layanan 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -62,17 +62,19 @@
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="printHandler(item)"
+                                @click="statusHandler(item)"
                                 >
-                                <v-icon>mdi-printer</v-icon>
+                                <v-icon>mdi-update</v-icon>
                                 </v-btn>
+                            </td>
+                            <td class="text-center">
                                 <v-btn 
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="statusHandler(item)"
+                                @click="tambahDetilHandler(item)"
                                 >
-                                <v-icon>mdi-update</v-icon>
+                                <v-icon>mdi-plus-box-outline</v-icon>
                                 </v-btn>
                                 <v-btn 
                                 icon 
@@ -403,6 +405,9 @@ export default {
                     text: 'Total',
                     value: 'total',
                     },
+                    {
+                    text: 'Ubah Status', sortable:false,
+                    },
             ],
             detilheaders: [
                     {
@@ -615,7 +620,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.dialogDetil =false;
-                this.getData();
+                this.getDataDetil();
         }).catch(error =>{ 
              console.log(this.detilform)
             this.errors = error; 
@@ -696,6 +701,14 @@ export default {
             this.editform.jumlah = item.jumlah;
             this.editform.subtotal = item.subtotal;
             this.updatedId = item.iddetilpelayanan;
+        },
+
+        tambahDetilHandler(item){
+            this.dialogDetil = true;
+            this.detilform.idtransaksipelayanan=item.idtransaksipelayanan
+            this.detilform.idproduk=item.idproduk
+            this.detilform.jumlah=item.jumlah
+            this.detilform.subtotal=item.subtotal
         },
 
         deleteData(deleteId){

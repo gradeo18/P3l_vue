@@ -15,7 +15,7 @@
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Penjualan Produk 
                         </v-btn>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -24,7 +24,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Produk 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -60,18 +60,10 @@
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="printHandler(item)"
+                                @click="tambahDetilHandler(item)"
                                 >
-                                <v-icon>mdi-printer</v-icon>
+                                <v-icon>mdi-plus-box-outline</v-icon>
                                 </v-btn>
-                                <!-- <v-btn 
-                                icon 
-                                color="indigo" 
-                                light
-                                @click="editHandler(item)"
-                                >
-                                <v-icon>mdi-pencil</v-icon>
-                                </v-btn> -->
                                 <v-btn 
                                 icon 
                                 color="error" 
@@ -124,8 +116,8 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
+                            <td>{{ item.idtransaksipenjualan}}</td>
                             <td>{{ item.iddetilpenjualan}}</td>
-                            <td>{{ item.idtransaksipenjualan}} </td>
                             <td>{{ item.idproduk}}</td>
                             <td>{{ item.jumlah}}</td>
                             <td>{{ item.subtotal}}</td>   
@@ -392,12 +384,12 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'ID Detil Penjualan',
-                    value: 'iddetilpenjualan'
-                    },
-                    {
                     text: 'ID Transaksi Penjualan',
                     value: 'idtransaksipenjualan'
+                    },
+                    {
+                    text: 'ID Detil Penjualan',
+                    value: 'iddetilpenjualan'
                     },
                     {
                     text: 'Produk',
@@ -594,7 +586,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.dialogDetil =false;
-                this.getData();
+                this.getDataDetil();
         }).catch(error =>{ 
              console.log(this.detilform)
             this.errors = error; 
@@ -641,6 +633,14 @@ export default {
             this.editform.jumlah = item.jumlah;
             this.editform.subtotal = item.subtotal;
             this.updatedId = item.iddetilpenjualan;
+        },
+
+        tambahDetilHandler(item){
+            this.dialogDetil = true;
+            this.detilform.idtransaksipenjualan=item.idtransaksipenjualan
+            this.detilform.idproduk=item.idproduk
+            this.detilform.jumlah=item.jumlah
+            this.detilform.subtotal=item.subtotal
         },
 
         deleteData(deleteId){
