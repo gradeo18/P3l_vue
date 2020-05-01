@@ -377,7 +377,7 @@
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="12">
-                        <!-- <span>{{ sum }}</span> -->
+                        <span>{{ sum }}</span>
                         <label for="diskon">Uang Customer*</label>
                         <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
                     </v-col>
