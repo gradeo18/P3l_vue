@@ -377,7 +377,7 @@
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="12">
-                        <span>{{ sum }}</span>
+                        <!-- <span>{{ sum }}</span> -->
                         <label for="diskon">Uang Customer*</label>
                         <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
                     </v-col>
@@ -597,14 +597,14 @@ export default {
     methods:{
         printHandler(item){
             axios({
-                url: 'http://kouvee.xbanana.my.id/transaksi_penjualan/cetak_struk/' + item.idtransaksipenjualan,
+                url: 'http://kouvee.xbanana.my.id/transaksi_pelayanan/cetak_struk/' + item.idtransaksipelayanan,
                 method: 'GET',
                 responseType: 'blob', // important
                 }).then((response) => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'penjualanproduk.pdf');
+                link.setAttribute('download', 'penjualanLayanan.pdf');
                 document.body.appendChild(link);
                 link.click();
             });

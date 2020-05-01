@@ -270,6 +270,16 @@ export default {
             });
         },
 
+        getDataCustomer(){
+            axios.get("http://kouvee.xbanana.my.id/api/customer")
+            .then(
+                response => {this.customers = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
+
 
         sendData(){
             this.hewan.append('nama', this.form.nama);
