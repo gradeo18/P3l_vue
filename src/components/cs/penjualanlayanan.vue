@@ -66,14 +66,14 @@
                                 >
                                 <v-icon>mdi-printer</v-icon>
                                 </v-btn>
-                                <!-- <v-btn 
+                                <v-btn 
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="editHandler(item)"
+                                @click="statusHandler(item)"
                                 >
-                                <v-icon>mdi-pencil</v-icon>
-                                </v-btn> -->
+                                <v-icon>mdi-update</v-icon>
+                                </v-btn>
                                 <v-btn 
                                 icon 
                                 color="error" 
@@ -198,6 +198,28 @@
         </v-card>
     </v-dialog>
 
+    <!-- DIALOG EDIT STATUS -->
+    <v-dialog v-model="dialogStatus" persistent max-width="600px"> <v-card>
+        <v-card-title>
+            <span class="headline">Status Transaksi Layanan</span>
+        </v-card-title>
+        <v-card-text>
+            <v-container>
+                 <v-row>
+                    <v-col cols="12">
+                        <span>Apakah anda yakin ingin membarui status layanan menjadi Selesai?</span>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card-text>
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue darken-1" text @click="dialogStatus = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="updateStatus()">Update</v-btn> 
+        </v-card-actions>
+        </v-card>
+    </v-dialog>
+    
     <!-- DIALOG EDIT -->
     <v-dialog v-model="dialogEdit" persistent max-width="600px"> <v-card>
         <v-card-title>
@@ -335,7 +357,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            status: ["Diproses"],
+            dialogStatus: false,
             dialogDetil: false,
             dialog: false,
             dialogEdit: false,
@@ -389,7 +411,7 @@ export default {
                     },
                     {
                     text: 'ID Penjualan Layanan',
-                    value: 'idpelayanan'
+                    value: 'idtransaksipelayanan'
                     },
                     {
                     text: 'ID Detil Pelayanan',
@@ -632,6 +654,40 @@ export default {
             this.load = false;
             this.typeInput = 'dddd';
             })
+        },
+
+        updateStatus(){
+            axios.put("http://kouvee.xbanana.my.id/api/transaksi_pelayanan/" + this.updatedId,{
+                status: "Selesai",
+                diskon: "0",
+                total: "0",
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.dialogStatus = false;
+                this.getData(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Masukan Data dengan Benar !';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
+        },
+
+        statusHandler(item){
+            this.dialogStatus = true;
+            this.status = item.status;
+            this.diskon = item.diskon;
+            this.total = item.total;
+            this.updatedId = item.idtransaksipelayanan;
         },
 
         editHandler(item){
