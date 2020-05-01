@@ -12,13 +12,17 @@
         <v-toolbar-items>
           <v-btn text router to="/">Home</v-btn>
         </v-toolbar-items>
-        
-        <v-toolbar-items>
-          <v-btn text router to="/aboutUs">About Us</v-btn>
-        </v-toolbar-items>
   
         <v-toolbar-items>
           <v-btn text router to="/signDual">Log In</v-btn>
+        </v-toolbar-items>
+
+        <v-toolbar-items>
+          <v-btn text router to="/status">Status Layanan</v-btn>
+        </v-toolbar-items>
+
+        <v-toolbar-items>
+          <v-btn text router to="/aboutUs">Tentang Kami</v-btn>
         </v-toolbar-items>
   
       </v-app-bar>

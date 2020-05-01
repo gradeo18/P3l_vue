@@ -16,7 +16,7 @@
             supplier dalam penyediaan produk yang dijual. 
         </v-card-text>
         <v-card-text align="right" class="font-weight-bold">
-          Copyright ©2020 Kouvee Pet Shop
+          Copyright ©2020 Kouvee Pet Shop - Kel 1 Kelas E 
         </v-card-text>
       </v-card>
       </v-flex>

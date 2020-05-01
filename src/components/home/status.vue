@@ -2,14 +2,15 @@
     <v-container>   
         <v-card>
             <v-container grid-list-md mb-0>
-                <h2 class="text-md-center">List Produk Kouvee Pet Shop</h2> 
+                <h2 class="text-md-center">Transaksi Penjualan Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
+                    
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
                             v-model="keyword" 
-                            append-icon="mdi-magnify" 
+                            append-icon="mdi-search" 
                             label="Search" 
                             hide-details
                         ></v-text-field>
@@ -18,7 +19,7 @@
 
                 <v-data-table
                     :headers="headers"
-                    :items="produks"
+                    :items="penjualanlayanans"
                     :search="keyword"
                     :loading="load"
                 >
@@ -27,11 +28,10 @@
                     <tbody>
                         <tr v-for="(item,index) in items" :key="item.id"> 
                             <td>{{ index + 1 }}</td>
-                            <img :src="'http://kouvee.xbanana.my.id/uploads/produk/' +item.gambar" alt="Image Gagal di Load"  width="80px" height="80px" />
-                            <td>{{ item.idproduk}}</td>
-                            <td>{{ item.nama}}</td>
-                            <td>{{ item.harga}}</td>
-                            <td>{{ item.stok}}</td>
+                            <td>{{ item.noLY}}</td>
+                            <td>{{ item.idcustomer}}</td>
+                            <td>{{ item.idhewan}}</td>
+                            <td>{{ item.status}} </td>   
                         </tr>
                     </tbody>
                 </template>
@@ -53,43 +53,41 @@ export default {
                     value: 'no',
                     },
                     {
-                    text: 'Gambar',
-                    value: 'gambar'
+                    text: 'No Layanan',
+                    value: 'noLY'
                     },
                     {
-                    text: 'ID Produk',
-                    value: 'idproduk'
+                    text: 'Customer',
+                    value: 'idcustomer'
                     },
                     {
-                    text: 'Nama Produk',
-                    value: 'nama'
+                    text: 'Hewan',
+                    value: 'idhewan'
                     },
                     {
-                    text: 'Harga',
-                    value: 'harga'
-                    },
-                    {
-                    text: 'Stok',
-                    value: 'stok',
+                    text: 'Status',
+                    value: 'status'
                     },
             ],
-            produks: [],
+            penjualanlayanans: [],
+            snackbar: false,
             color: null,
             text: '',
             load: false,
-            produk : new FormData,  
+            penjualanlayanan : new FormData,
         }
     },
+
     methods:{
         getData(){
-            axios.get("http://kouvee.xbanana.my.id/api/produk")
+            axios.get("http://kouvee.xbanana.my.id/api/transaksi_pelayanan")
             .then(
-                response => {this.produks = response.data},
+                response => {this.penjualanlayanans = response.data},
             )
             .catch(e => {
                 this.errors.push(e)
             });
-        }
+        },
         },
 
         mounted(){

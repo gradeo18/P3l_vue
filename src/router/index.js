@@ -41,6 +41,11 @@ const routes = [
         path: '/signDual',
         name: 'signDual',
         component: loadHomePage('signDual')
+    },
+    {
+        path: '/status',
+        name: 'status',
+        component: loadHomePage('status')
     }
     ]
 },
