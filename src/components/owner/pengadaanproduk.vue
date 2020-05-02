@@ -15,7 +15,7 @@
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
                             Tambah Transaksi Pemesanan 
                         </v-btn>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -24,7 +24,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Transaksi 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -59,9 +59,10 @@
                                 icon 
                                 color="indigo" 
                                 light
-                                @click="printHandler(item)"
+                                @click="tambahDetilHandler(item)"
                                 >
-                                <v-icon>mdi-printer</v-icon>
+                                <v-icon>mdi-plus-box-outline
+                                </v-icon>
                                 </v-btn>
                                 <v-btn 
                                 icon 
@@ -71,11 +72,76 @@
                                 >
                                 <v-icon>mdi-pencil</v-icon>
                                 </v-btn>
+                            </td>   
+                            <td class="text-center">
                                 <v-btn 
                                 icon 
                                 color="error" 
                                 light
-                                @click="deleteData(item.idtransaksipenjualan)"
+                                @click="deleteData(item.idpemesanan)"
+                                >
+                                <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="printHandler(item)"
+                                >
+                                <v-icon>mdi-printer</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
+                    </tbody>
+                </template>
+            </v-data-table>
+        </v-container>
+    </v-card>
+    <v-card>
+            <v-container grid-list-md mb-0>
+                <h2 class="text-md-center">Detil Pemesanan Produk</h2> 
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                    </v-flex>
+                    <v-flex xs6 class="text-right">
+                        <v-text-field
+                            v-model="keyword" 
+                            append-icon="mdi-search" 
+                            label="Search" 
+                            hide-details
+                        ></v-text-field>
+                    </v-flex>
+                </v-layout>
+
+                <v-data-table
+                    :headers="detilheaders"
+                    :items="detils"
+                    :search="keyword"
+                    :loading="load"
+                >
+
+                <template v-slot:body="{ items }">
+                    <tbody>
+                        <tr v-for="(item,index) in items" :key="item.id"> 
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ item.idpemesanan }}</td>
+                            <td>{{ item.idproduk}}</td>
+                            <td>{{ item.jumlah}}</td>
+                            <td>{{ item.satuan}}</td>
+                            <td class="text-center">
+                                <v-btn 
+                                icon 
+                                color="indigo" 
+                                light
+                                @click="editDetilHandler(item)"
+                                >
+                                <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn 
+                                icon 
+                                color="error" 
+                                light
+                                @click="deleteDetil(item.iddetilpemesanan)"
                                 >
                                 <v-icon>mdi-delete</v-icon>
                                 </v-btn>
@@ -248,34 +314,48 @@
     </v-card>
 </v-dialog>
 
-<v-dialog v-model="viewDialog" persistent max-width="1000px"> <v-card>
+<v-dialog v-model="editDetilDialog" persistent max-width="600px"> <v-card>
         <v-card-title>
-            <span class="headline">Surat Pemesanan</span>
+            <span class="headline">Edit Detil Pemesanan Produk</span>
         </v-card-title>
         <v-card-text>
             <v-container>
                  <v-row>
-                        <tr>
-                            <td>{{ form.idpemesanan }}</td>
-                            <td>{{ form.noPO}}</td>
-                            <td>{{ form.idsupplier.nama}}</td>
-                            <td>{{ form.idpegawai}}</td>
-                            <td>{{ form.tglpesan}}</td>
-                            <td>{{ form.tglcetak}}</td>
-                            <td>{{ form.status}}</td>
-                            <td>{{ form.detil}}</td>
-                        </tr>
+                    <v-col cols="12">
+                        <v-select 
+                            :items="produks"
+                            v-model="detilform.idproduk"
+                            label="Produk"
+                            item-text="nama"
+                            item-value="idproduk"
+                            :class="{ 'hasError': $v.detilform.idproduk.$error }"
+                            >
+                        </v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="jumlah">Jumlah*</label>
+                        <v-text-field v-model="detilform.jumlah" :class="{ 'hasError': $v.detilform.jumlah.$error }"></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                    <v-select
+                            :items="satuan"
+                            v-model="detilform.satuan"
+                            label="Satuan*"
+                            :class="{ 'hasError': $v.detilform.satuan.$error }"
+                        >
+                    </v-select>  
+                    </v-col>
                 </v-row>
             </v-container>
+            <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="viewDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="editDetilDialog = false">Close</v-btn>
+            <v-btn color="blue darken-1" text @click="updateDetil()">Save</v-btn> 
         </v-card-actions>
     </v-card>
 </v-dialog>
-
-
 
 <v-snackbar
     v-model="snackbar"
@@ -307,6 +387,7 @@ export default {
             viewDialog: false,
             dialog: false,
             detilDialog: false,
+            editDetilDialog: false,
             dialogEdit: false,
             keyword: '',
             headers: [
@@ -343,10 +424,33 @@ export default {
                     value: 'status',
                     },
             ],
+            detilheaders: [
+                    {
+                    text: 'No',
+                    value: 'no',
+                    },
+                    {
+                    text: 'ID Pemesanan',
+                    value: 'idpemesanan',
+                    },
+                    {
+                    text: 'Produk',
+                    value: 'produk'
+                    },
+                    {
+                    text: 'Jumlah',
+                    value: 'jumlah'
+                    },
+                    {
+                    text: 'Satuan',
+                    value: 'satuan',
+                    },
+            ],
             pemesananproduks: [],
             suppliers: [],
             pegawais:[],
             produks:[],
+            detils:[],
             snackbar: false,
             color: null,
             text: '',
@@ -422,6 +526,16 @@ export default {
                 this.errors.push(e)
             });
         },
+        
+        getDataDetil(){
+            axios.get("http://kouvee.xbanana.my.id/api/detil_pemesanan")
+            .then(
+                response => {this.detils = response.data},
+            )
+            .catch(e => {
+                this.errors.push(e)
+            });
+        },
 
         sendData(){
             this.$v.form.$touch();
@@ -443,6 +557,33 @@ export default {
                 this.getData();
         }).catch(error =>{ 
             console.log(this.form)
+            this.errors = error; 
+            this.snackbar = true; 
+            this.text = 'Masukan Data dengan Benar !'; 
+            this.color = 'red';
+        })
+        },
+        
+        detilPemesanan(){
+            this.$v.detilform.$touch();
+            this.detilpemesanan.append('idproduk', this.detilform.idproduk);
+            this.detilpemesanan.append('jumlah', this.detilform.jumlah);
+            this.detilpemesanan.append('satuan', this.detilform.satuan);
+            this.detilpemesanan.append('idpemesanan', this.detilform.idpemesanan);
+            if(this.$v.detilform.idpemesanan.$error) return alert('ID Pemesanan Tidak Boleh Kosong !')
+            else if(this.$v.detilform.idproduk.$error) return alert('Produk Masih Kosong !')
+            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Masih Kosong dan Harus Angka!')
+            else if(this.$v.detilform.satuan.$error) return alert('Satuan Tidak Boleh Kosong !')
+            var uri = "http://kouvee.xbanana.my.id/api/detil_pemesanan"
+            this.$http.post(uri,this.detilpemesanan).then(response =>{
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.detilDialog =false;
+                this.getData();
+        }).catch(error =>{ 
+             console.log(this.detilform)
             this.errors = error; 
             this.snackbar = true; 
             this.text = 'Masukan Data dengan Benar !'; 
@@ -476,6 +617,32 @@ export default {
             })
         },
 
+        updateDetil(){      
+            axios.put("http://kouvee.xbanana.my.id/api/detil_pemesanan/" + this.updatedId,{
+                idproduk: this.detilform.idproduk,
+                jumlah: this.detilform.jumlah,
+                satuan: this.detilform.satuan,
+            })
+            .then(response =>{     
+                this.snackbar = true; 
+                this.text = response.data.message;
+                this.text = 'Berhasil'; 
+                this.color = 'green';
+                this.load = false;
+                this.editDetilDialog = false;
+                this.getDataDetil(); 
+                this.resetForm();
+                this.typeInput = 'dddd';
+            }).catch(error =>{
+            this.errors = error
+            this.snackbar = true;
+            this.text = 'Masukan Data dengan Benar !';
+            this.color = 'red';
+            this.load = false;
+            this.typeInput = 'dddd';
+            })
+        },
+
         editHandler(item){
             this.typeInput = 'edit';
             this.dialogEdit = true;
@@ -483,6 +650,23 @@ export default {
             this.form.tglpesan = item.tglpesan;
             this.form.status = item.status;
             this.updatedId = item.idpemesanan;
+        },
+
+        editDetilHandler(item){
+            this.editDetilDialog = true;
+            this.detilform.idproduk = item.idproduk;
+            this.detilform.jumlah = item.jumlah;
+            this.detilform.satuan = item.satuan;
+            this.detilform.idpemesanan = item.idpemesanan;
+            this.updatedId = item.iddetilpemesanan;
+        },
+
+        tambahDetilHandler(item){
+            this.detilDialog = true;
+            this.detilform.idproduk=item.idproduk
+            this.detilform.jumlah=item.jumlah
+            this.detilform.satuan=item.satuan
+            this.detilform.idpemesanan=item.idpemesanan
         },
 
         printHandler(item){
@@ -521,32 +705,26 @@ export default {
             }
         },
 
-        detilPemesanan(){
-            this.$v.detilform.$touch();
-            this.detilpemesanan.append('idproduk', this.detilform.idproduk);
-            this.detilpemesanan.append('jumlah', this.detilform.jumlah);
-            this.detilpemesanan.append('satuan', this.detilform.satuan);
-            this.detilpemesanan.append('idpemesanan', this.detilform.idpemesanan);
-            if(this.$v.detilform.idpemesanan.$error) return alert('ID Pemesanan Tidak Boleh Kosong !')
-            else if(this.$v.detilform.idproduk.$error) return alert('ID Produk Masih Kosong !')
-            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Masih Kosong dan Harus Angka!')
-            else if(this.$v.detilform.satuan.$error) return alert('Satuan Tidak Boleh Kosong !')
-            var uri = "http://kouvee.xbanana.my.id/api/detil_pemesanan"
-            this.$http.post(uri,this.detilpemesanan).then(response =>{
-                this.snackbar = true; 
+        deleteDetil(deleteId){
+            const confirmBox = confirm("Apakah anda yakin untuk menghapus?")
+            if(confirmBox){
+            var uri="http://kouvee.xbanana.my.id/api/detil_pemesanan/"+deleteId;
+            this.$http.delete(uri).then(response =>{
+                this.snackbar=true;
                 this.text = response.data.message;
-                this.text = 'Berhasil'; 
-                this.color = 'green';
-                this.detilDialog =false;
-                this.getData();
-        }).catch(error =>{ 
-             console.log(this.detilform)
-            this.errors = error; 
-            this.snackbar = true; 
-            this.text = 'Masukan Data dengan Benar !'; 
-            this.color = 'red';
-        })
+                this.text="Berhasil";
+                this.color='green'
+                this.deleteDialog=false;
+                this.getDataDetil();
+                }).catch(error=>{
+                    this.errors=error 
+                    this.snackbar=true;
+                    this.text='Masukan Data dengan Benar !';
+                    this.color='red';
+                })
+            }
         },
+
 
         setForm(){
             if (this.typeInput === 'new') {
@@ -572,6 +750,7 @@ export default {
             this.getDataSupplier();
             this.getDataPegawai();
             this.getDataProduk();
+            this.getDataDetil();
         },
     }
 </script>

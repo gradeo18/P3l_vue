@@ -104,7 +104,7 @@
                 <h2 class="text-md-center">Detil Pembayaran Layanan</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -113,7 +113,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Produk 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -291,7 +291,6 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
-    <!-- Dialog Edit Pembayaran -->
     <!-- DIALOG EDIT DETIL PEMBAYARAN -->
     <v-dialog v-model="dialog" persistent max-width="600px"> <v-card>
         <v-card-title>
@@ -376,8 +375,11 @@
                             :class="{ 'hasError': $v.bayarform.subtotal.$error }"
                         ></v-autocomplete>
                     </v-col>
+                    <!-- <v-col cols="12">
+                        <label for="diskon">Subtotal*</label>
+                        <v-text-field v-model="sum" readonly></v-text-field>
+                    </v-col> -->
                     <v-col cols="12">
-                        <span>{{ sum }}</span>
                         <label for="diskon">Uang Customer*</label>
                         <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
                     </v-col>
@@ -387,12 +389,12 @@
                     </v-col>
                     <v-col cols="12">
                         <label for="total">Total</label>
-                        <v-text-field disabled="" v-model="bayarform.total" :class="{ 'hasError': $v.bayarform.total.$error }">
+                        <v-text-field readonly v-model="bayarform.total" :class="{ 'hasError': $v.bayarform.total.$error }">
                             {{bayarform.total=parseFloat(bayarform.subtotal)-parseFloat(bayarform.diskon)}}</v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="total">Kembalian</label>
-                        <v-text-field disabled v-model="bayarform.kembalian" :class="{ 'hasError': $v.bayarform.kembalian.$error }">
+                        <v-text-field readonly v-model="bayarform.kembalian" :class="{ 'hasError': $v.bayarform.kembalian.$error }">
                             {{bayarform.kembalian=parseFloat(bayarform.uang)-parseFloat(bayarform.total)}}</v-text-field>
                     </v-col>
                 </v-row>

@@ -102,7 +102,7 @@
                 <h2 class="text-md-center">Detil Pembayaran Produk</h2> 
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
-                        <v-btn depressed 
+                        <!-- <v-btn depressed 
                         dark 
                         rounded 
                         style="text-transform: none !important;" 
@@ -111,7 +111,7 @@
                         >
                         <v-icon size="18" class="mr-2">mdi-plus</v-icon> 
                             Tambah Detil Produk 
-                        </v-btn>
+                        </v-btn> -->
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
@@ -206,12 +206,12 @@
                     </v-col>
                     <v-col cols="12">
                         <label for="total">Total</label>
-                        <v-text-field disabled="" v-model="bayarform.total" :class="{ 'hasError': $v.bayarform.total.$error }">
+                        <v-text-field readonly v-model="bayarform.total" :class="{ 'hasError': $v.bayarform.total.$error }">
                             {{bayarform.total=parseFloat(bayarform.subtotal)-parseFloat(bayarform.diskon)}}</v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="total">Kembalian</label>
-                        <v-text-field disabled v-model="bayarform.kembalian" :class="{ 'hasError': $v.bayarform.kembalian.$error }">
+                        <v-text-field readonly v-model="bayarform.kembalian" :class="{ 'hasError': $v.bayarform.kembalian.$error }">
                             {{bayarform.kembalian=parseFloat(bayarform.uang)-parseFloat(bayarform.total)}}</v-text-field>
                     </v-col>
                 </v-row>

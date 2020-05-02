@@ -78,7 +78,7 @@
             <v-container>
                 <v-row>
                     <v-col cols="12">
-                        <v-text-field label="Nama Hewan*" v-model="form.nama" required></v-text-field>
+                        <v-text-field label="Nama Hewan*" v-model="form.nama" :class="{ 'hasError': $v.form.nama.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <v-menu
@@ -94,15 +94,12 @@
                                 label="Tanggal Lahir*"
                                 readonly
                                 v-on="on"
-                                required
+                                :class="{ 'hasError': $v.form.tgllahir.$error }"
                             ></v-text-field>
                             </template>
                             <v-date-picker v-model="form.tgllahir" @input="menuDate = false"></v-date-picker>
                         </v-menu>
                     </v-col>
-                    <!-- <v-col cols="12">
-                        <v-text-field label="ID Jenis Hewan*" v-model="form.idjenis" required></v-text-field>
-                    </v-col> -->
                     <v-col cols="12">
                         <v-select 
                             :items="jenishewans"
@@ -110,6 +107,7 @@
                             label="Jenis Hewan"
                             item-text="nama"
                             item-value="idjenis"
+                            :class="{ 'hasError': $v.form.idjenis.$error }"
                             >
                         </v-select>
                     </v-col>    
@@ -120,6 +118,7 @@
                             label="Ukuran Hewan"
                             item-text="nama"
                             item-value="idukuran"
+                            :class="{ 'hasError': $v.form.idukuran.$error }"
                             >
                         </v-select>
                     </v-col>
@@ -130,15 +129,10 @@
                             label="Customer"
                             item-text="nama"
                             item-value="idcustomer"
+                            :class="{ 'hasError': $v.form.idcustomer.$error }"
                             >
                         </v-select>
                     </v-col>
-                    <!-- <v-col cols="12">
-                        <v-text-field label="ID Ukuran Hewan*" v-model="form.idukuran" required></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-text-field label="ID Customer*" v-model="form.idcustomer" required></v-text-field>
-                    </v-col> -->
                 </v-row>
             </v-container>
             <small>*indicates required field</small>
@@ -170,6 +164,7 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import axios from 'axios'
 export default {
     data () {
@@ -239,6 +234,15 @@ export default {
             updatedId : '',
         }
     },
+    validations: {
+        form: {
+            nama: { required },
+            tgllahir: { required },
+            idjenis: { required},
+            idukuran: { required },
+            idcustomer: { required },
+        }
+    },
     methods:{
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/hewan")
@@ -282,12 +286,18 @@ export default {
 
 
         sendData(){
+            this.$v.form.$touch();
             this.hewan.append('nama', this.form.nama);
             this.hewan.append('tgllahir', this.form.tgllahir);
             this.hewan.append('idjenis', this.form.idjenis);
             this.hewan.append('idukuran', this.form.idukuran);
             this.hewan.append('idcustomer', this.form.idcustomer);
             this.hewan.append('aktor', this.$session.get('dataPegawai').idpegawai);
+            if(this.$v.form.nama.$error) return alert('Nama Masih Kosong !')
+            else if(this.$v.form.tgllahir.$error) return alert('Tanggal Lahir Masih Kosong !')
+            else if(this.$v.form.idjenis.$error) return alert('Jenis Masih Kosong !')
+            else if(this.$v.form.idukuran.$error) return alert('Ukuran Tidak Boleh Kosong !')
+            else if(this.$v.form.idcustomer.$error) return alert('Customer Tidak Boleh Kosong !')
             var uri = "http://kouvee.xbanana.my.id/api/hewan"
             this.$http.post(uri,this.hewan).then(response =>{
                 console.log(this.form)
@@ -390,7 +400,6 @@ export default {
             this.getDataJenisHewan();
             this.getDataUkuranHewan();
             this.getDataCustomer();
-            this.getDataUser();
         },
     }
 </script>

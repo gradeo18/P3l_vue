@@ -305,6 +305,7 @@ export default {
                 this.text = 'Berhasil'; 
                 this.color = 'green';
                 this.dialog =false;
+                this.resetForm();
                 this.getData();
         }).catch(error =>{ 
              console.log(this.form)
