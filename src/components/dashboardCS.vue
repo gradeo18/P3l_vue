@@ -39,6 +39,24 @@
                         </v-list-item-content>
                         </v-list-item>
 
+                        <v-list-item @click="$router.push('/cs/customer')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Customer</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+
+                        <v-list-item @click="$router.push('/cs/hewan')">
+                        <v-list-item-action>
+                            <v-icon color="white">mdi-check-bold</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title> <span class="white--text">Hewan</span></v-list-item-title>
+                        </v-list-item-content>
+                        </v-list-item>
+
                         <template v-slot:append>
                             <div class="pa-2">
                                 <v-btn block @click="logout()">Logout</v-btn>

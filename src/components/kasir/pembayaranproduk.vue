@@ -187,18 +187,15 @@
                             :multiple="true"
                             :items="detils.filter(item => item.idtransaksipenjualan === bayarform.idtransaksipenjualan)"
                             :filter="customFilter"
-                            v-model="bayarform.subtotal"
                             color="white"
                             item-text="subtotal"
                             item-value="subtotal"
-                            label="Subtotal*"
-                            :class="{ 'hasError': $v.bayarform.subtotal.$error }"
+                            label="List Subtotal*"
                         ></v-autocomplete>
                     </v-col>
                     <v-col cols="12">
-                        <span>{{ sum }}</span>
-                        <label for="diskon">Uang Customer*</label>
-                        <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
+                        <label for="diskon">Subtotal*</label>
+                        <v-text-field v-model="bayarform.subtotal" :class="{ 'hasError': $v.bayarform.subtotal.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="diskon">Diskon*</label>
@@ -208,6 +205,10 @@
                         <label for="total">Total</label>
                         <v-text-field readonly v-model="bayarform.total" :class="{ 'hasError': $v.bayarform.total.$error }">
                             {{bayarform.total=parseFloat(bayarform.subtotal)-parseFloat(bayarform.diskon)}}</v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                        <label for="diskon">Uang Customer*</label>
+                        <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
                     </v-col>
                     <v-col cols="12">
                         <label for="total">Kembalian</label>
@@ -692,9 +693,9 @@ export default {
             this.$v.bayarform.$touch();  
             if(this.$v.bayarform.idtransaksipenjualan.$error) return alert('ID Transaksi Penjualan Masih Kosong !')
             else if(this.$v.bayarform.subtotal.$error) return alert('Subtotal Masih Kosong !')
-            else if(this.$v.bayarform.uang.$error) return alert('Uang Customer Masih Kosong !')
             else if(this.$v.bayarform.diskon.$error) return alert('Diskon Masih Kosong !')
             else if(this.$v.bayarform.total.$error) return alert('Total Masih Kosong !')
+            else if(this.$v.bayarform.uang.$error) return alert('Uang Customer Masih Kosong !')
             axios.put("http://kouvee.xbanana.my.id/api/transaksi_penjualan/" + this.updatedId,{
                 diskon: this.bayarform.diskon,
                 total: this.bayarform.total,

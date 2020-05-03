@@ -114,6 +114,17 @@ children: [
         path: '/cs/penjualanlayanan',
         component: csView('penjualanlayanan')
     },
+    {
+        name: 'hewan',
+        path: '/cs/hewan',
+        component: ownerView('hewan')   
+    },
+    {
+        name: 'customer',
+        path: '/cs/customer',
+        component: ownerView('customer')   
+    },
+    
 ]
 },
 {
@@ -130,6 +141,7 @@ children: [
         path: '/kasir/pembayaranproduk',
         component: kasirView('pembayaranproduk')   
     },
+    
 ]
 },
 

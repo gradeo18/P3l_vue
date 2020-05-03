@@ -367,18 +367,17 @@
                             :multiple="true"
                             :items="detils.filter(item => item.idtransaksipelayanan === bayarform.idtransaksipelayanan)"
                             :filter="customFilter"
-                            v-model="bayarform.subtotal"
                             color="white"
                             item-text="subtotal"
                             item-value="subtotal"
-                            label="Subtotal*"
+                            label="List Subtotal*"
                             :class="{ 'hasError': $v.bayarform.subtotal.$error }"
                         ></v-autocomplete>
                     </v-col>
-                    <!-- <v-col cols="12">
+                    <v-col cols="12">
                         <label for="diskon">Subtotal*</label>
-                        <v-text-field v-model="sum" readonly></v-text-field>
-                    </v-col> -->
+                        <v-text-field v-model="bayarform.subtotal" :class="{ 'hasError': $v.bayarform.subtotal.$error }"></v-text-field>
+                    </v-col>
                     <v-col cols="12">
                         <label for="diskon">Uang Customer*</label>
                         <v-text-field v-model="bayarform.uang" :class="{ 'hasError': $v.bayarform.uang.$error }"></v-text-field>
