@@ -42,7 +42,6 @@
                             <td>{{ item.harga}}</td>
                             <td>{{ item.created_at}}</td>
                             <td>{{ item.updated_at}}</td>
-                            <td>{{ item.deleted_at}}</td>
                             <td>{{ item.aktor}} </td>
                             <td class="text-center">
                                 <v-btn 

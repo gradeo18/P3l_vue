@@ -70,7 +70,7 @@
                                 light
                                 @click="editHandler(item)"
                                 >
-                                <v-icon>mdi-pencil</v-icon>
+                                <v-icon>mdi-update</v-icon>
                                 </v-btn>
                             </td>   
                             <td class="text-center">
@@ -105,7 +105,7 @@
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
-                            v-model="keyword" 
+                            v-model="detilkeyword" 
                             append-icon="mdi-search" 
                             label="Search" 
                             hide-details
@@ -116,7 +116,7 @@
                 <v-data-table
                     :headers="detilheaders"
                     :items="detils"
-                    :search="keyword"
+                    :search="detilkeyword"
                     :loading="load"
                 >
 
@@ -219,7 +219,12 @@
         <v-card-text>
             <v-container>
                  <v-row>
+                     <v-row>
                     <v-col cols="12">
+                        <span>Apakah anda yakin ingin membarui status pemesanan menjadi Diterima?</span>
+                    </v-col>
+                    </v-row>
+                    <!-- <v-col cols="12">
                         <v-menu
                             :close-on-content-click="false"
                             :nudge-right="40"
@@ -238,8 +243,8 @@
                             </template>
                             <v-date-picker v-model="form.tglpesan" @input="menuDate = false"></v-date-picker>
                         </v-menu>
-                    </v-col>   
-                    <v-col cols="12">
+                    </v-col>    -->
+                    <!-- <v-col cols="12">
                         <v-select
                             :items="status"
                             v-model="form.status"
@@ -247,15 +252,14 @@
                             :class="{ 'hasError': $v.form.status.$error }"
                         >
                         </v-select>  
-                    </v-col>
+                    </v-col> -->
                 </v-row>
             </v-container>
-            <small>*indicates required field</small>
         </v-card-text>
         <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" text @click="dialogEdit = false">Close</v-btn>
-            <v-btn color="blue darken-1" text @click="setForm()">Save</v-btn> 
+            <v-btn color="blue darken-1" text @click="dialogEdit = false">Tutup</v-btn>
+            <v-btn color="blue darken-1" text @click="setForm()">Ya</v-btn> 
         </v-card-actions>
     </v-card>
 </v-dialog>
@@ -382,7 +386,7 @@ import axios from 'axios'
 export default {
     data () {
         return {
-            status: ["Dipesan","Diterima"],
+            status: ["Dipesan"],
             satuan: ["Pcs"],
             viewDialog: false,
             dialog: false,
@@ -390,6 +394,7 @@ export default {
             editDetilDialog: false,
             dialogEdit: false,
             keyword: '',
+            detilkeyword: '',
             headers: [
                     {
                     text: 'No',
@@ -546,7 +551,7 @@ export default {
             this.pemesananproduk.append('idsupplier', this.form.idsupplier);
             if(this.$v.form.idsupplier.$error) return alert('Supplier Masih Kosong !')
             else if(this.$v.form.tglpesan.$error) return alert('Tanggal Pesan Masih Kosong !')
-            else if(this.$v.form.status.$error) return alert('Status Tidak Boleh Kosong dan Harus Angka !')
+            else if(this.$v.form.status.$error) return alert('Status Tidak Boleh Kosong !')
             var uri = "http://kouvee.xbanana.my.id/api/pemesanan_barang"
             this.$http.post(uri,this.pemesananproduk).then(response =>{
                 this.snackbar = true; 
@@ -595,7 +600,7 @@ export default {
             axios.put("http://kouvee.xbanana.my.id/api/pemesanan_barang/" + this.updatedId,{
                 idpegawai: this.$session.get('dataPegawai').idpegawai,
                 tglpesan: this.form.tglpesan,
-                status: this.form.status,
+                status: "Diterima",
             })
             .then(response =>{     
                 this.snackbar = true; 
@@ -605,6 +610,7 @@ export default {
                 this.load = false;
                 this.dialogEdit = false;
                 this.getData(); 
+                this.getDataDetil();
                 this.resetForm();
                 this.typeInput = 'dddd';
             }).catch(error =>{

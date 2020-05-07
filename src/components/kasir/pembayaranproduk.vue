@@ -115,7 +115,7 @@
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
-                            v-model="keyword" 
+                            v-model="detilkeyword" 
                             append-icon="mdi-search" 
                             label="Search" 
                             hide-details
@@ -126,7 +126,7 @@
                 <v-data-table
                     :headers="detilheaders"
                     :items="detils"
-                    :search="keyword"
+                    :search="detilkeyword"
                     :loading="load"
                 >
 
@@ -371,6 +371,7 @@ export default {
             dialogDetil: false,
             dialog: false,
             keyword: '',
+            detilkeyword: '',
             headers: [
                     {
                     text: 'No',

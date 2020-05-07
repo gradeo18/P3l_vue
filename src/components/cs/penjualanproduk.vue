@@ -97,7 +97,7 @@
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
-                            v-model="keyword" 
+                            v-model="detilkeyword" 
                             append-icon="mdi-search" 
                             label="Search" 
                             hide-details
@@ -108,7 +108,7 @@
                 <v-data-table
                     :headers="detilheaders"
                     :items="detils"
-                    :search="keyword"
+                    :search="detilkeyword"
                     :loading="load"
                 >
 
@@ -236,7 +236,8 @@
                     </v-col>
                     <v-col cols="12">
                         <label for="subtotal">SubTotal*</label>
-                        <v-text-field readonly v-model="editform.subtotal" :class="{ 'hasError': $v.editform.subtotal.$error }" >{{parseInt(editform.subtotal=editform.harga * editform.jumlah)}}</v-text-field>
+                        <v-text-field readonly v-model="editform.subtotal" :class="{ 'hasError': $v.editform.subtotal.$error }" >
+                            {{parseInt(editform.subtotal=editform.harga * editform.jumlah)}}</v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -340,6 +341,7 @@ export default {
             dialog: false,
             dialogEdit: false,
             keyword: '',
+            detilkeyword:'',
             headers: [
                     {
                     text: 'No',
@@ -455,6 +457,7 @@ export default {
         editform:{
                 iddetilpenjualan: {required},
                 idproduk: {required},
+                harga: {required},
                 jumlah: {required,numeric},
                 subtotal: {required},
             },
@@ -597,11 +600,11 @@ export default {
         },
 
         updateDetil(){    
-            this.$v.detilform.$touch();  
-            if(this.$v.detilform.idproduk.$error) return alert('Produk Masih Kosong !')
-            else if(this.$v.detilform.harga.$error) return alert('Harga Masih Kosong !')
-            else if(this.$v.detilform.jumlah.$error) return alert('Jumlah Tidak Boleh Kosong dan Harus Angka !')
-            else if(this.$v.detilform.subtotal.$error) return alert('Subtotal Tidak Boleh Kosong dan Harus Angka !')
+            this.$v.editform.$touch();  
+            if(this.$v.editform.idproduk.$error) return alert('Produk Masih Kosong !')
+            else if(this.$v.editform.harga.$error) return alert('Harga Masih Kosong !')
+            else if(this.$v.editform.jumlah.$error) return alert('Jumlah Tidak Boleh Kosong dan Harus Angka !')
+            else if(this.$v.editform.subtotal.$error) return alert('Subtotal Tidak Boleh Kosong dan Harus Angka !')
             axios.put("http://kouvee.xbanana.my.id/api/detil_penjualan/" + this.updatedId,{
                 idproduk: this.editform.idproduk,
                 jumlah: this.editform.jumlah,

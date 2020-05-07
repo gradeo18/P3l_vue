@@ -28,7 +28,7 @@
                     </v-flex>
                     <v-flex xs6 class="text-right">
                         <v-text-field
-                            v-model="keyword" 
+                            v-model="detilkeyword" 
                             append-icon="mdi-search" 
                             label="Search" 
                             hide-details
@@ -40,7 +40,7 @@
                     :headers="headers"
                     :items="penjualanlayanans"
                     :detailrows="detils"
-                    :search="keyword"
+                    :search="detilkeyword"
                     :loading="load"
                 >
 
@@ -364,6 +364,7 @@ export default {
             dialog: false,
             dialogEdit: false,
             keyword: '',
+            detilkeyword:'',
             headers: [
                     {
                     text: 'No',
