@@ -5,8 +5,10 @@ import router from './router'
 import vuetify from './plugins/vuetify'
 import session from './plugins/session'
 import Vuelidate from 'vuelidate'
+import Notifications from 'vue-notification'
 import 'vue-search-select/dist/VueSearchSelect.css'
 
+Vue.use(Notifications)
 Vue.use(Vuelidate)
 Vue.prototype.$http = Axios;
 Vue.prototype.$apiUrl = 'http://localhost:8080/backend/index.php';    

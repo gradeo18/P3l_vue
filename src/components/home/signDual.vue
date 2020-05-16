@@ -37,6 +37,7 @@ export default {
       },
       role: [],
       pegawais: [],
+      produks:[],
       snackbar: false,
       color: null,
       text: '',
@@ -56,6 +57,16 @@ export default {
       axios.get("http://kouvee.xbanana.my.id/api/pegawai")
       .then(
         response => {this.pegawais = response.data},
+      )
+      .catch(e => {
+        this.errors.push(e)
+      });
+    },
+
+    getDataProduk() {
+      axios.get("http://kouvee.xbanana.my.id/api/produk")
+      .then(
+        response => {this.produks = response.data},
       )
       .catch(e => {
         this.errors.push(e)
@@ -90,7 +101,7 @@ export default {
             else if(this.$session.get('dataPegawai').role == "Owner")
             {
                 this.$router.push({
-                path: "/dashboardOwner"
+                path: "/produk"
                 });
             }
             else if(this.$session.get('dataPegawai').role == "Kasir")
@@ -119,6 +130,7 @@ export default {
 
   mounted() {
     this.getData();
+    this.getDataProduk();
   },
 }
 </script>

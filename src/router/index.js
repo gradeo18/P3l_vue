@@ -98,6 +98,28 @@ children: [
         path: '/pengadaanproduk',
         component: ownerView('pengadaanproduk')   
     },
+    // laporan
+    {
+        name: 'laporan',
+        path: '/laporan',
+        component: ownerView('laporan')   
+    },
+    // {
+    //     name: 'laporanpengadaan',
+    //     path: '/laporan/laporanpengadaan',
+    //     component: ownerView('laporanpengadaan')   
+    // },
+
+    // {
+    //     name: 'produkterlaris',
+    //     path: '/laporan/laporanprodukterlaris',
+    //     component: ownerView('laporanprodukterlaris')   
+    // },
+    // {
+    //     name: 'layananterlaris',
+    //     path: '/laporan/laporanlayananterlaris',
+    //     component: ownerView('laporanlayananterlaris')   
+    // },
 ]
 },
 {

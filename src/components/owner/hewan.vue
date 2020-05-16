@@ -316,7 +316,13 @@ export default {
         })
         },
 
-        updateData(){      
+        updateData(){     
+            this.$v.form.$touch(); 
+            if(this.$v.form.nama.$error) return alert('Nama Masih Kosong !')
+            else if(this.$v.form.tgllahir.$error) return alert('Tanggal Lahir Masih Kosong !')
+            else if(this.$v.form.idjenis.$error) return alert('Jenis Masih Kosong !')
+            else if(this.$v.form.idukuran.$error) return alert('Ukuran Tidak Boleh Kosong !')
+            else if(this.$v.form.idcustomer.$error) return alert('Customer Tidak Boleh Kosong !')
             axios.put("http://kouvee.xbanana.my.id/api/hewan/" + this.updatedId,{
                 nama: this.form.nama,
                 tgllahir: this.form.tgllahir,

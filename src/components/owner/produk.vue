@@ -182,6 +182,23 @@
         Close 
     </v-btn>
 </v-snackbar>
+
+<v-snackbar
+    v-model="snackbarLow"
+    :color="color"
+    :multi-line="true"
+    :timeout="300000"
+>
+
+    {{ text }} 
+    <v-btn
+        dark 
+        text
+        @click="snackbarLow = false"
+    >
+        Close 
+    </v-btn>
+</v-snackbar>
 </v-container>
 </template>
 
@@ -243,6 +260,7 @@ export default {
             pegawais: [],
             suppliers: [],
             snackbar: false,
+            snackbarLow: false,
             color: null,
             text: '',
             load: false,
@@ -272,7 +290,13 @@ export default {
         getData(){
             axios.get("http://kouvee.xbanana.my.id/api/produk")
             .then(
-                response => {this.produks = response.data},
+                response => {
+                this.produks = response.data
+                this.lowStock();
+                this.text = response.data.message;
+                this.text = 'Produk kurang dari Stok Minimum. Segera Restock Barang !'; 
+                this.color = 'red';
+                },
             )
             .catch(e => {
                 this.errors.push(e)
@@ -376,7 +400,16 @@ export default {
                     this.color='red';
                 })
         },
-    
+
+        lowStock(){
+            // if(this.produks[3].stok <= this.produks[3].stokminimum)
+            // {return this.snackbar=true}
+            Array.from(this.produks).forEach(item=>{
+                console.log(item.stok < item.stokminimum)
+                if(item.stok < item.stokminimum){return this.snackbarLow=true}
+            })
+        },
+
         setForm(){
             if (this.typeInput === 'new') {
                 this.sendData()

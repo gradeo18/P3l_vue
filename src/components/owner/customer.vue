@@ -245,7 +245,12 @@ export default {
         })
         },
 
-        updateData(){      
+        updateData(){     
+            this.$v.form.$touch(); 
+            if(this.$v.form.nama.$error) return alert('Nama Masih Kosong !')
+            else if(this.$v.form.tgllahir.$error) return alert('Tanggal Lahir Masih Kosong !')
+            else if(this.$v.form.notelp.$error) return alert('No Telp Masih Kosong dan Harus Angka (6-12 digit) !')
+            else if(this.$v.form.alamat.$error) return alert('Diskon Tidak Boleh Kosong dan Harus Angka !')
             axios.put("http://kouvee.xbanana.my.id/api/customer/" + this.updatedId,{
                 nama: this.form.nama,
                 tgllahir: this.form.tgllahir,

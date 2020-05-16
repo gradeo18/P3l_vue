@@ -10,6 +10,7 @@
     fixed
     temporary
     >
+            
             <v-list-item>
                 <v-list-item-content>
                 <v-list-item-title class="title">
@@ -103,6 +104,55 @@
                 </v-list-item-content>
                 </v-list-item>
 
+                <!-- laporan -->
+                <!-- <v-list-group
+                value="true"
+                >
+                <template v-slot:activator>
+                <v-list-item-title>Laporan</v-list-item-title>
+                </template> -->
+
+                <v-list-item @click="$router.push('/laporan')">
+                <v-list-item-action>
+                    <v-icon color="white">mdi-check-bold</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title> <span class="white--text">Laporan</span></v-list-item-title>
+                </v-list-item-content>
+                </v-list-item>
+
+                <!-- <v-list-item @click="$router.push('/laporan/laporanpengadaan')">
+                <v-list-item-action>
+                    <v-icon color="white">mdi-check-bold</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title> <span class="white--text">Pengadaan</span></v-list-item-title>
+                </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item @click="$router.push('/laporan/laporanprodukterlaris')">
+                <v-list-item-action>
+                    <v-icon color="white">mdi-check-bold</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title> <span class="white--text">Produk Terlaris</span></v-list-item-title>
+                </v-list-item-content>
+                </v-list-item>
+
+                <v-list-item @click="$router.push('/laporan/laporanlayananterlaris')">
+                <v-list-item-action>
+                    <v-icon color="white">mdi-check-bold</v-icon>
+                </v-list-item-action>
+                <v-list-item-content>
+                    <v-list-item-title> <span class="white--text">Layanan Terlaris</span></v-list-item-title>
+                </v-list-item-content>
+                </v-list-item> -->
+                
+
+                
+                <!-- </v-list-group> -->
+
+
                 <template v-slot:append>
                     <div class="pa-2">
                         <v-btn block @click="logout">Logout</v-btn>
@@ -142,9 +192,7 @@
             data(){
                 return{
                     drawer:null,
-                items:[
-                    
-                    ],
+                items:[],
                 }
             },
             methods:{
@@ -153,7 +201,7 @@
                 this.$router.push({
                 path: "/"
               });
-            }
+            },
         }
-    }    
+        }       
     </script>
