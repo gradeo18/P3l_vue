@@ -188,6 +188,7 @@
     :color="color"
     :multi-line="true"
     :timeout="300000"
+    :top="y === 'top'"
 >
 
     {{ text }} 
@@ -203,10 +204,17 @@
 </template>
 
 <script>
+import Vue from 'vue'
+Vue.notify({
+  group: 'foo',
+  title: 'Important message',
+  text: 'Hello user! This is a notification!'
+})
 import axios from 'axios'
 export default {
     data () {
         return {
+            y:'top',
             dialogEdit: false,
             dialog: false,
             keyword: '',
@@ -279,6 +287,7 @@ export default {
         }
     },
     methods:{
+        
         produkChange(event){
             console.log(event.target.files[0])
             console.log(event)
@@ -294,8 +303,8 @@ export default {
                 this.produks = response.data
                 this.lowStock();
                 this.text = response.data.message;
-                this.text = 'Produk kurang dari Stok Minimum. Segera Restock Barang !'; 
-                this.color = 'red';
+                this.text = 'INFO Produk kurang dari Stok Minimum. Segera Restock Barang !'; 
+                this.color = 'blue';
                 },
             )
             .catch(e => {
@@ -402,8 +411,6 @@ export default {
         },
 
         lowStock(){
-            // if(this.produks[3].stok <= this.produks[3].stokminimum)
-            // {return this.snackbar=true}
             Array.from(this.produks).forEach(item=>{
                 console.log(item.stok < item.stokminimum)
                 if(item.stok < item.stokminimum){return this.snackbarLow=true}

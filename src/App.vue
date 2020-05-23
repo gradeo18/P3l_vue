@@ -2,7 +2,7 @@
   <v-app>
     <main>
       <router-view>
-      
+      <notifications group="foo" />
       </router-view>
     </main>
   </v-app>

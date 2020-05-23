@@ -3,16 +3,25 @@
         <v-card>
             <v-container grid-list-md mb-0>
                 <h2 class="text-md-center">LAPORAN</h2> 
-                <v-layout row wrap style="margin:10px">
+                <v-layout row wrap style="margin:10px"> 
                     <v-flex xs6>
-                        <v-col cols="5">
-                            <h4 class="text-md-left">Pilih tahun</h4> 
+                        <v-col cols="3">
+                            <h4 class="text-md-left">Pilih Tahun</h4> 
                             <v-select
                             :items="pilihantahun"
                             v-model="form.tahun"
                             >
                             </v-select>  
-                        </v-col> 
+                        </v-col>
+                        <v-col cols="3">
+                            <h4 class="text-md-left">Pilih Bulan</h4> 
+                            <v-select
+                            :items="pilihanbulan"
+                            v-model="form.bulan"
+                            >
+                            </v-select>  
+                        </v-col>
+                        <h4 class="text-md-left">LAPORAN JASA LAYANAN TERLARIS</h4>  
                         <v-btn depressed 
                         dark 
                         style="text-transform: none !important;" 
@@ -26,6 +35,7 @@
                 </v-layout>
                 <v-layout row wrap style="margin:10px">
                     <v-flex xs6>
+                        <h4 class="text-md-left">LAPORAN PRODUK TERLARIS</h4> 
                         <v-btn depressed 
                         dark 
                         style="text-transform: none !important;" 
@@ -34,6 +44,62 @@
                         >
                         <v-icon size="15" class="mr-2">mdi-printer</v-icon> 
                             LAPORAN PRODUK TERLARIS
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <h4 class="text-md-left">LAPORAN PENDAPATAN TAHUNAN</h4> 
+                        <v-btn depressed 
+                        dark 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="printPendapatanTahunan(form)"
+                        >
+                        <v-icon size="15" class="mr-2">mdi-printer</v-icon> 
+                            LAPORAN PENDAPATAN TAHUNAN
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <h4 class="text-md-left">LAPORAN PENDAPATAN BULANAN</h4> 
+                        <v-btn depressed 
+                        dark 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="printPendapatanBulanan(form)"
+                        >
+                        <v-icon size="15" class="mr-2">mdi-printer</v-icon> 
+                            LAPORAN PENDAPATAN BULANAN
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <h4 class="text-md-left">LAPORAN PENGELUARAN TAHUNAN</h4> 
+                        <v-btn depressed 
+                        dark 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="printPengeluaranTahunan(form)"
+                        >
+                        <v-icon size="15" class="mr-2">mdi-printer</v-icon> 
+                            LAPORAN PENGELUARAN TAHUNAN
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+                <v-layout row wrap style="margin:10px">
+                    <v-flex xs6>
+                        <h4 class="text-md-left">LAPORAN PENGELUARAN BULANAN</h4> 
+                        <v-btn depressed 
+                        dark 
+                        style="text-transform: none !important;" 
+                        color = "green accent-3"
+                        @click="printPengeluaranBulanan(form)"
+                        >
+                        <v-icon size="15" class="mr-2">mdi-printer</v-icon> 
+                            LAPORAN PENGELUARAN BULANAN
                         </v-btn>
                     </v-flex>
                 </v-layout>
@@ -50,6 +116,7 @@ export default {
     data () {
         return {
             pilihantahun:["2019","2020"],
+            pilihanbulan:["1","2","3","4","5","6","7","8","9","10","11","12"],
             form: {
                 tahun : '',
                 bulan : '',
@@ -79,19 +146,74 @@ export default {
         },
         printProdukTerlaris(form){
             axios({
-                url: 'http://kouvee.xbanana.my.id/laporan_produk_terlaris/' + form.tahun,
+                url: 'http://kouvee.xbanana.my.id/laporan_penjualan_terlaris/' + form.tahun,
                 method: 'GET',
                 responseType: 'blob', // important
                 }).then((response) => {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'laporan_produk_terlaris.pdf');
+                link.setAttribute('download', 'laporan_penjualan_terlaris.pdf');
                 document.body.appendChild(link);
                 link.click();
             });
         },
-
+        printPendapatanTahunan(form){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/laporan_pendapatan_tahunan/' + form.tahun,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'laporan_pendapatan_tahunan.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
+        printPendapatanBulanan(form){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/laporan_pendapatan_bulanan/' + form.tahun + '/' + form.bulan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'laporan_pendapatan_tahunan.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
+        printPengeluaranTahunan(form){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/laporan_pengadaan_tahunan/' + form.tahun,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'laporan_pengadaan_tahunan.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
+        printPengeluaranBulanan(form){
+            axios({
+                url: 'http://kouvee.xbanana.my.id/laporan_pengadaan_bulanan/' + form.tahun + '/' + form.bulan,
+                method: 'GET',
+                responseType: 'blob', // important
+                }).then((response) => {
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'laporan_pengadaan_bulanan.pdf');
+                document.body.appendChild(link);
+                link.click();
+            });
+        },
         },
     }
 </script>
