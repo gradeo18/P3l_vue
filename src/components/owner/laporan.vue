@@ -10,6 +10,7 @@
                             <v-select
                             :items="pilihantahun"
                             v-model="form.tahun"
+                            :class="{ 'hasError': $v.form.tahun.$error }"
                             >
                             </v-select>  
                         </v-col>
@@ -18,6 +19,7 @@
                             <v-select
                             :items="pilihanbulan"
                             v-model="form.bulan"
+                            :class="{ 'hasError': $v.form.bulan.$error }"
                             >
                             </v-select>  
                         </v-col>
@@ -127,10 +129,13 @@ export default {
     validations: {
         form: {
             tahun: { required },
+            bulan: { required },
         },
     },
     methods:{
         printLayananTerlaris(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_pelayanan_terlaris/' + form.tahun,
                 method: 'GET',
@@ -145,6 +150,8 @@ export default {
                 });
         },
         printProdukTerlaris(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_penjualan_terlaris/' + form.tahun,
                 method: 'GET',
@@ -159,6 +166,8 @@ export default {
             });
         },
         printPendapatanTahunan(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_pendapatan_tahunan/' + form.tahun,
                 method: 'GET',
@@ -173,6 +182,9 @@ export default {
             });
         },
         printPendapatanBulanan(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
+            else if(this.$v.form.bulan.$error) return alert('Bulan Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_pendapatan_bulanan/' + form.tahun + '/' + form.bulan,
                 method: 'GET',
@@ -187,6 +199,8 @@ export default {
             });
         },
         printPengeluaranTahunan(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_pengadaan_tahunan/' + form.tahun,
                 method: 'GET',
@@ -195,12 +209,15 @@ export default {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'laporan_pengadaan_tahunan.pdf');
+                link.setAttribute('download', 'laporan_pengeluaran_tahunan.pdf');
                 document.body.appendChild(link);
                 link.click();
             });
         },
         printPengeluaranBulanan(form){
+            this.$v.form.$touch();
+            if(this.$v.form.tahun.$error) return alert('Tahun Masih Kosong !')
+            else if(this.$v.form.bulan.$error) return alert('Bulan Masih Kosong !')
             axios({
                 url: 'http://kouvee.xbanana.my.id/laporan_pengadaan_bulanan/' + form.tahun + '/' + form.bulan,
                 method: 'GET',
@@ -209,7 +226,7 @@ export default {
                 const url = window.URL.createObjectURL(new Blob([response.data]));
                 const link = document.createElement('a');
                 link.href = url;
-                link.setAttribute('download', 'laporan_pengadaan_bulanan.pdf');
+                link.setAttribute('download', 'laporan_pengeluaran_bulanan.pdf');
                 document.body.appendChild(link);
                 link.click();
             });
