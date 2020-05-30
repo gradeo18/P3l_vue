@@ -13,7 +13,7 @@
                         @click="dialog = true"
                         >
                         <v-icon size="18" class="mr-2">mdi-pencil-plus</v-icon> 
-                            Tambah Produk
+                            Tambah Produks
                         </v-btn>
                     </v-flex>
                     <v-flex xs6 class="text-right">
